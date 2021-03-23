@@ -1,0 +1,29 @@
+###
+Use SEB-LIGHT.cpp
+Requires fuel file from FIRETEC or QUICFIRE and meterolgical file.
+Fuel file:          treesrhof.dat
+meterological File: EglinMetData.txt  ### This is the file that you would add in your sunlight input.
+### The QswIn (shortwave radiation) 2nd column.  
+### First Column is a timestep tracker.  This data is 10min data, but can be what ever you since you are not running the surface energy balance.
+### All other columns can be whatever, LongwaveRadiaiton, AirTemperature, RelativeHumidity, Windspeed, Precipitation 
+
+
+Inputlist:          ### I just made this for you, we can change easily, and would likely need to add to it.
+
+
+
+########################################
+To compile:
+g++ SEB-LIGHT.cpp LeafEnergyBalance.cc spa.c -o sunmain
+
+
+To run:
+./sunmain
+
+Output:
+
+
+Have fun
+
+
+

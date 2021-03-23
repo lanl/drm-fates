@@ -1,0 +1,560 @@
+[1mdiff --git a/matlab_code/PlotTraj.m b/matlab_code/PlotTraj.m[m
+[1mindex 0d98429..ebf8545 100755[m
+[1m--- a/matlab_code/PlotTraj.m[m
+[1m+++ b/matlab_code/PlotTraj.m[m
+[36m@@ -5,7 +5,7 @@[m [mfunction PlotTraj(traj, plumes, plot_settings, save_folder)[m
+ utimes = unique(traj.fire_time);[m
+ [m
+ n_utimes = numel(utimes);[m
+[31m-for it = 6:n_utimes-1[m
+[32m+[m[32mfor it = 14:n_utimes-1[m[41m[m
+     [m
+     create_fig(plot_settings)[m
+     axval = [1e8 0 1e8 0 0 0];[m
+[1mdiff --git a/matlab_code/ReadTraj.m b/matlab_code/ReadTraj.m[m
+[1mindex 142720f..e0fd270 100755[m
+[1m--- a/matlab_code/ReadTraj.m[m
+[1m+++ b/matlab_code/ReadTraj.m[m
+[36m@@ -1,83 +1,80 @@[m
+[31m-function traj = ReadTraj(save_folder, flags)[m
+[32m+[m[32mfunction traj = ReadTraj(save_folder,qu)[m[41m[m
+ [m
+ %% Trajectories[m
+[31m-if(flags.traj == 1)[m
+[31m-    fname = fullfile(save_folder,'plume_trajectory.csv');[m
+[31m-    fid = fopen(fname,'r'); %'id, time , x , y, z , uc , wc ,plume_radius'[m
+[31m-    t = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*[^\n]',...[m
+[31m-        'headerlines',1, 'delimiter', ',');[m
+[31m-    traj.id = t{1};[m
+[31m-    traj.fire_time = t{2};[m
+[31m-    traj.x = t{4};[m
+[31m-    traj.y = t{5};[m
+[31m-    traj.z = t{6};[m
+[31m-    traj.uc = t{7};[m
+[31m-    traj.vc = t{8};[m
+[31m-    traj.wc = t{9};[m
+[31m-    traj.rph = t{10};[m
+[31m-    traj.eh = [t{11} t{12} t{13}];[m
+[31m-    traj.rpn = t{14};[m
+[31m-    traj.en = [t{15} t{16} t{17}];[m
+[31m-else[m
+[31m-    fname = fullfile(save_folder,'plume_trajectory.bin');[m
+[31m-    fid = fopen(fname,'r');[m
+[31m-    nvar = 17 + 2;[m
+[31m-    mysize = dir(fname);[m
+[31m-    nrows = mysize.bytes / (nvar*4);[m
+[31m-    t = zeros(nrows, 17);[m
+[31m-    for i = 1:nrows[m
+[31m-        fread(fid,1,'int32');[m
+[31m-        t(i,1:2) = fread(fid,2,'int32');[m
+[31m-        t(i,3:17) = fread(fid,15,'real*4');[m
+[31m-        fread(fid,1,'int32');[m
+[31m-    end[m
+[31m-    [m
+[31m-    traj.id = t(:,1);[m
+[31m-    traj.fire_time = t(:,2);[m
+[31m-    traj.plume_time = t(:,3);[m
+[31m-    traj.x = t(:,4);[m
+[31m-    traj.y = t(:,5);[m
+[31m-    traj.z = t(:,6);[m
+[31m-    traj.uc = t(:,7);[m
+[31m-    traj.vc = t(:,8);[m
+[31m-    traj.wc = t(:,9);[m
+[31m-    traj.rph = t(:,10);[m
+[31m-    traj.eh = t(:,11:13);[m
+[31m-    traj.rpn = t(:,14);[m
+[31m-    traj.en = t(:,15:17);[m
+[31m-    fclose(fid);[m
+[32m+[m[32m% fname = fullfile(save_folder,'plume_trajectory.csv');[m[41m[m
+[32m+[m[32m% fid = fopen(fname,'r'); %'id, time , x , y, z , uc , wc ,plume_radius'[m[41m[m
+[32m+[m[32m% t = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*[^\n]',...[m[41m[m
+[32m+[m[32m%     'headerlines',1, 'delimiter', ',');[m[41m[m
+[32m+[m[32m% traj.id = t{1};[m[41m[m
+[32m+[m[32m% traj.fire_time = t{2};[m[41m[m
+[32m+[m[32m% traj.x = t{4};[m[41m[m
+[32m+[m[32m% traj.y = t{5};[m[41m[m
+[32m+[m[32m% traj.z = t{6};[m[41m[m
+[32m+[m[32m% traj.uc = t{7};[m[41m[m
+[32m+[m[32m% traj.vc = t{8};[m[41m[m
+[32m+[m[32m% traj.wc = t{9};[m[41m[m
+[32m+[m[32m% traj.rph = t{10};[m[41m[m
+[32m+[m[32m% traj.eh = [t{11} t{12} t{13}];[m[41m[m
+[32m+[m[32m% traj.rpn = t{14};[m[41m[m
+[32m+[m[32m% traj.en = [t{15} t{16} t{17}];[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mfname = fullfile(save_folder,'plume_trajectory.bin');[m[41m[m
+[32m+[m[32mfid = fopen(fname,'r'); %'id [-], fire time [s], plume time [s], '[m[41m[m
+[32m+[m[32m% 			'x [m], y [m], z [m], uc [m/s], vc [m/s], wc [m/s], plume_radius h [m], plume_radius n [m]'[m[41m[m
+[32m+[m[32mnvar = 17 + 2;[m[41m[m
+[32m+[m[32mmysize = dir(fname);[m[41m[m
+[32m+[m[32mnrows = mysize.bytes / (nvar*4);[m[41m[m
+[32m+[m[32mt = zeros(nrows, 17);[m[41m[m
+[32m+[m[32mfor i = 1:nrows[m[41m[m
+[32m+[m[32m    fread(fid,1,'int32');[m[41m[m
+[32m+[m[32m    t(i,1:2) = fread(fid,2,'int32');[m[41m[m
+[32m+[m[32m    t(i,3:17) = fread(fid,15,'real*4');[m[41m[m
+[32m+[m[32m    fread(fid,1,'int32');[m[41m[m
+ end[m
+ [m
+[32m+[m[32mtraj.id = t(:,1);[m[41m[m
+[32m+[m[32mtraj.fire_time = t(:,2);[m[41m[m
+[32m+[m[32mtraj.plume_time = t(:,3);[m[41m[m
+[32m+[m[32mtraj.x = t(:,4);[m[41m[m
+[32m+[m[32mtraj.y = t(:,5);[m[41m[m
+[32m+[m[32mtraj.z = t(:,6);[m[41m[m
+[32m+[m[32mtraj.uc = t(:,7);[m[41m[m
+[32m+[m[32mtraj.vc = t(:,8);[m[41m[m
+[32m+[m[32mtraj.wc = t(:,9);[m[41m[m
+[32m+[m[32mtraj.rph = t(:,10);[m[41m[m
+[32m+[m[32mtraj.eh = t(:,11:13);[m[41m[m
+[32m+[m[32mtraj.rpn = t(:,14);[m[41m[m
+[32m+[m[32mtraj.en = t(:,15:17);[m[41m[m
+ [m
+[31m-traj = FilterMergeDoubleWrites(traj);[m
+[32m+[m[32mfclose(fid);[m[41m[m
+ [m
+[31m-if(flags.traj == 1)[m
+[31m-    fname = fullfile(save_folder,'plume_mergetrajectory.csv');[m
+[31m-    fid = fopen(fname,'r'); %'id_merged, id_start '[m
+[31m-    t = textscan(fid,'%f %f %f %*[^\n]', 'delimiter', ',');[m
+[31m-    traj.id_start = t{1};[m
+[31m-    traj.id_merged = t{2};[m
+[31m-    traj.time_merge = t{3};[m
+[31m-    fclose(fid);[m
+[31m-else[m
+[31m-    fname = fullfile(save_folder,'plume_mergetrajectory.bin');[m
+[31m-    fid = fopen(fname,'r'); %'id_merged, id_start '[m
+[31m-    nvar = 3 + 2;[m
+[31m-    mysize = dir(fname);[m
+[31m-    nrows = mysize.bytes / (nvar*4);[m
+[31m-    t = zeros(nrows, 3);[m
+[31m-    for i = 1:nrows[m
+[31m-        fread(fid,1,'int32');[m
+[31m-        t(i,:) = fread(fid,3,'int32');[m
+[31m-        fread(fid,1,'int32');[m
+[31m-    end[m
+[31m-    [m
+[31m-    traj.id_start = t(:,1);[m
+[31m-    traj.id_merged = t(:,2);[m
+[31m-    traj.time_merge = t(:,3);[m
+[31m-    fclose(fid);[m
+[32m+[m[32mtraj = FilterMergeDoubleWrites(traj);[m[41m[m
+[32m+[m[32m%[m[41m [m
+[32m+[m[32m% fname = fullfile(save_folder,'plume_mergetrajectory.csv');[m[41m[m
+[32m+[m[32m% fid = fopen(fname,'r'); %'id_merged, id_start '[m[41m[m
+[32m+[m[32m% t = textscan(fid,'%f %f %f %*[^\n]', 'delimiter', ',');[m[41m[m
+[32m+[m[32m% traj.id_start = t{1};[m[41m[m
+[32m+[m[32m% traj.id_merged = t{2};[m[41m[m
+[32m+[m[32m% traj.time_merge = t{3};[m[41m[m
+[32m+[m[32m% fclose(fid);[m[41m[m
+[32m+[m[32mfname = fullfile(save_folder,'plume_mergetrajectory.bin');[m[41m[m
+[32m+[m[32mfid = fopen(fname,'r'); %'id_merged, id_start '[m[41m[m
+[32m+[m[32mnvar = 3 + 2;[m[41m[m
+[32m+[m[32mmysize = dir(fname);[m[41m[m
+[32m+[m[32mnrows = mysize.bytes / (nvar*4);[m[41m[m
+[32m+[m[32mt = zeros(nrows, 3);[m[41m[m
+[32m+[m[32mfor i = 1:nrows[m[41m[m
+[32m+[m[32m    fread(fid,1,'int32');[m[41m[m
+[32m+[m[32m    t(i,:) = fread(fid,3,'int32');[m[41m    [m
+[32m+[m[32m    fread(fid,1,'int32');[m[41m[m
+ end[m
+ [m
+[32m+[m[32mtraj.id_start = t(:,1);[m[41m[m
+[32m+[m[32mtraj.id_merged = t(:,2);[m[41m[m
+[32m+[m[32mtraj.time_merge = t(:,3);[m[41m[m
+[32m+[m[32mfclose(fid);[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+ %% Break down trajectories[m
+ % traj = BreakTraj(traj, qu);[m
+ [m
+[36m@@ -286,20 +283,20 @@[m
+ is = 1;[m
+ f = fieldnames(traj);[m
+ for i = 1:numel(uid)[m
+[31m-    % Find all entries for a certain id[m
+[31m-    k = find(trajcopy.id == uid(i));[m
+[31m-    [m
+[31m-    A = [trajcopy.x(k) trajcopy.y(k) trajcopy.z(k)];[m
+[31m-    [~,uk] = unique(A, 'rows');[m
+[31m-    uk = sort(uk);[m
+[31m-    k = k(uk);[m
+[31m-    m = numel(uk);[m
+[31m-    ie = is + m - 1;[m
+[31m-    [m
+[31m-    for j = 1:numel(f)[m
+[31m-        traj.(f{j})(is:ie, :) = trajcopy.(f{j})(k, :);[m
+[31m-    end[m
+[31m-    is = ie + 1;[m
+[32m+[m[32m   % Find all entries for a certain id[m[41m[m
+[32m+[m[32m   k = find(trajcopy.id == uid(i));[m[41m[m
+[32m+[m[41m   [m
+[32m+[m[32m   A = [trajcopy.x(k) trajcopy.y(k) trajcopy.z(k)];[m[41m  [m
+[32m+[m[32m   [~,uk] = unique(A, 'rows');[m[41m[m
+[32m+[m[32m   uk = sort(uk);[m[41m[m
+[32m+[m[32m   k = k(uk);[m[41m[m
+[32m+[m[32m   m = numel(uk);[m[41m[m
+[32m+[m[32m   ie = is + m - 1;[m[41m[m
+[32m+[m[41m   [m
+[32m+[m[32m   for j = 1:numel(f)[m[41m[m
+[32m+[m[32m       traj.(f{j})(is:ie, :) = trajcopy.(f{j})(k, :);[m[41m[m
+[32m+[m[32m   end[m[41m[m
+[32m+[m[32m   is = ie + 1;[m[41m[m
+ end[m
+ [m
+ % Eliminate extra elements[m
+[1mdiff --git a/matlab_code/main.m b/matlab_code/main.m[m
+[1mindex 30e970e..8aa2948 100755[m
+[1m--- a/matlab_code/main.m[m
+[1m+++ b/matlab_code/main.m[m
+[36m@@ -26,7 +26,7 @@[m
+ [m
+ %% Specify project[m
+ prj_folder = {'SimpleSolution/02_BlackBox'};[m
+[31m-prj_subfolder{1} = {'02_two_plumes_equal_side_fillw_fr_01'};[m
+[32m+[m[32mprj_subfolder{1} = {'LineFire'};[m[41m[m
+ [m
+ fid = fopen('Errors.txt','w');[m
+ for iprj = 1:numel(prj_folder)[m
+[36m@@ -45,10 +45,10 @@[m
+             [qf,qu,flags,plumes,fuel_mass0] = ReadInputFiles(save_folder,...[m
+                 plot_settings);[m
+             [m
+[31m-            iw = 3;[m
+[31m-            PlotIsosurface(qu, qf, 1, save_folder, ...[m
+[31m-                qu.strwinds{1,iw}, qu.strwinds{2,iw},...[m
+[31m-                plot_settings, 0, 0.2)[m
+[32m+[m[32m%             iw = 3;[m[41m[m
+[32m+[m[32m%             PlotIsosurface(qu, qf, [0.5 1], save_folder, ...[m[41m[m
+[32m+[m[32m%                 qu.strwinds{1,iw}, qu.strwinds{2,iw},...[m[41m[m
+[32m+[m[32m%                 plot_settings, 0, 0.2)[m[41m[m
+ %             [m
+             %% Plot results[m
+             disp('Plot results')[m
+[36m@@ -57,10 +57,11 @@[m
+             if(flags.traj > 0)[m
+                 disp('Plot plume trajectories')[m
+                 %% CHANGE PLUME TIME IN THE CODE TO ACTUALLY BE THE PLUME TIME NOT SUM + START TIME[m
+[31m-                traj = ReadTraj(save_folder, flags);[m
+[32m+[m[32m                traj = ReadTraj(save_folder, qu);[m[41m[m
+                 %CheckPlumeMerge(traj, plot_settings, save_folder)[m
+                 %PlotPlumesMerge(traj)[m
+[31m-                PlotHistory(traj, plot_settings, save_folder)                [m
+[32m+[m[32m                %PlotHistory(traj, plot_settings, save_folder)[m[41m[m
+[32m+[m[41m                [m
+                 PlotTraj(traj, plumes, plot_settings, save_folder)[m
+             end[m
+             [m
+[1mdiff --git a/source_code/source_code.v11.suo b/source_code/source_code.v11.suo[m
+[1mindex 92a2fe9..2e22291 100755[m
+Binary files a/source_code/source_code.v11.suo and b/source_code/source_code.v11.suo differ
+[1mdiff --git a/source_code/source_code/FireCA_common_subs.f90 b/source_code/source_code/FireCA_common_subs.f90[m
+[1mindex e58c6e0..5beb33c 100644[m
+[1m--- a/source_code/source_code/FireCA_common_subs.f90[m
+[1m+++ b/source_code/source_code/FireCA_common_subs.f90[m
+[36m@@ -2463,7 +2463,6 @@[m
+ 	use grid_module[m
+ 	use bld_module[m
+ 	use flags_module[m
+[31m-	use interpolation_module[m
+ 	[m
+ 	implicit none[m
+ [m
+[36m@@ -2471,8 +2470,7 @@[m
+ 	real,dimension(:,:,:),allocatable ::		&[m
+ 		fuel_density_array,							& ! kg/m3, density of the fuel at each cell[m
+ 		fuel_density_array_thick					  ! kg/m3, density of the thick fuel at each cell[m
+[31m-	integer :: i[m
+[31m-	[m
+[32m+[m[41m[m
+ 	allocate(fuel_density_array(firegrid%nx,firegrid%ny,firegrid%nz), &[m
+ 		fuel_density_array_thick(firegrid%nx,firegrid%ny,firegrid%nz))[m
+ [m
+[36m@@ -2503,7 +2501,7 @@[m
+ 	if(ft%n_fuel_types > 1) call DefineUrban(fuel_density_array_thick)[m
+ 	[m
+ 	deallocate(fuel_density_array, fuel_density_array_thick)[m
+[31m-	[m
+[32m+[m[41m[m
+ 	return[m
+ [m
+ 	end[m
+[1mdiff --git a/source_code/source_code/QFire_Advanced_User_Inputs.inp b/source_code/source_code/QFire_Advanced_User_Inputs.inp[m
+[1mindex 26c897f..8338de2 100755[m
+[1m--- a/source_code/source_code/QFire_Advanced_User_Inputs.inp[m
+[1m+++ b/source_code/source_code/QFire_Advanced_User_Inputs.inp[m
+[36m@@ -1,13 +1,13 @@[m
+[31m-1			! N/A, fraction of the cells on fire that will launch a firebrand[m
+[32m+[m[32m0.05			! N/A, fraction of the cells on fire that will launch a firebrand[m[41m[m
+ 40.			! N/A, scaling factor of the radius represented by the firebrands launched[m
+ 1				! s, time step for the firebrands trajectory calculation[m
+[31m-1				! s, how often to launch firebrands[m
+[31m-10			! N/A, number of firebrands distributed over the landing area[m
+[31m-10.			! N/A, FB_FRACTION_LAUNCHED_to_RT_ratio[m
+[32m+[m[32m10				! s, how often to launch firebrands[m[41m[m
+[32m+[m[32m500			! N/A, number of firebrands distributed over the landing area[m[41m[m
+[32m+[m[32m20.			! N/A, FB_FRACTION_LAUNCHED_to_RT_ratio[m[41m[m
+ 50.			! N/A, min_b_value_coef[m
+ 0.75			! N/A, fb_frac_of_max_size[m
+ 180				! s, germination_delay[m
+[31m-5.				! N/A, fraction of the cell on fire (to scale w)[m
+[32m+[m[32m10.				! N/A, fraction of the cell on fire (to scale w)[m[41m[m
+ 50				! N/A, minimum number of ignitions via firebrands at a point[m
+ 100			! N/A, maximum number of ignitions via firebrands at a point[m
+[31m-0.523598		! rad, min_theta_value (pi/6)[m
+[32m+[m[32m0.523598		! rad, min_theta_value (pi/6)[m
+\ No newline at end of file[m
+[1mdiff --git a/source_code/source_code/QFire_Bldg_Advanced_User_Inputs.inp b/source_code/source_code/QFire_Bldg_Advanced_User_Inputs.inp[m
+[1mindex 3910786..d1238ce 100755[m
+[1m--- a/source_code/source_code/QFire_Bldg_Advanced_User_Inputs.inp[m
+[1m+++ b/source_code/source_code/QFire_Bldg_Advanced_User_Inputs.inp[m
+[36m@@ -4,6 +4,6 @@[m
+ 0.1	  ! m, surface roughness within buildings[m
+ 1				! N/A, flag to convert fuel to canopy for winds (0 = no, 1 = yes)[m
+ 1				! N/A, update canopy winds when fuel is consumed[m
+[31m-1.			! N/A, attenuation coefficient within fuel[m
+[32m+[m[32m1			! N/A, attenuation coefficient within fuel[m
+ 0.1	  ! m, surface roughness within fuel[m
+ [m
+[1mdiff --git a/source_code/source_code/QFire_Plume_Advanced_User_Inputs.inp b/source_code/source_code/QFire_Plume_Advanced_User_Inputs.inp[m
+[1mindex a733f83..7a5d3a8 100755[m
+[1m--- a/source_code/source_code/QFire_Plume_Advanced_User_Inputs.inp[m
+[1m+++ b/source_code/source_code/QFire_Plume_Advanced_User_Inputs.inp[m
+[36m@@ -4,10 +4,13 @@[m
+ 0.1					! N/A, minimum speed ratio (plume vertical velocity/wind speed. If below, the plume is eliminated[m
+ 0.						! 1/s2, brunt vaisala frequency squared[m
+ 1						! N/A creeping flag: 0 = off, 1 = on[m
+[31m-0						! time step flag 0 = constant, 1 = adaptable[m
+ 1                 ! s, time step plume[m
+[31m-0                 ! sor option[m
+[32m+[m[32m1                              ! time step flag 0 = constant, 1 = adaptable[m[41m[m
+[32m+[m[32m1                 ! sor option[m[41m[m
+ 10                ! N/A, alpha 2[m
+ 0.						! N/A, fraction of ignition energy that goes into en 2 atmos[m
+[31m-45						! deg, max angle for merging two plumes[m
+[31m-0.7				[m
+[32m+[m[32m30.00						! deg, max angle for merging two plumes[m[41m[m
+[32m+[m[32m0.7                    ! N/A, fraction of a plume length that a point on a second plume can be for merging[m[41m[m
+[41m+[m
+[41m+[m
+[41m+[m
+[1mdiff --git a/source_code/source_code/QUIC_fire.inp b/source_code/source_code/QUIC_fire.inp[m
+[1mindex 2a8cdf5..dae3cbf 100755[m
+[1m--- a/source_code/source_code/QUIC_fire.inp[m
+[1m+++ b/source_code/source_code/QUIC_fire.inp[m
+[36m@@ -2,41 +2,49 @@[m
+ 222				! Random number generator: -1: use time and date, any other integer > 0 is used as the seed[m
+ ! FIRE TIMES[m
+ 1488794400		! When the fire is ignited in Unix Epoch time (integer seconds since 1970/1/1 00:00:00)[m
+[31m-1160				! Total simulation time for the fire [s][m
+[31m-1					! time step for the fire simulation [s][m
+[31m-5					! Number of fire time steps done before updating the quic wind field (integer, >= 1)[m
+[31m-10					! After how many fire time steps to print out fire-related files (excluding emissions and radiation)[m
+[31m-10					! After how many quic updates to print out wind-related files[m
+[31m-25					! After how many fire time steps to average emissions and radiation[m
+[31m-25					! After how many quic updates to print out averaged wind-related files[m
+[32m+[m[32m500			! Total simulation time for the fire [s][m[41m[m
+[32m+[m[32m1				! time step for the fire simulation [s][m[41m[m
+[32m+[m[32m1					! Number of fire time steps done before updating the quic wind field (integer, >= 1)[m[41m[m
+[32m+[m[32m100					! After how many fire time steps to print out fire-related files (excluding emissions and radiation)[m[41m[m
+[32m+[m[32m100					! After how many quic updates to print out wind-related files[m[41m[m
+[32m+[m[32m4					! After how many fire time steps to average emissions and radiation[m[41m[m
+[32m+[m[32m2					! After how many quic updates to print out averaged wind-related files[m[41m[m
+ ! FIRE GRID[m
+[31m-23					! Number of vertical layers of fire grid cells (integer)[m
+[32m+[m[32m1					! Number of vertical layers of fire grid cells (integer)[m[41m[m
+ 1					! x - fire grid ratio = (QUIC-URB cell size)/(fire cell size), integer, can only be >= 1[m
+ 1					! y - fire grid ratio = (QUIC-URB cell size)/(fire cell size), integer, can only be >= 1[m
+ 0					! Vertical stretching flag: 0 = uniform dz, 1 = custom[m
+[31m-2.000000[m
+[32m+[m[32m1[m[41m[m
+ ! FILE PATH[m
+ ""[m
+ 1[m
+ ! FUEL[m
+[31m-4					! fuel density flag: 1 = uniform; 2 = provided thru QF_FuelDensity.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)[m
+[31m-4					! fuel moisture flag: 1 = uniform; 2 = provided thru QF_FuelMoisture.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)[m
+[32m+[m[32m1					! fuel density flag: 1 = uniform; 2 = provided thru QF_FuelDensity.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)[m[41m[m
+[32m+[m[32m0.7[m[41m[m
+[32m+[m[32m1					! fuel moisture flag: 1 = uniform; 2 = provided thru QF_FuelMoisture.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)[m[41m[m
+[32m+[m[32m0.05[m[41m[m
+[32m+[m[32m1   Fuel heght flag[m[41m[m
+[32m+[m[32m1   fuel height if constant[m[41m[m
+ ! PLACEHOLDER[m
+ 0[m
+ ""[m
+ ! IGNITION LOCATIONS[m
+[31m-7					! 1 = rectangle, 2 = square ring, 3 = circular ring, 4 = file (QF_Ignitions.inp), 5 = time-dependent ignitions (QF_IgnitionPattern.inp), 6 = ignite.dat (firetech ARA), 7 = ignite.dat (firetech v3)[m
+[31m-1[m
+[31m-!FIREBRANDS[m
+[32m+[m[32m1					! 1 = rectangle, 2 = square ring, 3 = circular ring, 4 = file (QF_Ignitions.inp), 5 = time-dependent ignitions (QF_IgnitionPattern.inp), 6 = ignite.dat (firetech)[m[41m[m
+[32m+[m[32m100[m[41m[m
+[32m+[m[32m150[m[41m [m
+[32m+[m[32m4[m[41m[m
+[32m+[m[32m700[m[41m[m
+[32m+[m[32m100[m[41m[m
+[32m+[m[32m! FIREBRANDS[m[41m[m
+ 0				! 0 = off, 1 = on[m
+[31m-!OUTPUT FILES (formats depend on the grid type flag)[m
+[31m-0					! Output gridded energy-to-atmosphere (fire grid)[m
+[32m+[m[32m! OUTPUT FILES (formats depend on the grid type flag)[m[41m[m
+[32m+[m[32m1					! Output gridded energy-to-atmosphere (fire grid)[m[41m[m
+ 0					! Output compressed array reaction rate (fire grid)[m
+ 1					! Output compressed array fuel density (fire grid)[m
+ 0					! Output gridded wind (u,v,w,sigma) (fire grid)[m
+[31m-0					! Output gridded QU winds with fire effects, instantaneous (QUIC-URB grid)[m
+[32m+[m[32m1					! Output gridded QU winds with fire effects, instantaneous (QUIC-URB grid)[m[41m[m
+ 0					! Output gridded QU winds with fire effects, averaged (QUIC-URB grid)[m
+[31m-0					! Output plume trajectories[m
+[32m+[m[32m1					! Output plume trajectories[m[41m[m
+ 0					! Output compressed array fuel moisture (fire grid)[m
+ 1					! Output vertically-integrated % mass burnt (fire grid)[m
+ 0					! Output gridded file with plumes locations (QUIC-URB grid)[m
+[1mdiff --git a/source_code/source_code/cleanup.f90 b/source_code/source_code/cleanup.f90[m
+[1mindex 8d6f3e2..a46c23f 100755[m
+[1m--- a/source_code/source_code/cleanup.f90[m
+[1m+++ b/source_code/source_code/cleanup.f90[m
+[36m@@ -21,7 +21,7 @@[m
+ [m
+ 	implicit none[m
+ 	[m
+[31m-	integer :: ew, ns, ud, i[m
+[32m+[m	[32minteger :: ew, ns, ud[m[41m[m
+ [m
+ 	IF(ALLOCATED(lock))then[m
+ 		!$OMP parallel do private(ew, ns, ud)[m
+[36m@@ -308,32 +308,11 @@[m
+ 		IF(ALLOCATED(fire_ignition%new_num))	deallocate(fire_ignition%new_num)[m
+ [m
+ 		! Conversion between grids[m
+[32m+[m		[32mif(ALLOCATED(ft_2_fca_conv_x)) deallocate(ft_2_fca_conv_x)[m[41m[m
+[32m+[m		[32mif(ALLOCATED(ft_2_fca_conv_y)) deallocate(ft_2_fca_conv_y)[m[41m[m
+[32m+[m		[32mif(ALLOCATED(ft_2_fca_conv_z)) deallocate(ft_2_fca_conv_z)[m[41m[m
+ 		if(allocated(fca2quic))deallocate(fca2quic)[m
+[31m-		if(allocated(ft_2_fca_conv_x))then[m
+[31m-			do i = 1, firegrid%nx[m
+[31m-				if(ft_2_fca_conv_x(i)%nelem > 0) then[m
+[31m-					deallocate(ft_2_fca_conv_x(i)%index)[m
+[31m-					deallocate(ft_2_fca_conv_x(i)%length)[m
+[31m-				endif[m
+[31m-			enddo[m
+[31m-			deallocate(ft_2_fca_conv_x)[m
+[31m-	[m
+[31m-			do i = 1, firegrid%ny[m
+[31m-				if(ft_2_fca_conv_y(i)%nelem > 0) then[m
+[31m-					deallocate(ft_2_fca_conv_y(i)%index)[m
+[31m-					deallocate(ft_2_fca_conv_y(i)%length)[m
+[31m-				endif[m
+[31m-			enddo[m
+[31m-			deallocate(ft_2_fca_conv_y)[m
+[31m-	[m
+[31m-			do i = 1, firegrid%nz[m
+[31m-				if(ft_2_fca_conv_z(i)%nelem > 0) then[m
+[31m-					deallocate(ft_2_fca_conv_z(i)%index)[m
+[31m-					deallocate(ft_2_fca_conv_z(i)%length)[m
+[31m-				endif[m
+[31m-			enddo[m
+[31m-			deallocate(ft_2_fca_conv_z)[m
+[31m-		endif[m
+[32m+[m[41m[m
+ 		! Random numbers[m
+ 		IF(ALLOCATED(stat)) deallocate(stat)[m
+ [m
+[1mdiff --git a/source_code/source_code/datamodule.f90 b/source_code/source_code/datamodule.f90[m
+[1mindex 3185b28..39a5316 100755[m
+[1m--- a/source_code/source_code/datamodule.f90[m
+[1m+++ b/source_code/source_code/datamodule.f90[m
+[36m@@ -517,6 +517,8 @@[m
+ 		ft_2_fca_conv_x,												&[m
+ 		ft_2_fca_conv_y,												&[m
+ 		ft_2_fca_conv_z[m
+[32m+[m	[32mTYPE(FT_GridConversion),dimension(:,:),allocatable ::	&[m[41m[m
+[32m+[m		[32mft_2_fca_conv_z1[m[41m[m
+ [m
+ 	TYPE :: EnRatio[m
+ 		real,allocatable,dimension(:) :: volRatio ! [0 1], ratio of the fireca cell that is in a quic-urb cell[m
+[1mdiff --git a/source_code/source_code/interpolation_for_fire_grid.f90 b/source_code/source_code/interpolation_for_fire_grid.f90[m
+[1mindex 25d581b..20337bf 100755[m
+[1m--- a/source_code/source_code/interpolation_for_fire_grid.f90[m
+[1m+++ b/source_code/source_code/interpolation_for_fire_grid.f90[m
+[36m@@ -408,10 +408,11 @@[m [msubroutine interpolate_for_fire_grid !(fire_time)[m
+ 		ys,ye,														& ! m, start and end of location in the Firetec domain (y-dir)[m
+ 		ysfca,yefca												    ! m, bottom border of the cell in the FireCA domain, relative coordinates (from SW corner)[m
+ 		[m
+[31m-	allocate(														&[m
+[31m-		ft_2_fca_conv_x(firegrid%nx),							&[m
+[31m-		ft_2_fca_conv_y(firegrid%ny),							&[m
+[31m-		ft_2_fca_conv_z(firegrid%nz))[m
+[32m+[m	[32mallocate(																	&[m[41m[m
+[32m+[m		[32mft_2_fca_conv_x(firegrid%nx),										&[m[41m[m
+[32m+[m		[32mft_2_fca_conv_y(firegrid%ny),										&[m[41m[m
+[32m+[m		[32mft_2_fca_conv_z(firegrid%nz),										&[m[41m[m
+[32m+[m		[32mft_2_fca_conv_z1(firegrid%nx, firegrid%ny))[m[41m[m
+ [m
+ 	! Initialization	[m
+ 	dutmx = firegrid%utmx - ft%utmx[m
+[36m@@ -494,6 +495,41 @@[m [msubroutine interpolate_for_fire_grid !(fire_time)[m
+ 	enddo	[m
+ 	[m
+ 	!!! Z-DIRECTION[m
+[32m+[m	[32m!do j = 2, firegrid%ny-1[m[41m[m
+[32m+[m	[32m!	do i = 2, firegrid%nx-1[m[41m[m
+[32m+[m	[32m!		if(fuels%actual_height(i,j) > ft%z(1)) then[m[41m[m
+[32m+[m	[32m!			! Things are different only when the fuel does not fill the first firetec cell[m[41m[m
+[32m+[m	[32m!			! Find how many firegrid z cells the fuel extends thru[m[41m[m
+[32m+[m	[32m!			k_start = 1[m[41m[m
+[32m+[m	[32m!			k_end = 1[m[41m[m
+[32m+[m	[32m!			do while(k_end < firegrid%nz .and. firegrid%z(k_end) <= fuels%actual_height(i,j))[m[41m[m
+[32m+[m	[32m!				k_end = k_end + 1[m[41m[m
+[32m+[m	[32m!			enddo[m[41m[m
+[32m+[m	[32m![m[41m			[m
+[32m+[m	[32m!			ft_2_fca_conv_z1(i,j)%nelem = k_end - k_start + 1[m[41m[m
+[32m+[m	[32m!			allocate(																&[m[41m[m
+[32m+[m	[32m!				ft_2_fca_conv_z1(i,j)%index(ft_2_fca_conv_z(k)%nelem),	&[m[41m[m
+[32m+[m	[32m!				ft_2_fca_conv_z1(i,j)%length(ft_2_fca_conv_z(k)%nelem))[m[41m[m
+[32m+[m	[32m![m[41m	[m
+[32m+[m	[32m!			do i = 1,ft_2_fca_conv_z(k)%nelem[m[41m[m
+[32m+[m	[32m!				j = k_start + i - 1[m[41m[m
+[32m+[m	[32m!				ft_2_fca_conv_z(k)%index(i) = j[m[41m[m
+[32m+[m	[32m![m[41m		[m
+[32m+[m	[32m!				if(j == 1)then[m[41m[m
+[32m+[m	[32m!					z1 = max(0. , firegrid%z(k))[m[41m[m
+[32m+[m	[32m!				else[m[41m[m
+[32m+[m	[32m!					z1 = max(ft%z(j) , firegrid%z(k))[m[41m[m
+[32m+[m	[32m!				endif[m[41m[m
+[32m+[m	[32m!				z2 = min(ft%z(j+1) , firegrid%z(k+1))[m[41m[m
+[32m+[m	[32m!				ft_2_fca_conv_z(k)%length(i) = (z2-z1) !/(z_ft_top(j+1)-z_ft_top(j))[m[41m[m
+[32m+[m	[32m!			enddo[m[41m[m
+[32m+[m	[32m![m[41m			[m
+[32m+[m	[32m![m[41m			[m
+[32m+[m	[32m!		endif[m[41m[m
+[32m+[m[32m ![m[41m[m
+[32m+[m	[32m!	enddo[m[41m[m
+[32m+[m	[32m!enddo[m[41m[m
+[32m+[m	[32m! For k = 1, use fuel height to define top of fuel[m[41m[m
+ 	do k = 1,firegrid%nz[m
+ 		! cells in the firetech domain[m
+ 		k_start = 1[m
+[36m@@ -523,10 +559,12 @@[m [msubroutine interpolate_for_fire_grid !(fire_time)[m
+ 				z1 = max(ft%z(j) , firegrid%z(k))[m
+ 			endif[m
+ 			z2 = min(ft%z(j+1) , firegrid%z(k+1))[m
+[31m-			ft_2_fca_conv_z(k)%length(i) = z2 - z1[m
+[32m+[m			[32mft_2_fca_conv_z(k)%length(i) = (z2-z1) !/(z_ft_top(j+1)-z_ft_top(j))[m[41m[m
+ 		enddo[m
+ 	enddo[m
+ 	[m
+[32m+[m[41m	[m
+[32m+[m[41m	[m
+ 	END[m
+ !=====================================================================================================================[m
+ !=====================================================================================================================	[m
+[36m@@ -565,7 +603,7 @@[m [msubroutine interpolate_for_fire_grid !(fire_time)[m
+ 								if(k == 1) then[m
+ 									frz = firegrid%z(k+1) / max(fuels%actual_height(i, j),firegrid%z(k+1)) * ft%dz_array(kk)[m
+ 								else[m
+[31m-									frz = max((min(fuels%actual_height(i, j),firegrid%z(k+1)) - firegrid%z(k)), 0.) / &[m
+[32m+[m									[32mfrz = (min(fuels%actual_height(i, j),firegrid%z(k+1)) - firegrid%z(k)) / &[m[41m[m
+ 										fuels%actual_height(i, j) * ft%dz_array(kk)[m
+ 								endif[m
+ 							else[m

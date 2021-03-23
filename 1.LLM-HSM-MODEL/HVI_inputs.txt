@@ -1,0 +1,14 @@
+# HVI scoring metric
+# l_bnd: lower boundary 
+# h_bnd: high boundary,
+# mean: mean number of elements (trees) per area A, 
+# n and m: number of cols and rows in the area A(n,m)
+# R: range, score relaxation factor (sc=1 for all elements in [bn-s,bn+s]) 
+# param | l_bnd | h_bnd | mean | n | m | s |
+LPage, 50, 450, 5, 5, 5, 1
+LPheight, 15, 45, 5, 5, 5, 1
+LPdbh, 20, 35, 3, 15, 15, 1
+HWage, 50, 450, 2, 5, 5, 1
+HWheight, 10, 25, 2, 5, 5, 1
+ba, 10, 100, 20, 5, 5, 10
+

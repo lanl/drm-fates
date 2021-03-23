@@ -1,0 +1,6 @@
+Locaton Information
+ Lat       Long,       elevation,  TimeZone(0=Greenwich,England)
+30.606949  -86.500379   45.7        -7.0
+Time Information
+Year,  Month,  Day,  Hour,   Minute,  Second
+2019     5       2     0       0        0  

@@ -1,0 +1,465 @@
+[H[2J------------------------------------------
+WARNING: Source code was not recompiled
+------------------------------------------
+ Number of threads=           8
+ OpenMP Enabled.  Allocating           8 threads
+  **** Small cell physics turned on
+ Plume time step [s]:    1.00000000    
+ Initializing fire variables
+ Percentage of cells with fuel (fire domain):    98.0099945     %
+ Percentage of cells with fuel (QU domain):    4.45499992    
+ Writing FireCA output files
+ Calculating winds for 03/06/2017 10:00:00
+ Finished interpolating winds
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:      1
+ Fire time step #:   1; Fire time [s]:      2
+ Fire time step #:   1; Fire time [s]:      3
+ Fire time step #:   1; Fire time [s]:      4
+ Fire time step #:   1; Fire time [s]:      5
+ Fire time step #:   1; Fire time [s]:      6
+ Fire time step #:   1; Fire time [s]:      7
+ Fire time step #:   1; Fire time [s]:      8
+ Fire time step #:   1; Fire time [s]:      9
+ Fire time step #:   1; Fire time [s]:     10
+ Fire time step #:   1; Fire time [s]:     11
+ Fire time step #:   1; Fire time [s]:     12
+ Fire time step #:   1; Fire time [s]:     13
+ Fire time step #:   1; Fire time [s]:     14
+ Fire time step #:   1; Fire time [s]:     15
+ Fire time step #:   1; Fire time [s]:     16
+ Fire time step #:   1; Fire time [s]:     17
+ Fire time step #:   1; Fire time [s]:     18
+ Fire time step #:   1; Fire time [s]:     19
+ Fire time step #:   1; Fire time [s]:     20
+ Fire time step #:   1; Fire time [s]:     21
+ Fire time step #:   1; Fire time [s]:     22
+ Fire time step #:   1; Fire time [s]:     23
+ Fire time step #:   1; Fire time [s]:     24
+ Fire time step #:   1; Fire time [s]:     25
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:     26
+ Fire time step #:   1; Fire time [s]:     27
+ Fire time step #:   1; Fire time [s]:     28
+ Fire time step #:   1; Fire time [s]:     29
+ Fire time step #:   1; Fire time [s]:     30
+ Fire time step #:   1; Fire time [s]:     31
+ Fire time step #:   1; Fire time [s]:     32
+ Fire time step #:   1; Fire time [s]:     33
+ Fire time step #:   1; Fire time [s]:     34
+ Fire time step #:   1; Fire time [s]:     35
+ Fire time step #:   1; Fire time [s]:     36
+ Fire time step #:   1; Fire time [s]:     37
+ Fire time step #:   1; Fire time [s]:     38
+ Fire time step #:   1; Fire time [s]:     39
+ Fire time step #:   1; Fire time [s]:     40
+ Fire time step #:   1; Fire time [s]:     41
+ Fire time step #:   1; Fire time [s]:     42
+ Fire time step #:   1; Fire time [s]:     43
+ Fire time step #:   1; Fire time [s]:     44
+ Fire time step #:   1; Fire time [s]:     45
+ Fire time step #:   1; Fire time [s]:     46
+ Fire time step #:   1; Fire time [s]:     47
+ Fire time step #:   1; Fire time [s]:     48
+ Fire time step #:   1; Fire time [s]:     49
+ Fire time step #:   1; Fire time [s]:     50
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:     51
+ Fire time step #:   1; Fire time [s]:     52
+ Fire time step #:   1; Fire time [s]:     53
+ Fire time step #:   1; Fire time [s]:     54
+ Fire time step #:   1; Fire time [s]:     55
+ Fire time step #:   1; Fire time [s]:     56
+ Fire time step #:   1; Fire time [s]:     57
+ Fire time step #:   1; Fire time [s]:     58
+ Fire time step #:   1; Fire time [s]:     59
+ Fire time step #:   1; Fire time [s]:     60
+ Fire time step #:   1; Fire time [s]:     61
+ Fire time step #:   1; Fire time [s]:     62
+ Fire time step #:   1; Fire time [s]:     63
+ Fire time step #:   1; Fire time [s]:     64
+ Fire time step #:   1; Fire time [s]:     65
+ Fire time step #:   1; Fire time [s]:     66
+ Fire time step #:   1; Fire time [s]:     67
+ Fire time step #:   1; Fire time [s]:     68
+ Fire time step #:   1; Fire time [s]:     69
+ Fire time step #:   1; Fire time [s]:     70
+ Fire time step #:   1; Fire time [s]:     71
+ Fire time step #:   1; Fire time [s]:     72
+ Fire time step #:   1; Fire time [s]:     73
+ Fire time step #:   1; Fire time [s]:     74
+ Fire time step #:   1; Fire time [s]:     75
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:     76
+ Fire time step #:   1; Fire time [s]:     77
+ Fire time step #:   1; Fire time [s]:     78
+ Fire time step #:   1; Fire time [s]:     79
+ Fire time step #:   1; Fire time [s]:     80
+ Fire time step #:   1; Fire time [s]:     81
+ Fire time step #:   1; Fire time [s]:     82
+ Fire time step #:   1; Fire time [s]:     83
+ Fire time step #:   1; Fire time [s]:     84
+ Fire time step #:   1; Fire time [s]:     85
+ Fire time step #:   1; Fire time [s]:     86
+ Fire time step #:   1; Fire time [s]:     87
+ Fire time step #:   1; Fire time [s]:     88
+ Fire time step #:   1; Fire time [s]:     89
+ Fire time step #:   1; Fire time [s]:     90
+ Fire time step #:   1; Fire time [s]:     91
+ Fire time step #:   1; Fire time [s]:     92
+ Fire time step #:   1; Fire time [s]:     93
+ Fire time step #:   1; Fire time [s]:     94
+ Fire time step #:   1; Fire time [s]:     95
+ Fire time step #:   1; Fire time [s]:     96
+ Fire time step #:   1; Fire time [s]:     97
+ Fire time step #:   1; Fire time [s]:     98
+ Fire time step #:   1; Fire time [s]:     99
+ Fire time step #:   1; Fire time [s]:    100
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    101
+ Fire time step #:   1; Fire time [s]:    102
+ Fire time step #:   1; Fire time [s]:    103
+ Fire time step #:   1; Fire time [s]:    104
+ Fire time step #:   1; Fire time [s]:    105
+ Fire time step #:   1; Fire time [s]:    106
+ Fire time step #:   1; Fire time [s]:    107
+ Fire time step #:   1; Fire time [s]:    108
+ Fire time step #:   1; Fire time [s]:    109
+ Fire time step #:   1; Fire time [s]:    110
+ Fire time step #:   1; Fire time [s]:    111
+ Fire time step #:   1; Fire time [s]:    112
+ Fire time step #:   1; Fire time [s]:    113
+ Fire time step #:   1; Fire time [s]:    114
+ Fire time step #:   1; Fire time [s]:    115
+ Fire time step #:   1; Fire time [s]:    116
+ Fire time step #:   1; Fire time [s]:    117
+ Fire time step #:   1; Fire time [s]:    118
+ Fire time step #:   1; Fire time [s]:    119
+ Fire time step #:   1; Fire time [s]:    120
+ Fire time step #:   1; Fire time [s]:    121
+ Fire time step #:   1; Fire time [s]:    122
+ Fire time step #:   1; Fire time [s]:    123
+ Fire time step #:   1; Fire time [s]:    124
+ Fire time step #:   1; Fire time [s]:    125
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    126
+ Fire time step #:   1; Fire time [s]:    127
+ Fire time step #:   1; Fire time [s]:    128
+ Fire time step #:   1; Fire time [s]:    129
+ Fire time step #:   1; Fire time [s]:    130
+ Fire time step #:   1; Fire time [s]:    131
+ Fire time step #:   1; Fire time [s]:    132
+ Fire time step #:   1; Fire time [s]:    133
+ Fire time step #:   1; Fire time [s]:    134
+ Fire time step #:   1; Fire time [s]:    135
+ Fire time step #:   1; Fire time [s]:    136
+ Fire time step #:   1; Fire time [s]:    137
+ Fire time step #:   1; Fire time [s]:    138
+ Fire time step #:   1; Fire time [s]:    139
+ Fire time step #:   1; Fire time [s]:    140
+ Fire time step #:   1; Fire time [s]:    141
+ Fire time step #:   1; Fire time [s]:    142
+ Fire time step #:   1; Fire time [s]:    143
+ Fire time step #:   1; Fire time [s]:    144
+ Fire time step #:   1; Fire time [s]:    145
+ Fire time step #:   1; Fire time [s]:    146
+ Fire time step #:   1; Fire time [s]:    147
+ Fire time step #:   1; Fire time [s]:    148
+ Fire time step #:   1; Fire time [s]:    149
+ Fire time step #:   1; Fire time [s]:    150
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    151
+ Fire time step #:   1; Fire time [s]:    152
+ Fire time step #:   1; Fire time [s]:    153
+ Fire time step #:   1; Fire time [s]:    154
+ Fire time step #:   1; Fire time [s]:    155
+ Fire time step #:   1; Fire time [s]:    156
+ Fire time step #:   1; Fire time [s]:    157
+ Fire time step #:   1; Fire time [s]:    158
+ Fire time step #:   1; Fire time [s]:    159
+ Fire time step #:   1; Fire time [s]:    160
+ Fire time step #:   1; Fire time [s]:    161
+ Fire time step #:   1; Fire time [s]:    162
+ Fire time step #:   1; Fire time [s]:    163
+ Fire time step #:   1; Fire time [s]:    164
+ Fire time step #:   1; Fire time [s]:    165
+ Fire time step #:   1; Fire time [s]:    166
+ Fire time step #:   1; Fire time [s]:    167
+ Fire time step #:   1; Fire time [s]:    168
+ Fire time step #:   1; Fire time [s]:    169
+ Fire time step #:   1; Fire time [s]:    170
+ Fire time step #:   1; Fire time [s]:    171
+ Fire time step #:   1; Fire time [s]:    172
+ Fire time step #:   1; Fire time [s]:    173
+ Fire time step #:   1; Fire time [s]:    174
+ Fire time step #:   1; Fire time [s]:    175
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    176
+ Fire time step #:   1; Fire time [s]:    177
+ Fire time step #:   1; Fire time [s]:    178
+ Fire time step #:   1; Fire time [s]:    179
+ Fire time step #:   1; Fire time [s]:    180
+ Fire time step #:   1; Fire time [s]:    181
+ Fire time step #:   1; Fire time [s]:    182
+ Fire time step #:   1; Fire time [s]:    183
+ Fire time step #:   1; Fire time [s]:    184
+ Fire time step #:   1; Fire time [s]:    185
+ Fire time step #:   1; Fire time [s]:    186
+ Fire time step #:   1; Fire time [s]:    187
+ Fire time step #:   1; Fire time [s]:    188
+ Fire time step #:   1; Fire time [s]:    189
+ Fire time step #:   1; Fire time [s]:    190
+ Fire time step #:   1; Fire time [s]:    191
+ Fire time step #:   1; Fire time [s]:    192
+ Fire time step #:   1; Fire time [s]:    193
+ Fire time step #:   1; Fire time [s]:    194
+ Fire time step #:   1; Fire time [s]:    195
+ Fire time step #:   1; Fire time [s]:    196
+ Fire time step #:   1; Fire time [s]:    197
+ Fire time step #:   1; Fire time [s]:    198
+ Fire time step #:   1; Fire time [s]:    199
+ Fire time step #:   1; Fire time [s]:    200
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    201
+ Fire time step #:   1; Fire time [s]:    202
+ Fire time step #:   1; Fire time [s]:    203
+ Fire time step #:   1; Fire time [s]:    204
+ Fire time step #:   1; Fire time [s]:    205
+ Fire time step #:   1; Fire time [s]:    206
+ Fire time step #:   1; Fire time [s]:    207
+ Fire time step #:   1; Fire time [s]:    208
+ Fire time step #:   1; Fire time [s]:    209
+ Fire time step #:   1; Fire time [s]:    210
+ Fire time step #:   1; Fire time [s]:    211
+ Fire time step #:   1; Fire time [s]:    212
+ Fire time step #:   1; Fire time [s]:    213
+ Fire time step #:   1; Fire time [s]:    214
+ Fire time step #:   1; Fire time [s]:    215
+ Fire time step #:   1; Fire time [s]:    216
+ Fire time step #:   1; Fire time [s]:    217
+ Fire time step #:   1; Fire time [s]:    218
+ Fire time step #:   1; Fire time [s]:    219
+ Fire time step #:   1; Fire time [s]:    220
+ Fire time step #:   1; Fire time [s]:    221
+ Fire time step #:   1; Fire time [s]:    222
+ Fire time step #:   1; Fire time [s]:    223
+ Fire time step #:   1; Fire time [s]:    224
+ Fire time step #:   1; Fire time [s]:    225
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    226
+ Fire time step #:   1; Fire time [s]:    227
+ Fire time step #:   1; Fire time [s]:    228
+ Fire time step #:   1; Fire time [s]:    229
+ Fire time step #:   1; Fire time [s]:    230
+ Fire time step #:   1; Fire time [s]:    231
+ Fire time step #:   1; Fire time [s]:    232
+ Fire time step #:   1; Fire time [s]:    233
+ Fire time step #:   1; Fire time [s]:    234
+ Fire time step #:   1; Fire time [s]:    235
+ Fire time step #:   1; Fire time [s]:    236
+ Fire time step #:   1; Fire time [s]:    237
+ Fire time step #:   1; Fire time [s]:    238
+ Fire time step #:   1; Fire time [s]:    239
+ Fire time step #:   1; Fire time [s]:    240
+ Fire time step #:   1; Fire time [s]:    241
+ Fire time step #:   1; Fire time [s]:    242
+ Fire time step #:   1; Fire time [s]:    243
+ Fire time step #:   1; Fire time [s]:    244
+ Fire time step #:   1; Fire time [s]:    245
+ Fire time step #:   1; Fire time [s]:    246
+ Fire time step #:   1; Fire time [s]:    247
+ Fire time step #:   1; Fire time [s]:    248
+ Fire time step #:   1; Fire time [s]:    249
+ Fire time step #:   1; Fire time [s]:    250
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    251
+ Fire time step #:   1; Fire time [s]:    252
+ Fire time step #:   1; Fire time [s]:    253
+ Fire time step #:   1; Fire time [s]:    254
+ Fire time step #:   1; Fire time [s]:    255
+ Fire time step #:   1; Fire time [s]:    256
+ Fire time step #:   1; Fire time [s]:    257
+ Fire time step #:   1; Fire time [s]:    258
+ Fire time step #:   1; Fire time [s]:    259
+ Fire time step #:   1; Fire time [s]:    260
+ Fire time step #:   1; Fire time [s]:    261
+ Fire time step #:   1; Fire time [s]:    262
+ Fire time step #:   1; Fire time [s]:    263
+ Fire time step #:   1; Fire time [s]:    264
+ Fire time step #:   1; Fire time [s]:    265
+ Fire time step #:   1; Fire time [s]:    266
+ Fire time step #:   1; Fire time [s]:    267
+ Fire time step #:   1; Fire time [s]:    268
+ Fire time step #:   1; Fire time [s]:    269
+ Fire time step #:   1; Fire time [s]:    270
+ Fire time step #:   1; Fire time [s]:    271
+ Fire time step #:   1; Fire time [s]:    272
+ Fire time step #:   1; Fire time [s]:    273
+ Fire time step #:   1; Fire time [s]:    274
+ Fire time step #:   1; Fire time [s]:    275
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    276
+ Fire time step #:   1; Fire time [s]:    277
+ Fire time step #:   1; Fire time [s]:    278
+ Fire time step #:   1; Fire time [s]:    279
+ Fire time step #:   1; Fire time [s]:    280
+ Fire time step #:   1; Fire time [s]:    281
+ Fire time step #:   1; Fire time [s]:    282
+ Fire time step #:   1; Fire time [s]:    283
+ Fire time step #:   1; Fire time [s]:    284
+ Fire time step #:   1; Fire time [s]:    285
+ Fire time step #:   1; Fire time [s]:    286
+ Fire time step #:   1; Fire time [s]:    287
+ Fire time step #:   1; Fire time [s]:    288
+ Fire time step #:   1; Fire time [s]:    289
+ Fire time step #:   1; Fire time [s]:    290
+ Fire time step #:   1; Fire time [s]:    291
+ Fire time step #:   1; Fire time [s]:    292
+ Fire time step #:   1; Fire time [s]:    293
+ Fire time step #:   1; Fire time [s]:    294
+ Fire time step #:   1; Fire time [s]:    295
+ Fire time step #:   1; Fire time [s]:    296
+ Fire time step #:   1; Fire time [s]:    297
+ Fire time step #:   1; Fire time [s]:    298
+ Fire time step #:   1; Fire time [s]:    299
+ Fire time step #:   1; Fire time [s]:    300
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    301
+ Fire time step #:   1; Fire time [s]:    302
+ Fire time step #:   1; Fire time [s]:    303
+ Fire time step #:   1; Fire time [s]:    304
+ Fire time step #:   1; Fire time [s]:    305
+ Fire time step #:   1; Fire time [s]:    306
+ Fire time step #:   1; Fire time [s]:    307
+ Fire time step #:   1; Fire time [s]:    308
+ Fire time step #:   1; Fire time [s]:    309
+ Fire time step #:   1; Fire time [s]:    310
+ Fire time step #:   1; Fire time [s]:    311
+ Fire time step #:   1; Fire time [s]:    312
+ Fire time step #:   1; Fire time [s]:    313
+ Fire time step #:   1; Fire time [s]:    314
+ Fire time step #:   1; Fire time [s]:    315
+ Fire time step #:   1; Fire time [s]:    316
+ Fire time step #:   1; Fire time [s]:    317
+ Fire time step #:   1; Fire time [s]:    318
+ Fire time step #:   1; Fire time [s]:    319
+ Fire time step #:   1; Fire time [s]:    320
+ Fire time step #:   1; Fire time [s]:    321
+ Fire time step #:   1; Fire time [s]:    322
+ Fire time step #:   1; Fire time [s]:    323
+ Fire time step #:   1; Fire time [s]:    324
+ Fire time step #:   1; Fire time [s]:    325
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    326
+ Fire time step #:   1; Fire time [s]:    327
+ Fire time step #:   1; Fire time [s]:    328
+ Fire time step #:   1; Fire time [s]:    329
+ Fire time step #:   1; Fire time [s]:    330
+ Fire time step #:   1; Fire time [s]:    331
+ Fire time step #:   1; Fire time [s]:    332
+ Fire time step #:   1; Fire time [s]:    333
+ Fire time step #:   1; Fire time [s]:    334
+ Fire time step #:   1; Fire time [s]:    335
+ Fire time step #:   1; Fire time [s]:    336
+ Fire time step #:   1; Fire time [s]:    337
+ Fire time step #:   1; Fire time [s]:    338
+ Fire time step #:   1; Fire time [s]:    339
+ Fire time step #:   1; Fire time [s]:    340
+ Fire time step #:   1; Fire time [s]:    341
+ Fire time step #:   1; Fire time [s]:    342
+ Fire time step #:   1; Fire time [s]:    343
+ Fire time step #:   1; Fire time [s]:    344
+ Fire time step #:   1; Fire time [s]:    345
+ Fire time step #:   1; Fire time [s]:    346
+ Fire time step #:   1; Fire time [s]:    347
+ Fire time step #:   1; Fire time [s]:    348
+ Fire time step #:   1; Fire time [s]:    349
+ Fire time step #:   1; Fire time [s]:    350
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    351
+ Fire time step #:   1; Fire time [s]:    352
+ Fire time step #:   1; Fire time [s]:    353
+ Fire time step #:   1; Fire time [s]:    354
+ Fire time step #:   1; Fire time [s]:    355
+ Fire time step #:   1; Fire time [s]:    356
+ Fire time step #:   1; Fire time [s]:    357
+ Fire time step #:   1; Fire time [s]:    358
+ Fire time step #:   1; Fire time [s]:    359
+ Fire time step #:   1; Fire time [s]:    360
+ Fire time step #:   1; Fire time [s]:    361
+ Fire time step #:   1; Fire time [s]:    362
+ Fire time step #:   1; Fire time [s]:    363
+ Fire time step #:   1; Fire time [s]:    364
+ Fire time step #:   1; Fire time [s]:    365
+ Fire time step #:   1; Fire time [s]:    366
+ Fire time step #:   1; Fire time [s]:    367
+ Fire time step #:   1; Fire time [s]:    368
+ Fire time step #:   1; Fire time [s]:    369
+ Fire time step #:   1; Fire time [s]:    370
+ Fire time step #:   1; Fire time [s]:    371
+ Fire time step #:   1; Fire time [s]:    372
+ Fire time step #:   1; Fire time [s]:    373
+ Fire time step #:   1; Fire time [s]:    374
+ Fire time step #:   1; Fire time [s]:    375
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    376
+ Fire time step #:   1; Fire time [s]:    377
+ Fire time step #:   1; Fire time [s]:    378
+ Fire time step #:   1; Fire time [s]:    379
+ Fire time step #:   1; Fire time [s]:    380
+ Fire time step #:   1; Fire time [s]:    381
+ Fire time step #:   1; Fire time [s]:    382
+ Fire time step #:   1; Fire time [s]:    383
+ Fire time step #:   1; Fire time [s]:    384
+ Fire time step #:   1; Fire time [s]:    385
+ Fire time step #:   1; Fire time [s]:    386
+ Fire time step #:   1; Fire time [s]:    387
+ Fire time step #:   1; Fire time [s]:    388
+ Fire time step #:   1; Fire time [s]:    389
+ Fire time step #:   1; Fire time [s]:    390
+ Fire time step #:   1; Fire time [s]:    391
+ Fire time step #:   1; Fire time [s]:    392
+ Fire time step #:   1; Fire time [s]:    393
+ Fire time step #:   1; Fire time [s]:    394
+ Fire time step #:   1; Fire time [s]:    395
+ Fire time step #:   1; Fire time [s]:    396
+ Fire time step #:   1; Fire time [s]:    397
+ Fire time step #:   1; Fire time [s]:    398
+ Fire time step #:   1; Fire time [s]:    399
+ Fire time step #:   1; Fire time [s]:    400
+ Writing FireCA output files
+ Writing QU output files
+ Fire time step #:   1; Fire time [s]:    401
+ Fire time step #:   1; Fire time [s]:    402
+ Fire time step #:   1; Fire time [s]:    403
+ Fire time step #:   1; Fire time [s]:    404
+ Fire time step #:   1; Fire time [s]:    405
+ Fire time step #:   1; Fire time [s]:    406
+ Fire time step #:   1; Fire time [s]:    407
+ Fire time step #:   1; Fire time [s]:    408
+ Fire time step #:   1; Fire time [s]:    409
+ Fire time step #:   1; Fire time [s]:    410
+ Fire time step #:   1; Fire time [s]:    411
+ Fire time step #:   1; Fire time [s]:    412
+ Fire time step #:   1; Fire time [s]:    413
+ Fire time step #:   1; Fire time [s]:    414
+ Fire time step #:   1; Fire time [s]:    415
+ Fire time step #:   1; Fire time [s]:    416
+ Fire time step #:   1; Fire time [s]:    417
+ Fire time step #:   1; Fire time [s]:    418
+ Fire time step #:   1; Fire time [s]:    419

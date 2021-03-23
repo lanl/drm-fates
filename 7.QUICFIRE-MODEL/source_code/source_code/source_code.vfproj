@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console Application" Version="11.0" ProjectIdGuid="{829BC1F0-F819-4BDF-9523-3628F0142B2D}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Release|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Debug|x64">
+				<Tool Name="VFFortranCompilerTool" AdditionalOptions="-heap-arrays" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" MultiProcessorCompilation="true" Optimization="optimizeDisabled" SourceFileFormat="fileFormatFree" OpenMP="OpenMPSequentialCode" Diagnostics="diagnosticsShowAll" DebugParameter="debugParameterAll" WarnInterfaces="true" LocalSavedScalarsSNaN="true" InitArrays="true" FloatingPointExceptionHandling="fpe0" Traceback="true" NullPointerCheck="true" BoundsCheck="true" UninitializedVariablesCheck="true" DescriptorDataTypeCheck="true" DescriptorDataSizeCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Release|x64">
+				<Tool Name="VFFortranCompilerTool" AdditionalOptions="-heap-arrays&#xA;" SuppressStartupBanner="true" MultiProcessorCompilation="true" Optimization="optimizeFull" Parallelization="true" InterproceduralOptimizations="ipoMultiFile" SourceFileFormat="fileFormatFree" OpenMP="OpenMPParallelCode" DisableSpecificDiagnostics="7712" Diagnostics="diagnosticsShowAll" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="Header Files" Filter="fi;fd;h;inc"/>
+		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
+		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath=".\bisect.f90"/>
+		<File RelativePath=".\building_damage.f90"/>
+		<File RelativePath=".\building_parameterizations.f90"/>
+		<File RelativePath=".\buoyant_plume.f90"/>
+		<File RelativePath=".\cleanup.f90"/>
+		<File RelativePath=".\datamodule.f90"/>
+		<File RelativePath=".\datamodule_fire.f90"/>
+		<File RelativePath=".\datefunctions.f90"/>
+		<File RelativePath=".\diffusion.f90"/>
+		<File RelativePath=".\disturbedflow.f90"/>
+		<File RelativePath=".\divergence.f90"/>
+		<File RelativePath=".\euler.f90"/>
+		<File RelativePath=".\file_handling_module_file.f90"/>
+		<File RelativePath=".\FireCA_common_subs.f90"/>
+		<File RelativePath=".\FireCA_LDRD.f90"/>
+		<File RelativePath=".\GenerateQUWinds.f90"/>
+		<File RelativePath=".\init.f90"/>
+		<File RelativePath=".\interpolatewinds.f90"/>
+		<File RelativePath=".\interpolation_for_fire_grid.f90"/>
+		<File RelativePath=".\main.f90"/>
+		<File RelativePath=".\mersenne.f90"/>
+		<File RelativePath=".\outfile.f90"/>
+		<File RelativePath=".\plantinit.f90"/>
+		<File RelativePath=".\poisson.f90"/>
+		<File RelativePath=".\read_hotmac_met.f90"/>
+		<File RelativePath=".\read_ittmm5_met.f90"/>
+		<File RelativePath=".\read_quic_met.f90"/>
+		<File RelativePath=".\regress.f90"/>
+		<File RelativePath=".\sensorinit.f90"/>
+		<File RelativePath=".\sor3d.f90"/>
+		<File RelativePath=".\sort.f90"/>
+		<File RelativePath=".\surface_coords.f90"/>
+		<File RelativePath=".\turbulence_model.f90"/>
+		<File RelativePath=".\update_canopy.f90"/>
+		<File RelativePath=".\utilities.f90"/>
+		<File RelativePath=".\utmll.f90"/>
+		<File RelativePath=".\wallbc.f90"/></Filter></Files>
+	<Globals/></VisualStudioProject>
