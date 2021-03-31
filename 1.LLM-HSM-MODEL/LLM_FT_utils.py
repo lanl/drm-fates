@@ -176,16 +176,19 @@ def FT_LLM_FT_tlist(tid,tlist,new_count,CR,dbh,ht):
                 tlist.append(np.hstack((line0,line)) )
     return tlist
 
-def save_litter_LLM_FT(filename,ftitle,litter):
+def save_litter_LLM_FT(filename,ftitle,litter,fplot):
     [nx,ny]=litter.shape
-    print (nx,ny)
+    print ('shape of the litter matrix:',nx,ny)
     new_litter=regrid_LLM2FT(nx,ny,200,200,"linear",litter);
-    axx=plot_area_matrix(new_litter,ftitle,'yes')
-    print (litter.sum())
-    print (new_litter.sum())
+    if fplot=='plot':
+        axx=plot_area_matrix(new_litter,ftitle,'yes')
+    print ('sum of the old litter matrix:',litter.sum())
+    print ('sum of the old litter matrix:', new_litter.sum())
     np.savetxt(filename,  (1/(4*1.5))*new_litter, fmt='%.2f')
-    a=np.loadtxt(filename)
-    print (a.shape)
+    print ('litter file:',filename,' saved!')
+    #checking the size of the saved matrix
+    #a=np.loadtxt(filename)
+    #print (a.shape)
 
 def read_FT_2_LLM(file_litter,file_wg,file_tlist,pp,graph=0):
     # converting WG and tree litters and tree to LLM
@@ -341,3 +344,78 @@ def update_tree_info_per_location(pp,ftreelist,graph):
     print ('hw_newlist',np.shape(hw_newlist))
     
     return lp_newlist,hw_newlist
+
+def create_treelist(p,filename):
+    # Creates the treefile for Tree code and provides a quick look at the prduced dataset
+    # NOTE: this step is required only when we first time create treelist, then we used the 
+    #       same treelist.
+
+    lp_count=p.old_LPcount.copy()
+    lp_count[p.old_ht<1.37]=0
+    #counting HWs
+    hw_count=p.old_HWcount.copy()
+    hw_count[p.old_htHW<1.37]=0
+
+    x0=2.5 # start in the [0,0,5,5] cell
+    y0=2.5
+    llp_xy=[]
+    hw_xy=[]
+
+    [n,m]=lp_count.shape
+
+    for i in range(n):
+        x=x0+i*5
+        for j in range(m):
+            y=y0+j*5
+            if lp_count[i,j]!=0: #add long-leaf pines
+                if p.lp_dbh[i,j]>1:
+                    line=np.round([p.lp_CR[i,j],p.lp_dbh[i,j],p.old_ht[i,j]],3)
+                    for item in range(int(lp_count[i,j])):
+                        xx=random.uniform(-2.5,2.5)+x
+                        yy=random.uniform(-2.5,2.5)+y
+                        line0=np.round([1,xx,yy],3)
+                        llp_xy.append( np.hstack((line0,line)) )
+
+            if hw_count[i,j]!=0: #add hardwoods
+                if p.hw_dbh[i,j]>1:
+                    line=[p.hw_CR[i,j].round(2),p.hw_dbh[i,j].round(2),p.old_htHW[i,j].round(2)]
+                    for item in range(int(hw_count[i,j])):
+                        xx=random.uniform(-2.5,2.5)+x
+                        yy=random.uniform(-2.5,2.5)+y
+                        line0=np.round([2,xx,yy],3)
+                        hw_xy.append( np.hstack((line0,line)) )
+    print ('shape of llp (x,y):',np.shape(llp_xy))
+    print ('shape of hw (x,y):',np.shape(hw_xy))
+
+    df_hw = pd.DataFrame(hw_xy)
+    df = pd.DataFrame(llp_xy)
+    df=df.append(df_hw)
+    df.to_csv(filename, sep=' ',header=False,index=False)
+
+    data=np.loadtxt(filename)
+    [n,m]=data.shape
+    htlc=np.zeros(n)
+    hmaxcr=np.zeros(n)
+    canopydensity=np.zeros(n)
+    newdata=np.zeros((n,8))
+
+    htlc=data[:,-1]*0.7649-4.1628
+    htlc[htlc<0]=0
+    htlc[data[:,0]==2]=0
+    hmaxcr=htlc+.07
+    hmaxcr[data[:,0]==2]=0
+    canopydensity[data[:,0]==2]=0.6
+    canopydensity[data[:,0]==1]=0.2
+
+    newdata[:,0:3]=data[:,0:3]
+    newdata[:,3]=data[:,-1]
+    newdata[:,4]=htlc
+    newdata[:,5]=2*data[:,3] #Cdimater
+    newdata[:,6]=hmaxcr #Cdimater
+    newdata[:,7]=canopydensity
+    
+    df_new = pd.DataFrame(newdata)
+    df_new.to_csv(filename, sep=' ',header=False,index=False)
+    print (filename,'is created!')
+    
+    return
