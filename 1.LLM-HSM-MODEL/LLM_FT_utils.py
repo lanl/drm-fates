@@ -4,6 +4,22 @@ import random
 import pandas as pd
 import scipy.interpolate.ndgriddata as ndgriddata
 import matplotlib.pyplot as plt
+import struct
+
+def read_tree_dat_file(filename):
+    # Read all of the data
+    with open(filename, 'rb') as input_file:
+        data = input_file.read()
+
+    # Convert to list of floats
+    format = '{:d}f'.format(len(data)//4)
+    data = struct.unpack(format, data)
+
+    # Display some of the data
+    print (len(data), "entries")
+    print (data[0], data[1], data[2], "...")
+    
+    return data
 
 def regrid_LLM2FT(nx,ny,nx1,ny1,imethod="linear",data=[]):
     # methods: nearest, linear cubic 
@@ -183,7 +199,7 @@ def save_litter_LLM_FT(filename,ftitle,litter,fplot):
     if fplot=='plot':
         axx=plot_area_matrix(new_litter,ftitle,'yes')
     print ('sum of the old litter matrix:',litter.sum())
-    print ('sum of the old litter matrix:', new_litter.sum())
+    print ('sum of the new litter matrix:', new_litter.sum())
     np.savetxt(filename,  (1/(4*1.5))*new_litter, fmt='%.2f')
     print ('litter file:',filename,' saved!')
     #checking the size of the saved matrix
