@@ -144,13 +144,15 @@ class LLM:
         self.fireflag = zeros((self.dim,self.dim), 'float') # 0 = no fire, 1 = fire
         self.time_since_fire = zeros((self.dim,self.dim), 'float') # tracking time since fire by cell: for germ prob., litter
         self.mortflag = zeros((self.dim,self.dim)) # '0' = has not been checked for mortality; 1 = checked for mortality
+        self.lp_dbh = zeros((self.dim,self.dim), 'float') #Elchin added dbh
+        self.lp_CR = zeros((self.dim,self.dim), 'float') #Elchin added crown radius
 
         ''' Wiregrass initial values '''
         self.litterWG = zeros((self.dim,self.dim), 'float') 
         self.old_litterWG = zeros((self.dim,self.dim), 'float') # added for final map
         self.burntlitWG = zeros((self.dim,self.dim), 'float')
         self.max_wtWG = 6.25 # max weight of wiregrass within a cell - kg/cell, asymptote
-
+        
         ''' HW initial values '''
         self.old_HWcount = zeros((self.dim,self.dim), 'float')
         ##        self.old_HWcount = pickle.load(f4) # tracking no. of all HW trees in cell
@@ -175,8 +177,9 @@ class LLM:
         self.old_litterHW = zeros((self.dim,self.dim), 'float') # for final map
         self.burntlitHW = zeros((self.dim,self.dim), 'float') # burnt litter in cell
         self.mortflagHW = zeros((self.dim,self.dim)) # '0' = has not been checked for mortality
-
         self.total_burntlit = zeros((self.dim,self.dim), 'float') # burnt litter in cell from both HW & LLP & WG, used in mort_fire
+        self.hw_dbh = zeros((self.dim,self.dim), 'float') # Elchin added dbh
+        self.hw_CR = zeros((self.dim,self.dim), 'float') # Elchin added crown radius
 
         ''' time-elapsed graphs '''
 
