@@ -58,7 +58,7 @@ tdny          -- [0,ny*dy]            -- y range of the domain to be populated w
 ilitter       -- 0                    -- Flag for litter, 0 if no litter, 1 if litter distributed by vertical fuel-load \
 litterconstant-- 5                    -- Exponential constant to increase of litter mass under trees \
 litterfile    -- ‘ ‘                  -- Name of litterfile with additional information to be read \
-!-------------------------------------------------------------------------------------------------
+!------------------------------------------------------------------------------------------------- \
 itreatment    -- 0                    -- Flag for fuel treatments, 0 if no treatment, 1 if slashlayer, 2 if slashpiles, 3 if fuel removal \
 sdnx          -- [0,nx*dx]            -- x range of the domain over which a treatment is applied (m) \
 sdny          -- [0,ny*dy]            -- y range of the domain over which a treatment is applied (m) \
