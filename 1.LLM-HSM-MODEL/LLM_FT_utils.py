@@ -397,7 +397,7 @@ def create_treelist(p,filename):
     htlc=np.zeros(n)
     hmaxcr=np.zeros(n)
     canopydensity=np.zeros(n)
-    newdata=np.zeros((n,8))
+    newdata=np.zeros((n,10))
 
     htlc=data[:,-1]*0.7649-4.1628
     htlc[htlc<0]=0
@@ -413,6 +413,8 @@ def create_treelist(p,filename):
     newdata[:,5]=2*data[:,3] #Cdimater
     newdata[:,6]=hmaxcr #Cdimater
     newdata[:,7]=canopydensity
+    newdata[:,8]=np.ones(n)
+    newdata[:,9]=np.ones(n)*0.000347222
     
     df_new = pd.DataFrame(newdata)
     df_new.to_csv(filename, sep=' ',header=False,index=False)

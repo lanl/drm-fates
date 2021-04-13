@@ -20,7 +20,7 @@
       call define_baseline_variables 
       
       ! Fill grass arrays
-      if (igrass.ne.0) then     
+      if (igrass.eq.1) then !modified by EJ, before it was ne.0   
         print*,'Filling Grass Baseline'
         call grass_baseline
         do ift=1,ngrass
@@ -35,7 +35,7 @@
             enddo
           enddo
         enddo 
-      else
+      else !if (igrass.eq.0) then ! modified my EJ, before it was else only
         grhof(:,:,:,:)      = 0
         gmoist(:,:,:,:)     = 0
         gsizescale(:,:,:,:) = 0
@@ -119,9 +119,9 @@
       real,allocatable:: rhofxy(:,:)
 
       if (igrass.eq.2) then
-         print*,'Reading LLM WGlitter'
+         print*,"Reading LLM WG litter: ",grassfile
          allocate(rhofxy(nx,ny))
-         open(1, file="LLM_litter_WG.txt")
+         open(1, file=grassfile)
            read(1,*) rhofxy
          close(1)
       endif
@@ -376,9 +376,9 @@
       real,allocatable:: rhofxy(:,:)
 
       if (ilitter.eq.2) then
-          print*,'Reading LLM tree litter'
+          print*,'Reading LLM tree litter: ',litterfile
           allocate(rhofxy(nx,ny))
-          open(1, file="LLM_litter_trees.txt")
+          open(1, file=litterfile)
             read(1,*) rhofxy
           close(1)
       endif

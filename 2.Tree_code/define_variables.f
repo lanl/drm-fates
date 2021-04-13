@@ -93,7 +93,7 @@
       !-----------------------------------------------------------------
       ! Groundfuel variables unique to the ground fuels baseline
       !-----------------------------------------------------------------
-      if (igrass.ne.0) then
+      if (igrass.eq.1) then  ! EJ modified it, before it was ne.0, which did not work for igrass=2
         allocate(grho(ngrass))
         allocate(gmoisture(ngrass))
         allocate(gss(ngrass))
@@ -110,6 +110,7 @@
       !-----------------------------------------------------------------
       ! Tree variables unique to the tree baseline
       !-----------------------------------------------------------------
+      print*,"itrees:",itrees
       if (itrees.eq.1) then
         allocate(ntrees(ntspecies)) ! Number of trees for each species
         allocate(tcanopy(ntspecies)) ! Canopy closure [fraction]
@@ -120,7 +121,6 @@
         allocate(tbulkdensity(tfuelbins,ntspecies)) ! Crown fuel bulk density [kg/m3]
         allocate(tmoisture(tfuelbins,ntspecies)) ! Crown fuel moisture content [fraction]
         allocate(tss(tfuelbins,ntspecies)) ! Crown fuel size scale [m]
-      
         open (2,file=treefile)
         read (2,*) tcanopy
         read (2,*) theight(1,:)
