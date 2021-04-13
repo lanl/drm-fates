@@ -3,3 +3,4 @@
 #git rm --cached `git ls-files -i --exclude-from=.gitignore`
 .DS_Store
 __pycache__
+.ipynb_checkpoints
