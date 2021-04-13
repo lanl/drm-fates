@@ -1,7 +1,12 @@
-Tree program
+Tree program (customized)
 ------------
+_The original version of the code is developed and maintained by Alexander Josephson (email:alexanderj@lanl.gov). This version was customized by Elchin Jafarov to allow better compatibility with the  LLM-HSM._ The Trees program is a pre-processing tool used to virtually build forest fuel arrays to be read into FIRETEC or QUIC-Fire. This is meant to be a living document to be updated as the program evolves and is modified.
 
-The Trees program is a pre-processing tool used to virtually build forest fuel arrays to be read into FIRETEC or QUIC-Fire. This is meant to be a living document to be updated as the program evolves and is modified.
+Building and Executing
+------------
+A makefile is provided for building this software. Simply execute 'make' from the commandline in the location where the makefile is located. Specific configurations unique to a users build should be specified there.
+There are a number of possible input configurations available to the user but in basic when executed, the program will look for a file called 'fuellist' in the location from which the executable is called. This fuellist contains input parameters are specified. Any additional input files (ie grassfile, treefile, or litterfile) are specified within the fuellist. The four output tree files will be written to the location from which the exectuable is called.
+
 
 Program Outline
 ------------
@@ -122,12 +127,3 @@ This program creates four binary files each containing a full fortran array whic
 2. treesfueldepth.dat contains actual fuel depths for entire HIGRAD array (3D array, but only bottom layer actually used in fire simulations)
 3. treesss.dat contains sizescales for entire HIGRAD array
 4. treesmoist.dat contains fuel moisture contents for entire HIGRAD array
-
-Modifications
-------------
-Under-development so modifications happening all the time and not recorded here for now.
-
-Building and Executing
-------------
-A makefile is provided for building this software. Simply execute 'make' from the commandline in the location where the makefile is located. Specific configurations unique to a users build should be specified there.
-There are a number of possible input configurations available to the user but in basic when executed, the program will look for a file called 'fuellist' in the location from which the executable is called. This fuellist contains input parameters are specified. Any additional input files (ie grassfile, treefile, or litterfile) are specified within the fuellist. The four output tree files will be written to the location from which the exectuable is called.
