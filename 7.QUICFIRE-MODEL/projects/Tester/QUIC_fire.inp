@@ -16,7 +16,7 @@
 0					! Vertical stretching flag: 0 = uniform dz, 1 = custom
 1.000000                                ! Uniform dz for fuel grid
 ! FOLDER OF TREES AND IGNITION FILES (full path, empty line if none) -- USE FILE SEPARATOR AT THE END
-"/lustre/scratch4/turquoise/.mdt2/aatchley/Eglin/QUICFIRE-MODEL/projects/ftFiles/"
+"/Users/elchin/Documents/Adams_project/llm-hsm-ft/7.QUICFIRE-MODEL/projects/ftFiles/"
 1
 ! FUEL
 4					! fuel density flag: 1 = uniform; 2 = provided thru QF_FuelDensity.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)
