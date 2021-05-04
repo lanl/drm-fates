@@ -30,6 +30,13 @@
       open(unit=15,file='Inputs/fuellist',form='formatted',status='old')
            read (15,nml=fuellist)
       close(15)
+      print*,'Inputs/fuellist file is read!'
+      print*,'nx,ny,nz: ',nx,ny,nz
+      print*,'dx,dy,dz: ',dx,dy,dz
+      print*,'grassfile: ',grassfile
+      print*,'treefile: ',treefile
+      print*,'litterfile: ',litterfile
+      print*, '---------------------'
 
       ! Corrections for if variables not specifiedi on namelist
       if (tdnx(1).eq.0) then
@@ -69,24 +76,30 @@
         if (nonzero(ift).ne.0)  write (1) rhof(ift,:,:,1:lfuel)
       enddo
       close (1)
+      print*,"------------------------------"
+      print*,"treesrhof.dat is created!"
 
       open (1,file='treesfueldepth.dat',form='unformatted',status='unknown')
       do ift=1,nfuel
         if (nonzero(ift).ne.0)  write (1) fueldepth(ift,:,:,1)
       enddo
       close (1)
+      print*,"treesfueldepth.dat is created!"
 
       open (1,file='treesss.dat',form='unformatted',status='unknown')
       do ift=1,nfuel
         if (nonzero(ift).ne.0)  write (1) sizescale(ift,:,:,1:lfuel)
       enddo
       close (1)
+      print*,"treesss.dat is created!"
 
       open (1,file='treesmoist.dat',form='unformatted',status='unknown')
       do ift=1,nfuel
         if (nonzero(ift).ne.0)  write (1) moist(ift,:,:,1:lfuel)
       enddo
       close (1)
+      print*,"treesmoist.dat is created!"
+      print*,"------------------------------"
 
       print*,'Your nfuel is',int(sum(nonzero(:)))
       print*,'Your lfuel is',lfuel
