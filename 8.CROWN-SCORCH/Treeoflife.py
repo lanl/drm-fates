@@ -97,7 +97,7 @@ smallllp = 1
 tf = open(fnameIn2, 'r')
 td = open(fnameIn3, 'r')
 aft = open(fnameOut, 'wb')
-for e_tf, e_td in itertools.izip(tf, td):
+for e_tf, e_td in zip(tf, td):
   line_tf = e_tf.split()
   line_td = e_td.split()
   #print (line_td)
