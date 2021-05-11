@@ -5,6 +5,7 @@ import pandas as pd
 import scipy.interpolate.ndgriddata as ndgriddata
 import matplotlib.pyplot as plt
 import struct
+import os
 
 def read_tree_dat_file(filename):
     # Read all of the data
@@ -435,5 +436,150 @@ def create_treelist(p,filename):
     df_new = pd.DataFrame(newdata)
     df_new.to_csv(filename, sep=' ',header=False,index=False)
     print (filename,'is created!')
+    
+    return
+
+def Treeoflife(file_names):
+
+    file_in_pfc    = file_names[0] # percent fuel change
+    file_in_tt     = file_names[1] # Tree Tracker
+    file_in_tl     = file_names[2] # treelist from LLM2QF/LLM2FT/
+    file_in_llmlwg = file_names[3] # LLM_litter_WG from LLM2QF/LLM2FT/
+    file_in_llmlt  = file_names[4] # LLM_litter_trees from LLM2QF/LLM2FT/
+    file_out_aft   = file_names[5] # AfterFireTrees to QF2LLM/FT2LLM
+    file_out_afwg  = file_names[6] # AfterFireWG to QF2LLM/FT2LLM
+    file_out_afl   = file_names[7] # AfterFireLitter to QF2LLM/FT2LLM
+    
+    # DEFINE DOMAIN
+    Nx = 200
+    Ny = 200
+    Nz = 16
+    s = (200,200)
+    cellnum = 0
+    cellptr = 0
+    conccell = 0
+    array1d = 0
+    array1d = Nx*Ny*Nz
+    groundf = Nx*Ny
+    percentFuelChang1d = np.zeros(array1d)
+    grassfuel = np.zeros(groundf)
+    litterfuel = np.zeros(groundf)
+    newgrassfuel = np.zeros(s)
+    newlitterfuel = np.zeros(s)
+
+    # READ IN PERCENT FUEL AFTER Burn
+    pfc = open(file_in_pfc, 'r')
+    count = 0
+    for line in pfc:
+        percentFuelChang1d[count] = line
+        count = count + 1
+
+    pfc.close()
+    print(percentFuelChang1d[8], percentFuelChang1d[47777])
+    print (type(percentFuelChang1d[8]))
+
+    ## JUST CHECKING HERE TO SEE HOW MANY CELL'S REDUCED FUEL
+    ccc = 0
+    cc = 0
+    c = 0
+    for locz in range (Nz):
+        for locy in range(Ny):
+            for locx in range(Nx):
+                ccc = locx + (locy*Nx) + (Nx*Ny*locz)
+                #print locx, locy, locz, ccc
+                if locz == 0:
+                    if percentFuelChang1d[ccc] < 1:
+                        c = c + 1
+            if percentFuelChang1d[ccc] < 1:
+                cc = cc + 1
+               #print locx, locy, locz, cc
+    print (cc, c)
+
+    ## READ IN GROUND FUEL
+    gf = open(file_in_llmlwg, 'r')
+    grassfuel = gf.read().split()
+    gf.close()
+    lf = open(file_in_llmlt, 'r')
+    litterfuel = lf.read().split()
+    lf.close()
+    gloc = 0
+    planarloc = 0
+    print (grassfuel[0],grassfuel[1],grassfuel[2],grassfuel[200],type(grassfuel[200]))
+    ### ASSUMED A PLANAR VIEW OF LITTER AND GRASS ARRAYS FROM LLM **** BUT NEED TO CHECK !!!!!!!
+    for locy in range(Ny):
+        for locx in range(Nx):
+            gloc = locx + (locy * Nx)
+            ### THIS IS TO CONVERT CARTISIAN TO PLANAR **** MAY NOT BE NECESSARY **** 
+            planarloc = (Nx*(Ny-1)-(locy*Nx)) + locx
+            newgrassfuel[locy,locx] = float(grassfuel[gloc]) * percentFuelChang1d[planarloc]
+            newlitterfuel[locy,locx] = float(litterfuel[gloc]) * percentFuelChang1d[planarloc]
+            #print (gloc, locx, locy, planarloc, percentFuelChang1d[planarloc], grassfuel[gloc], newgrassfuel[locx,locy])
+    #print (newgrassfuel[:,:])
+    #afw = open(fnameOut2, 'wb')
+    #afw.write(newgrassfuel[:,:])
+    #afw.close() 
+    np.savetxt(file_out_afwg, newgrassfuel,fmt='%10.2f')
+    np.savetxt(file_out_afl, newlitterfuel,fmt='%10.2f')
+    print (file_out_afwg,'saved!')
+    print (file_out_afl,'saved!')
+
+    cc = 0
+    c6 = 0
+    c7 = 0
+    ## READ IN TREE TRACKER FILE
+    newfuel = 0.0
+    sppflag = 0
+    smallturk = 1
+    smallllp = 1
+
+    tf = open(file_in_tt, 'r')
+    td = open(file_in_tl, 'r')
+    aft = open(file_out_aft, 'w')
+    for e_tf, e_td in zip(tf, td):
+        #print (e_td)
+        line_tf = e_tf.split()
+        line_td = e_td.split()
+        #print ('line_tf',line_tf)
+        #print ('line_td',line_td)
+        #print (line_tf[1])
+        cellnum = int(line_tf[1])
+        #print (line_tf[1],cellnum)
+        totfuel = 0.0
+        sppflag = int(line_td[0])
+        #print(line_td[0], sppflag)
+        for cid in range(cellnum):
+            cellptr = int(line_tf[cid+2])
+            conccell = float(line_tf[cid+2+cellnum])
+            newfuel = percentFuelChang1d[cellptr] * conccell
+            totfuel = totfuel + newfuel
+            cc = cc + 1
+        if sppflag == 1:
+            if smallllp > totfuel:
+                smallllp = totfuel
+            if totfuel > 0.30:
+                aft.write(e_td)
+            #print ("LLP", totfuel)
+            else:
+                c6 = c6 + 1
+        elif sppflag == 2:
+            if smallturk > totfuel:
+                smallturk = totfuel
+            if totfuel > 0.75:
+                aft.write(e_td)
+            #print ("TurkeyOak", totfuel)
+            else:
+                c7 = c7 + 1
+
+    print ("")
+    print ("")
+    print ('used these files:',file_in_tt,file_in_tl)
+    print ('to produce this files:',file_out_aft)
+    print ('Small LLP',smallllp,c6,'Small Turk',smallturk,c7, cc)
+    
+    return
+
+def check_file_exists(fname):
+    if not os.path.exists(fname):
+        print("ERROR: File ",fname,' was not found!')
     
     return
