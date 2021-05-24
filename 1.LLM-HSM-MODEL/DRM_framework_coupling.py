@@ -1,6 +1,6 @@
-# This a master coupling script, that should streamline all the components of the DRM framework
+# This a master coupling script, that streamlines all the components of the DRM framework
 #
-#(c) Elchin Jafarov 03/30/2021
+# (c) Elchin Jafarov 03/30/2021
 
 import numpy as np
 import hsiscore_class as HSI
@@ -22,7 +22,6 @@ import postfuelfire_new as pff
 def LLMspinup(nyears):
     # --spinup run ---
     p = llm.LLM()     # assign p to the llm class
-    #NOTE: p.instantiate(0) start from scratch
     p.dim = 80
     p.instantiate(0)  # 1: reads input data from file, 0: generate inputs internally
     p.readfireprobfromfile=0
@@ -145,7 +144,6 @@ def runQF():
     #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
     #that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
-    #import postfuelfire_new as pff
     pff.main(900) #ASK ADAM!
     
     return
@@ -222,6 +220,5 @@ for i in range(ncycle):
     runQF()                           # runs QuickFire
     runCrownScorch()                  # runs the tree program to create LLM inputs 
     llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
-    llm=dbh_cr(llm)
     savelittersLLMQF(llm)
-    updateTreelist(llm)
+    updateTreelist(llm)               # this also updates dbh and cr 
