@@ -1,11 +1,11 @@
- Percentage of cells with fuel (fire domain):    19.7826004     %
- Percentage of cells with fuel (QU domain):    14.1528416     %
- Simulation time =          209 s
- Sub time #           1 :           69
- Sub time #           2 :           58
- Sub time #           3 :           42
- Sub time #           4 :           27
+ Percentage of cells with fuel (fire domain):    27.4344006     %
+ Percentage of cells with fuel (QU domain):    21.0715904     %
+ Simulation time =          798 s
+ Sub time #           1 :          108
+ Sub time #           2 :          623
+ Sub time #           3 :           35
+ Sub time #           4 :           22
  !==========================================
- Maximum plume height [m]:    77.6028595    
- Maximum plume w [m/s]:    31.5077953    
+ Maximum plume height [m]:    105.445511    
+ Maximum plume w [m/s]:    108.653435    
  Maximum domain height [m]:    94.2500000    
