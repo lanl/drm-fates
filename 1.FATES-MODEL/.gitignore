@@ -12,6 +12,8 @@
 !.gitignore
 !*.py
 !*.R
+!*.yaml
+!*.sh
 # Ignore tehse directories
 **/data-raw/
 **/results/
