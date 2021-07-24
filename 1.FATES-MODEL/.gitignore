@@ -1,0 +1,17 @@
+# https://jasonstitt.com/gitignore-whitelisting-patterns
+# Ignore everything
+*
+# But descend into directories
+!*/
+# Un-ignore specific files under subtree
+!R/**
+!code/**
+## Recursively allow files under subtree
+#!/data/**
+## but not these files
+!.gitignore
+!*.py
+!*.R
+# Ignore tehse directories
+**/data-raw/
+**/results/
