@@ -9,6 +9,9 @@ Phillip J. Wolfram
 
 Modified by Chonggang Xu
 May 8th,2021
+
+Modified by Rutuja Chitra-Tarak
+July 24th, 2021
 """
 import numpy as np
 import shutil
@@ -29,8 +32,13 @@ def run_case(casebase,runroot, finalfiletag, startitem,samplenum): # {{{
   test_array[:,0]=2000
   test_array[:,1]= range(365)
   test_array[:,1]= test_array[:,1]+1
-  filename ='HU.'+ str(samplenum+startitem)+'.csv' 
   header='year, doy, wetness1, wetness2, wetness3'
+  
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  results_folder=dir_path + '/results'
+  if not os.path.exists(results_folder):
+    os.makedirs(results_folder)
+  filename = results_folder + '/HU.'+ str(samplenum+startitem)+'.csv'
   np.savetxt(filename, test_array,comments='', header=header, delimiter=',') 
   #if os.path.isdir(casename):
   #  if os.path.exists(rundir + '/' + finalfile):
