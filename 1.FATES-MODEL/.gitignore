@@ -6,8 +6,7 @@
 # Un-ignore specific files under subtree
 !R/**
 !code/**
-## Recursively allow files under subtree
-#!/data/**
+!OutputExtract/*.R
 ## but not these files
 !.gitignore
 !*.py
