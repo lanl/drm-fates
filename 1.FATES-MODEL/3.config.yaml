@@ -6,7 +6,7 @@ LOG_PATH: '/turquoise/usr/projects/veg/cxu/ACME_cases/DRToyModel/log'
 OUTPUT_DIR: '/lustre/scratch3/turquoise/cxu/ACME/cases/DRToyModel'
 OUTPUT_TYPE: 'csv' 
 CASE_BASE: 'TEST.HPU'
-HPU_PATH: 'HPU.Table' 
+HPU_PATH: 'HPU.Table.csv' 
 HPU_ID_START: 1
 HPU_ID_END: 2
 DURATION: 10 
