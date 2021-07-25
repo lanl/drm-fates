@@ -1,4 +1,4 @@
-1. To create and activate a conda environment with all the python and R modules needed
+1. To create and activate a conda environment with all the python and R modules needed, run this in a shell
 ```
 ./create.conda.env.sh
 ```
