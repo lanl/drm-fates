@@ -11,7 +11,7 @@ from rpy2.robjects.conversion import localconverter
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 R_file = '4.generate.inputs.R'
-surf_basefile_rel_path = 'data-raw/surfdata_bci_panama_v1_c171113.nc'
+surf_basefile_rel_path = 'params/surfdata_bci_panama_v1_c171113.nc'
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
