@@ -36,7 +36,7 @@ conda config --add envs_dirs $currentdir
 conda remove --prefix $currentdir/conda_env --all
 
 # Create a conda environment with a specified name, conda_env, and a desired list of modules and their versions
-conda create --name conda_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py yaml
+conda create --name conda_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py pyyaml
 
 # Activate the environment. Activation prepends to PATH.
 conda activate conda_env
