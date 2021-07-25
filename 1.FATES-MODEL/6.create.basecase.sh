@@ -1,0 +1,183 @@
+#!/bin/sh
+# =======================================================================================
+#
+# This script will create, setup and build a single-site simulation at 
+# Barro Colorado Island, Panama
+#
+# A specialized domain and surface file was generated using Gautam Bisht's
+# "matlab-script-for-clm-sparse-grid".
+#
+# Meteorological driving data was prepared using Ryan Knox's "ConvertMetCSVtoCLM".
+# PLEASE SEE THE DRIVER DATA'S METADATA FOR ACKNOWLEDGMENTS AND ATTRIBUTION
+#
+# In this implementation, meteorological data will be cycled based on the data
+# offsets.  We make use of "CLM1PT" datm mode, and make a minor modification to the
+# default stream-file to signal to CLM/ELM that no downwelling long-wave is available
+# in our dataset.
+#
+# The base-version of this script, works off the assumption that driver data
+# and surface/domain data have been unpaciked in the cime/scripts directory
+# and can all be found in a parent directory with alias $SITE_DIR
+#
+#
+# Ryan Knox (Mon Nov 13 13:53:03 PST 2017)
+# Updated to 14 year BCI record Nov 14
+#
+# USER SETTINGS
+# USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
+# =======================================================================================
+
+export SITE_NAME=bci_0.1x0.1_v4.0i                         # Name of folder with site data
+export SITE_BASE_DIR=`pwd`                                 # Where is the site folder located? (SITE_NAME)
+export TAG='BCI'                                           # User defined tag to differentiate runs
+export COMPSET=ICLM45ED                                    # Compset (probably ICLM45ED or ICLM50ED)
+export MAC=badger                                           # Name your machine
+export COMPILER=intel                                      # Name your compiler
+export CASEROOT=${SITE_BASE_DIR}                               # Where the build is generated (probably on scratch partition)
+export CLM_USRDAT_DOMAIN=params/domain_bci_panama_v1_c171113.nc   # Name of domain file in scripts/${SITE_DIR}/
+export CLM_USRDAT_SURDAT=params/surf.params/surfdata_bci_panama_v1_c171113.1.nc # Name of surface file in scripts/${SITE_DIR}/
+
+
+# DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
+# =======================================================================================
+export CLM_SURFDAT_DIR=${SITE_BASE_DIR}/${SITE_NAME}
+export CLM_DOMAIN_DIR=${SITE_BASE_DIR}/${SITE_NAME}
+export DIN_LOC_ROOT_FORCE=${SITE_BASE_DIR}
+export FATES_PARAM_DIR=${SITE_BASE_DIR}/params  #location of FATES parameter file
+export ELM_PARAM_DIR=${SITE_BASE_DIR}/params/elm.params  #location of ELM parameter file
+
+export CLM_HASH=`cd ${ACME_ROOT}/components/clm/;git log -n 1 --pretty=%h`
+export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git log -n 1 --pretty=%h)`
+export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
+export RES=CLM_USRDAT
+export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.'met.v5.2016-2018'
+export FATES_PARAM=fates_params_default_13Nov2019_1pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
+export ELM_PARAM=parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
+
+
+ #REMOVE EXISTING CASE IF PRESENT
+rm -r ${CASEROOT}/${CASE_NAME}
+
+# CREATE THE CASE
+${ACME_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial"
+
+
+cd ${CASEROOT}/${CASE_NAME} 
+
+
+# SET PATHS TO SCRATCH ROOT, DOMAIN AND MET DATA (USERS WILL PROB NOT CHANGE THESE)
+# =================================================================================
+
+./xmlchange -file env_run.xml -id ATM_DOMAIN_FILE -val ${CLM_USRDAT_DOMAIN}
+./xmlchange -file env_run.xml -id ATM_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
+./xmlchange -file env_run.xml -id LND_DOMAIN_FILE -val ${CLM_USRDAT_DOMAIN}
+./xmlchange -file env_run.xml -id LND_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
+./xmlchange -file env_run.xml -id DATM_MODE -val CLM1PT
+./xmlchange -file env_run.xml -id CLM_USRDAT_NAME -val ${SITE_NAME}
+./xmlchange -file env_run.xml -id DIN_LOC_ROOT_CLMFORC -val ${DIN_LOC_ROOT_FORCE}
+#./xmlchange -file env_build.xml -id CESMSCRATCHROOT -val ${CASE_NAME}
+
+# SPECIFY PE LAYOUT FOR SINGLE SITE RUN (USERS WILL PROB NOT CHANGE THESE)
+# =================================================================================
+
+./xmlchange NTASKS_ATM=1
+./xmlchange NTASKS_CPL=1
+./xmlchange NTASKS_GLC=1
+./xmlchange NTASKS_OCN=1
+./xmlchange NTASKS_WAV=1
+./xmlchange NTASKS_ICE=1
+./xmlchange NTASKS_LND=1
+./xmlchange NTASKS_ROF=1
+./xmlchange NTASKS_ESP=1
+./xmlchange ROOTPE_ATM=0
+./xmlchange ROOTPE_CPL=0
+./xmlchange ROOTPE_GLC=0
+./xmlchange ROOTPE_OCN=0
+./xmlchange ROOTPE_WAV=0
+./xmlchange ROOTPE_ICE=0
+./xmlchange ROOTPE_LND=0
+./xmlchange ROOTPE_ROF=0
+./xmlchange ROOTPE_ESP=0
+./xmlchange NTHRDS_ATM=1
+./xmlchange NTHRDS_CPL=1
+./xmlchange NTHRDS_GLC=1
+./xmlchange NTHRDS_OCN=1
+./xmlchange NTHRDS_WAV=1
+./xmlchange NTHRDS_ICE=1
+./xmlchange NTHRDS_LND=1
+./xmlchange NTHRDS_ROF=1
+./xmlchange NTHRDS_ESP=1
+
+# SPECIFY RUN TYPE PREFERENCES (USERS WILL CHANGE THESE)
+# =================================================================================
+
+./xmlchange -file env_build.xml -id DEBUG -val FALSE
+./xmlchange -file env_run.xml -id STOP_N -val 50
+./xmlchange -file env_run.xml -id RUN_STARTDATE -val '1971-01-01'
+./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
+./xmlchange -file env_run.xml -id REST_N -val 10
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val 1971
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val 2020
+
+# ========
+# MACHINE SPECIFIC, AND/OR USER PREFERENCE CHANGES (USERS WILL CHANGE THESE)
+# =================================================================================
+
+#./xmlchange -file env_build.xml -id GMAKE -val make
+#./xmlchange -file env_run.xml -id BATCHQUERY -val ''
+#./xmlchange -file env_run.xml -id BATCHSUBMIT -val ''
+#./xmlchange -file env_run.xml -id DOUT_S_SAVE_INTERIM_RESTART_FILES -val TRUE
+#./xmlchange -file env_run.xml -id DOUT_S -val TRUE
+#./xmlchange -file env_run.xml -id DOUT_S_ROOT -val '$CASEROOT/run'
+#./xmlchange -file env_run.xml -id RUNDIR -val ${CASE_NAME}/run
+#./xmlchange -file env_build.xml -id EXEROOT -val ${CASE_NAME}/bld
+
+
+# SPECIFY INPUT DATA (USERS WILL CHANGE THESE)
+# =================================================================================
+./xmlchange  DIN_LOC_ROOT=/usr/projects/cesm/input_data
+
+# ========
+# MODIFY THE CLM NAMELIST (USERS MODIFY AS NEEDED)
+# =================================================================================
+
+cat >> user_nl_clm <<EOF
+fsurdat = '${CLM_SURFDAT_DIR}/${CLM_USRDAT_SURDAT}'
+fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
+paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
+use_fates_spitfire = .false.
+use_fates_planthydro = .false.
+use_fates_ed_st3 = .true.
+use_var_soil_thick = .true.
+!hist_empty_htapes = .true.
+use_fates_inventory_init = .false.
+fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/bci_inv_file_list.txt'
+hist_fincl2 = 'H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
+hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA', 
+'EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
+hist_nhtfrq = 0, -24, -1
+hist_mfilt = 1, 365, 8760
+EOF
+
+# Useful user_nl_clm arguments: 
+# This couplet will enable hourly output
+# hist_mfilt             = 480      
+# hist_nhtfrq            = -1  
+# #hist_fincl1='NEP','NPP','GPP','TLAI','TSOI_10CM','QVEGT','EFLX_LH_TOT','AR','HR','ED_biomass','ED_bleaf','ED_balive','DDBH_S#CPF','BA_SCPF','NPLANT_SCPF','M1_SCPF','M2_SCPF','M3_SCPF','M4_SCPF','M5_SCPF','M6_SCPF','WIND','ZBOT','FSDS','RH','TBOT','P#BOT','QBOT','RAIN','FLDS'
+
+# MODIFY THE DATM NAMELIST (DANGER ZONE - USERS BEWARE CHANGING)
+
+cat >> user_nl_datm <<EOF
+taxmode = "cycle", "cycle", "cycle"
+EOF
+
+./case.setup
+
+# HERE WE NEED TO MODIFY THE STREAM FILE (DANGER ZONE - USERS BEWARE CHANGING)
+./preview_namelists
+cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.CLM_USRDAT user_datm.streams.txt.CLM1PT.CLM_USRDAT
+`sed -i '/FLDS/d' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
+`sed -i 's/CLM1PT_data/bci_0.1x0.1_met.v5.1/' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
+
+./case.build
+
