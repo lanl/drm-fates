@@ -32,10 +32,10 @@ conda config --add envs_dirs $currentdir
 # conda config --remove envs_dirs $currentdir 
 
 # To remove older conda env
-conda remove conda_env
+conda remove --prefix $currentdir/conda_env --all
 
 # Create a conda environment with a specified name, conda_env, and a desired list of modules and their versions
-conda create --name conda_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py
+conda create --name conda_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py yaml
 
 # Activate the environment
 conda activate conda_env
@@ -47,8 +47,7 @@ conda install -c conda-forge tzlocal
 # chmod +x create.conda.env.sh
 # Run with
 #./create.conda.env.sh
-# you will be prompted if an exisiting command by the same name in teh current dir needs to be replaced
-# And whether to proceed to load all the modules.
+
 
 # Make sure the conda env is on the PATH
 echo $PATH
