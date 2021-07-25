@@ -1,4 +1,7 @@
+#-------------------------------------------------
 # Generate surface data files with varying parameters 
+# Modified by Rutuja Chitra-Tarak
+# July 15, 2021
 #-------------------------------------------------
 
 #-------------------------------------------------
