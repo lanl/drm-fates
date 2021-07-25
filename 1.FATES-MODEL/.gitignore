@@ -17,3 +17,4 @@
 # Ignore tehse directories
 **/data-raw/
 **/results/
+**/conda_env/
