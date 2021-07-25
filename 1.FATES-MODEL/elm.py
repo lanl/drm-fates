@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default='3.config.yaml')
+                    default='config.yaml')
 args = parser.parse_args()
 
 # generate surface data input
@@ -23,7 +23,7 @@ HPU_ID_END = config_dict['HPU_ID_END']
 HPU_PATH = config_dict['HPU_PATH']
 LOG_PATH = config_dict['LOG_PATH']
 #HPU.table = read.csv(HPU_PATH)
-
 t= HPU_ID_END - HPU_ID_START + 1
-command = "python 7.parallel.run.random.py -c 'BCI.ICLM45ED.wolf.intel.Cb14cb81-F812a621.' -r /lustre/scratch3/turquoise/cxu/ACME/cases -f clm2.h0.2003-12.nc"+ " -s " +str(HPU_ID_START) + " -t " + str(t)+ " -g " + str(LOG_PATH)
+
+command = "python parallel.run.random.py -c BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.met.v5.2016-2018. -r /lustre/scratch3/turquoise/rutuja/ACME/cases -f clm2.h0.2018-12.nc"+ " -s " +str(HPU_ID_START) + " -t " + str(t)+ " -g " + str(LOG_PATH)
 os.system(command)

@@ -22,3 +22,9 @@ python generate_Sen_Cases.py
 ```
 python run_elm.py
 ```
+
+6. To find which cases are complete (OutputExtract/Filter.txt) and which are not (OutputExtract/Missing.txt), run:
+```
+python create.filter.py
+```
+
