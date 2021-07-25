@@ -15,7 +15,8 @@
 !*.yaml
 !*.sh
 !*.csh
-# Ignore tehse directories
+# Ignore these directories
+**/BCI.ICLM45ED.badger.intel*/
 **/data-raw/
 **/results/
 **/conda_env/
