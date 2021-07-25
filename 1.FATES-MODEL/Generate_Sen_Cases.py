@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default='3.config.yaml')
+                    default='config.yaml')
 args = parser.parse_args()
 
 # generate surface data input
