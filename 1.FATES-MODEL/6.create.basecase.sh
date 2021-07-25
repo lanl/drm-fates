@@ -180,4 +180,4 @@ cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.CLM_USRDAT user_datm.str
 `sed -i 's/CLM1PT_data/bci_0.1x0.1_met.v5.1/' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
 
 ./case.build
-
+echo "Successfully created a base case"
