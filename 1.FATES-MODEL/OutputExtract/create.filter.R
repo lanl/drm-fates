@@ -24,8 +24,8 @@ function_filter <- function(outdir, filebase, finaltag, start_n, stop_n){
     }
   }
   miss.arr<-id.arr[filter.arr==FALSE]
-  write.table(as.data.frame(cbind(filename.arr)),paste0(outdir,"Filename.txt"),row.names=F,col.names=F)
-  write.table(as.data.frame(cbind(filter.arr)),paste0(outdir,"Filter.txt"),row.names=F,col.names=F)
-  write.table(as.data.frame(cbind(miss.arr)),paste0(outdir,"Missing.txt"),row.names=F,col.names=F)
+  write.table(as.data.frame(cbind(filename.arr)),paste0(outdir,"/Filename.txt"),row.names=F,col.names=F)
+  write.table(as.data.frame(cbind(filter.arr)),paste0(outdir,"/Filter.txt"),row.names=F,col.names=F)
+  write.table(as.data.frame(cbind(miss.arr)),paste0(outdir,"/Missing.txt"),row.names=F,col.names=F)
   return(length(which(filter.arr==TRUE)))
 }

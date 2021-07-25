@@ -35,10 +35,10 @@ def run_case(casebase,runroot, finalfiletag, startitem,samplenum): # {{{
   header='year, doy, wetness1, wetness2, wetness3'
   
   dir_path = os.path.dirname(os.path.realpath(__file__))
-  results_folder=dir_path + '/results'
-  if not os.path.exists(results_folder):
-    os.makedirs(results_folder)
-  filename = results_folder + '/HU.'+ str(samplenum+startitem)+'.csv'
+  outdir=dir_path + '/OutputExtract'
+  if not os.path.exists(outdir):
+    os.makedirs(outdir)
+  filename = outdir + '/HU.'+ str(samplenum+startitem)+'.csv'
   np.savetxt(filename, test_array,comments='', header=header, delimiter=',') 
   #if os.path.isdir(casename):
   #  if os.path.exists(rundir + '/' + finalfile):
