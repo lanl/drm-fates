@@ -21,6 +21,10 @@ HPU_ID_START = config_dict['HPU_ID_START']
 HPU_ID_END = config_dict['HPU_ID_END']
 HPU_PATH = config_dict['HPU_PATH']
 LOG_PATH = config_dict['LOG_PATH']
+N_CPU_PER_NODE = config_dict['N_CPU_PER_NODE']
+N_NODE = config_dict['N_NODE']
+WALL_TIME = config_dict['WALL_TIME']
+N_PROC = N_NODE * N_CPU_PER_NODE
 TOTAL= HPU_ID_END - HPU_ID_START + 1
 
 SCRIPT = "parallel.run.py"
@@ -30,7 +34,7 @@ FINALTAG = "clm2.h0.2020-12.nc"
 
 command = "python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-#command = "mpiexec -n " + str(TOTAL) + " python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+#command = "mpiexec -n " + str(N_PROC) + " python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 print(command)
 os.system(command)
