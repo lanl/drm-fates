@@ -4,11 +4,11 @@
 # July 26, 2021
 """
 import pandas as pd
+import os
 import rpy2
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
-import os
 import argparse
 import yaml
 
@@ -51,23 +51,23 @@ scale_vec_h1 = [1.0, 1.0]
 #[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 # Converting python objects into r objects for passing into r function
+#with localconverter(robjects.default_converter + pandas2ri.converter):
+#  sam_start_r = robjects.r(sam_start) 
+#sam_start_r
+
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  var_vec_h1_r = robjects.conversion.py2ri(var_vec_h1) # in later rpy2 versions use py2rpy
+  var_vec_h1_r = robjects.vectors.StrVector(var_vec_h1) 
 var_vec_h1_r
 
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  scale_vec_h1_r = robjects.conversion.py2ri(scale_vec_h1) # in later rpy2 versions use py2rpy
+  scale_vec_h1_r = robjects.vectors.FloatVector(scale_vec_h1) 
 scale_vec_h1_r
 
-with localconverter(robjects.default_converter + pandas2ri.converter):
-  sam_start_r = robjects.conversion.py2ri(sam_start) # in later rpy2 versions use py2rpy
-sam_start_r
-
-with localconverter(robjects.default_converter + pandas2ri.converter):
-  sam_end_r = robjects.conversion.py2ri(sam_end) # in later rpy2 versions use py2rpy
-sam_end_r
-
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-df_result = extractres_h1_r(sam_start_r, sam_end_r, outdir, cloneroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year)
+h1_result = extractres_h1_r(sam_start, sam_end, outdir, cloneroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year)
 
-print(df_result)
+if (h1_result):
+    print('Daily outputs extracted successfully for ', var_vec_h1)
+    exit(0)
+else:
+   print("Daily outputs not generated")
