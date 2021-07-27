@@ -15,6 +15,7 @@
 !*.sh
 !*.csh
 !*.md
+!*.yml
 # Ignore these directories
 **/BCI.ICLM45ED.badger.intel*/
 **/data-raw/
