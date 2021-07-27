@@ -65,7 +65,6 @@ scale_vec_h1_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
 h1_result = extractres_h1_r(sam_start, sam_end, outdir, cloneroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year)
-
 if (h1_result):
     print('Daily outputs extracted successfully for ', var_vec_h1)
     exit(0)
