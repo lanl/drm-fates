@@ -17,10 +17,6 @@ extractres_h0 <-
     ncol <- nmonth * nyears
     filter.arr <-
        read.table(file.path(outdir, filterFile), header = F) # on server
-    # filter.arr <-
-    #   read.table(file.path("data-raw/extract/", current.folder, filterFile), header = F) # on desktop
-    #sam.vec <-
-    #  c(sam.start:sam.end)[filter.arr$V1[c(sam.start:sam.end)]]
     sam.vec <-
       c(sam.start:sam.end)[filter.arr$V1]
 
@@ -105,9 +101,9 @@ extractres_h0 <-
       # data is stored as a list
       var.res.arr <- res.arr[[v]]
       out.file.name <- paste0(var.name, ".h0.extract.Rdata")
+      if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      return("Monthky output saved.")
-      # save(var.res.arr, file = file.path("data-raw", "extract", current.folder, "extract", out.file.name)) # on desktop
+      return("Success")
     }
   }
 
@@ -132,11 +128,6 @@ extractres_h1 <-
     ncol <- length(cnames)
     
     filter.arr <- read.table(file.path(outdir, filterFile), header = F) # on server
-    # filter.arr <-
-    #   read.table(file.path("data-raw/extract/", current.folder, filterFile), header = F) # on desktop
-    
-    ### temporarily turning some cases off, since some cases from 1:100 are not well run:
-    #filter.arr$V1[c(1:100, 740)] <- FALSE
     sam.vec <-
       c(sam.start:sam.end)[filter.arr$V1] 
     nsam <- length(sam.vec)
@@ -215,9 +206,9 @@ extractres_h1 <-
       # data is stored as a list
       var.res.arr <- res.arr[[v]]
       out.file.name <- paste0(var.name, ".h1.extract.Rdata")
+      if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      return("Daily output Saved.")
-      # save(var.res.arr, file = file.path("data-raw", "extract", current.folder, "extract", out.file.name)) # on desktop
+      return("Success")
     }
   }
 # load(file.path(outdir, "data-raw", "extract", out.file.name))
@@ -239,10 +230,7 @@ extractres_h2 <-
                by = "hour")
     cnames <- cnames[format(cnames, "%m-%d") != "02-29"]
     ncol <- length(cnames)
-    
-    # filter.arr <-
-    read.table(file.path(outdir, filterFile), header = F) # on server
-    # filter.arr <- read.table(file.path("data-raw", filterFile), header = F) # on desktop
+    filter.arr <- read.table(file.path(outdir, filterFile), header = F) # on server
     sam.vec <-
       c(sam.start:sam.end)[filter.arr$V1]
     nsam <- length(sam.vec)
@@ -311,8 +299,9 @@ extractres_h2 <-
       # data is stored as a list
       var.res.arr <- res.arr[[v]]
       out.file.name <- paste0(var.name, ".h2.extract.Rdata")
+      if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      # save(var.res.arr, file = file.path("data-raw", "extract", current.folder, "extract", out.file.name)) # on desktop
+      return("Success")
     }
-  }
+}
 
