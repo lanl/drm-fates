@@ -103,7 +103,7 @@ extractres_h0 <-
       out.file.name <- paste0(var.name, ".h0.extract.Rdata")
       if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      return("Success")
+      return("TRUE")
     }
   }
 
@@ -192,7 +192,7 @@ extractres_h1 <-
         }
         nc_close(nc)
       }
-      print(sample)
+      #print(sample)
       # if (i %% 200 == 0)
       #  print(sample)
     }
@@ -208,7 +208,7 @@ extractres_h1 <-
       out.file.name <- paste0(var.name, ".h1.extract.Rdata")
       if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      return("Success")
+      return("TRUE")
     }
   }
 # load(file.path(outdir, "data-raw", "extract", out.file.name))
@@ -301,7 +301,7 @@ extractres_h2 <-
       out.file.name <- paste0(var.name, ".h2.extract.Rdata")
       if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
       save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-      return("Success")
+      return("TRUE")
     }
 }
 
