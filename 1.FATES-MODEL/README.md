@@ -2,6 +2,10 @@
 ```
 ./create.conda.env.sh
 ```
+   Alternatively, you could also create the environment by running
+```
+conda env create -f environment.yml
+```
 
 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 ```
