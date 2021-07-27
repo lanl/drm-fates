@@ -34,14 +34,14 @@ export COMPSET=ICLM45ED                                    # Compset (probably I
 export MAC=badger                                           # Name your machine
 export COMPILER=intel                                      # Name your compiler
 export CASEROOT=${SITE_BASE_DIR}                               # Where the build is generated (probably on scratch partition)
-export CLM_USRDAT_DOMAIN=params/domain_bci_panama_v1_c171113.nc   # Name of domain file in scripts/${SITE_DIR}/
-export CLM_USRDAT_SURDAT=params/surf.params/surfdata_bci_panama_v1_c171113.1.nc # Name of surface file in scripts/${SITE_DIR}/
+export CLM_USRDAT_DOMAIN=domain_bci_panama_v1_c171113.nc   # Name of domain file in scripts/${SITE_DIR}/
+export CLM_USRDAT_SURDAT=surfdata_bci_panama_v1_c171113.1.nc # Name of surface file in scripts/${SITE_DIR}/
 
 
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
 # =======================================================================================
-export CLM_SURFDAT_DIR=${SITE_BASE_DIR}/${SITE_NAME}
-export CLM_DOMAIN_DIR=${SITE_BASE_DIR}/${SITE_NAME}
+export CLM_SURFDAT_DIR=${SITE_BASE_DIR}/params/surf.params
+export CLM_DOMAIN_DIR=${SITE_BASE_DIR}/params
 export DIN_LOC_ROOT_FORCE=${SITE_BASE_DIR}
 export FATES_PARAM_DIR=${SITE_BASE_DIR}/params  #location of FATES parameter file
 export ELM_PARAM_DIR=${SITE_BASE_DIR}/params/elm.params  #location of ELM parameter file
@@ -151,7 +151,7 @@ use_fates_ed_st3 = .true.
 use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
 use_fates_inventory_init = .false.
-fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/bci_inv_file_list.txt'
+fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
 hist_fincl2 = 'H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
 hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA', 
 'EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
@@ -180,4 +180,4 @@ cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.CLM_USRDAT user_datm.str
 `sed -i 's/CLM1PT_data/bci_0.1x0.1_met.v5.1/' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
 
 ./case.build
-echo "Successfully created a base case"
+echo "============Successfully created a base case============"
