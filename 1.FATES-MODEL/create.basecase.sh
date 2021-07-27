@@ -112,12 +112,12 @@ cd ${CASEROOT}/${CASE_NAME}
 # =================================================================================
 
 ./xmlchange -file env_build.xml -id DEBUG -val FALSE
-./xmlchange -file env_run.xml -id STOP_N -val 50
-./xmlchange -file env_run.xml -id RUN_STARTDATE -val '1971-01-01'
+./xmlchange -file env_run.xml -id STOP_N -val 3
+./xmlchange -file env_run.xml -id RUN_STARTDATE -val '1016-01-01'
 ./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
-./xmlchange -file env_run.xml -id REST_N -val 10
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val 1971
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val 2020
+./xmlchange -file env_run.xml -id REST_N -val 3
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val 2016
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val 2018
 
 # ========
 # MACHINE SPECIFIC, AND/OR USER PREFERENCE CHANGES (USERS WILL CHANGE THESE)
