@@ -1,9 +1,12 @@
 #-----------------------------------------------------
 #ELM Model Configuration # (add more specific info in this later)
 #------------------------------------------#
-PROJECT_ROOT: '/turquoise/usr/projects/veg/cxu/ACME_cases/DRToyModel'
-LOG_PATH: '/turquoise/usr/projects/veg/cxu/ACME_cases/DRToyModel/log'
-OUTPUT_DIR: '/lustre/scratch3/turquoise/cxu/ACME/cases/DRToyModel'
+#PROJECT_ROOT: '/turquoise/usr/projects/veg/cxu/ACME_cases/DRToyModel'
+#LOG_PATH: '/turquoise/usr/projects/veg/cxu/ACME_cases/DRToyModel/log'
+#OUTPUT_DIR: '/lustre/scratch3/turquoise/cxu/ACME/cases/DRToyModel'
+PROJECT_ROOT: '/turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease'
+LOG_PATH: '/turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease/log'
+OUTPUT_DIR: '/lustre/scratch3/turquoise/rutuja/ACME/cases/ELM_Disease'
 OUTPUT_TYPE: 'csv' 
 CASE_BASE: 'TEST.HPU'
 HPU_PATH: 'HPU.Table.csv' 
