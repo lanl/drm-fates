@@ -32,3 +32,7 @@ sbatch run_elm.sh
 python create.filter.py
 ```
 
+7. To extract outputs from ELM ensembles, run:
+```
+python extract.output.py
+``` 
