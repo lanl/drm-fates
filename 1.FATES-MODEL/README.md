@@ -9,30 +9,30 @@ conda env create -f environment.yml
 
 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 ```
-python generate.inputs.py 
+python src/generate.inputs.py 
 ```
 
 3. To generate a base case of ELM, run:
 ```
-python create.basecase.py
+python src/create.basecase.py
 ```
 
 4. To generate ELM clone cases each associated with an ensemble member, run:
 ```
-python create.ELM.ensembles.py 
+python src/create.ELM.ensembles.py 
 ```
 
 5. To run the parallel emsemble simulations as per elm.py, run the following command:
 ```
-sbatch run_elm.sh
+sbatch src/run_elm.sh
 ```
 
 6. To find which cases are complete (OutputExtract/Filter.txt) and which are not (OutputExtract/Missing.txt), run:
 ```
-python create.filter.py
+python src/create.filter.py
 ```
 
 7. To extract outputs from ELM ensembles, run:
 ```
-python extract.output.py
+python src/extract.output.py
 ``` 
