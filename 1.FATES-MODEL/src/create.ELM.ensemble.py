@@ -27,16 +27,12 @@ case_arr = list(range(HPU_ID_START, HPU_ID_END + 1))
 #https://stackoverflow.com/questions/11392033/passing-python-array-to-bash-script-and-passing-bash-variable-to-python-functio
 os.putenv('case_arr', ' '.join(str(v) for v in case_arr))
 
-# Set the CLONE ROOT Directory
-#dir_path = os.path.dirname(os.path.realpath(__file__))
-#print(dir_path)
-#CLONE_ROOT="$CASE_ROOT/ELM_Disease"
-#os.putenv('CLONE_ROOT', str(dir_path))
+# Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
+os.putenv('BASE_CASE', open("CASE_NAME.txt", "r"))
 
-# Set the BASE CASE Directory
-BASE_CASE = "BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.met.v5.2016-2018"
-os.putenv('BASE_CASE', BASE_CASE)
+# Set the CLONE ROOT Directory
+os.putenv('CLONE_ROOT', config_dict['CASE_DIR'])
 
 # This will clone a base case ending with elements of case_arr
-subprocess.call('./create.ELM.ensemble.csh')
+subprocess.call('./src/create.ELM.ensemble.csh')
 

@@ -5,5 +5,5 @@
 """
 
 import subprocess
-subprocess.call(['sh', './create.basecase.sh'])
+subprocess.call(['sh', './src/create.basecase.sh'])
 

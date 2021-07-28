@@ -2,11 +2,8 @@
 
 #-----------------------------------------------------------------------------------------------
 
-# Set the CLONE ROOT Directory
-set CLONE_ROOT = $CASE_ROOT/ELM_Disease
+# Python script will pass the CLONE ROOT Directory and BASE_CASE
 
-# Set the BASE CASE Directory
-#set BASE_CASE = "BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.met.v6.1971.2020"
 set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
 #======================================
 
