@@ -1,29 +1,34 @@
 #-----------------------------------------------------
 #ELM Model Configuration # (add more specific info in this later)
 #------------------------------------------#
-PROJECT_ROOT: '/turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease'
-LOG_DIR: 'log' # Under PROJECT_ROOT
-OUTPUT_DIR: 'OuputExtract' # Under PROJECT_ROOT
+PROJECT_ROOT: /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease
+# Directories under PROJECT_ROOT----
+LOG_DIR: log
+OUTPUT_DIR: output 
+PARAM_DIR: params 
+DATA_DIR: data
+CASE_DIR: CASE_DIR
 
 #----ELM parameter ensemble data----
-HPU_PATH: 'HPU.Table.csv'
+HPU_PATH: data/HPU.Table.csv
 
 #----Ensemble IDs to run---- 
 HPU_ID_START: 1
 HPU_ID_END: 2 
 
 #----ELM case set-up attributes----
-TAG: 'HPU.TEST'
-COMPSET: 'ICLM45ED'
-MAC: 'badger'
+TAG: HPU.TEST
+COMPSET: ICLM45ED
+MAC: badger
+COMPILER: intel
 STOP_N: 3 # years to run
 REST_N: 3 # frequency of yrs to write restart file
-RUN_STARTDATE: '2016-01-01'
+RUN_STARTDATE: 2016-01-01
 DATM_CLMNCEP_YR_START: 2016
 DATM_CLMNCEP_YR_END: 2018
 
 #----ELM Run attributes----
 N_NODE: 1
 N_CPU_PER_NODE: 36
-WALL_TIME: '1:00:00'
-OUTPUT_TYPE: 'csv'
+WALL_TIME: 1:00:00
+OUTPUT_TYPE: csv
