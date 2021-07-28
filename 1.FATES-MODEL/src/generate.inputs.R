@@ -21,7 +21,7 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
   #*******************
   ## Create clones of surface data file to hold changed parameter----
   #******************* 
-  surf.dir <- paste0(PARAM_PATH, "surf.params")
+  surf.dir <- paste0(PARAM_PATH, "/", "surf.params")
   unlink(surf.dir, recursive=TRUE)
   if(!dir.exists(surf.dir)) {dir.create(surf.dir)}
 
