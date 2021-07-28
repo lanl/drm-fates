@@ -6,7 +6,7 @@
 
 #-------------------------------------------------
 # Create the files
-generate.surface.files <- function(HPU.tab, path.dir, surf_basefile_rel_path) {
+generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
   #*******************
   ## Load packages----
   #*******************
@@ -21,12 +21,12 @@ generate.surface.files <- function(HPU.tab, path.dir, surf_basefile_rel_path) {
   #*******************
   ## Create clones of surface data file to hold changed parameter----
   #******************* 
-  surf.dir <- paste0(path.dir, "/params/surf.params")
+  surf.dir <- paste0(PARAM_PATH, "surf.params")
   unlink(surf.dir, recursive=TRUE)
   if(!dir.exists(surf.dir)) {dir.create(surf.dir)}
 
   for (i in 1:n.sam) {
-    filename1 <- paste0(path.dir,"/", surf_basefile_rel_path)
+    filename1 <- paste0(PARAM_PATH,"/", surf_basefile)
     filename2 <- paste0(surf.dir, "/surfdata_bci_panama_v1_c171113.", i, ".nc")
     file.copy(filename1, filename2, overwrite = T)
   }
