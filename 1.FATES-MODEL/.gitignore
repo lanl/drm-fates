@@ -4,20 +4,19 @@
 # But descend into directories
 !*/
 # Un-ignore specific files under subtree
-!R/**
-!code/**
+!src/**
 !OutputExtract/*.R
+!tools/*.sh
+!data/HPU.Table.csv
 ## but not these files
 !.gitignore
 !*.py
 !*.R
 !*.yaml
-!*.sh
+!**/*.sh
 !*.csh
 !*.md
 !*.yml
 # Ignore these directories
-**/BCI.ICLM45ED.badger.intel*/
-**/data-raw/
-**/results/
 **/conda_env/
+**/CASE_DIR/
