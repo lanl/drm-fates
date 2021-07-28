@@ -21,30 +21,38 @@
 #
 #
 # Ryan Knox (Mon Nov 13 13:53:03 PST 2017)
-# Updated to 14 year BCI record Nov 14
-#
+
+# Updated by Rutuja Chitra-Tarak
+# READ YAML VARIABLES
+# =======================================================================================
+SRCDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)	   #Locate the directory of this script
+source "$SRCDIR/../tools/yaml.sh"
+#parse_yaml "$SRCDIR/../config.yaml"
+create_variables "$SRCDIR/../config.yaml"
+echo $MAC
+
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
 # =======================================================================================
 
-export SITE_NAME=bci_0.1x0.1_v4.0i                         # Name of folder with site data
-export SITE_BASE_DIR=`pwd`                                 # Where is the site folder located? (SITE_NAME)
-export TAG='BCI'                                           # User defined tag to differentiate runs
-export COMPSET=ICLM45ED                                    # Compset (probably ICLM45ED or ICLM50ED)
-export MAC=badger                                           # Name your machine
-export COMPILER=intel                                      # Name your compiler
-export CASEROOT=${SITE_BASE_DIR}                               # Where the build is generated (probably on scratch partition)
-export CLM_USRDAT_DOMAIN=domain_bci_panama_v1_c171113.nc   # Name of domain file in scripts/${SITE_DIR}/
-export CLM_USRDAT_SURDAT=surfdata_bci_panama_v1_c171113.1.nc # Name of surface file in scripts/${SITE_DIR}/
-
+export SITE_NAME=bci_0.1x0.1_v4.0i                         	# Name of folder with site data
+export SITE_BASE_DIR=$PROJECT_ROOT/$DATA_DIR                	# Where is the site folder located? (SITE_NAME)
+export TAG=$TAG                                            	# User defined tag to differentiate runs
+export COMPSET=$COMPSET                                    	# Compset (probably ICLM45ED or ICLM50ED)
+export MAC=$MAC                                           	# Name your machine
+export COMPILER=$COMPILER                                  	# Name your compiler
+export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 	# Where the build is generated (probably on scratch partition)
+export CLM_USRDAT_DOMAIN=domain_bci_panama_v1_c171113.nc   	# Name of domain file in scripts/${SITE_DIR}/
+export CLM_USRDAT_SURDAT=surfdata_bci_panama_v1_c171113.1.nc 	# Name of surface file in scripts/${SITE_DIR}/
+export PARAM_BASE_DIR=$PARAM_DIR
 
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
 # =======================================================================================
-export CLM_SURFDAT_DIR=${SITE_BASE_DIR}/params/surf.params
-export CLM_DOMAIN_DIR=${SITE_BASE_DIR}/params
+export CLM_SURFDAT_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR/surf.params
+export CLM_DOMAIN_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR
 export DIN_LOC_ROOT_FORCE=${SITE_BASE_DIR}
-export FATES_PARAM_DIR=${SITE_BASE_DIR}/params  #location of FATES parameter file
-export ELM_PARAM_DIR=${SITE_BASE_DIR}/params/elm.params  #location of ELM parameter file
+export FATES_PARAM_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR  	#location of FATES parameter file
+export ELM_PARAM_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR   	#location of ELM parameter file
 
 export CLM_HASH=`cd ${ACME_ROOT}/components/clm/;git log -n 1 --pretty=%h`
 export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git log -n 1 --pretty=%h)`
@@ -52,7 +60,7 @@ export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
 export RES=CLM_USRDAT
 export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.'met.v5.2016-2018'
 export FATES_PARAM=fates_params_default_13Nov2019_1pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
-export ELM_PARAM=parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
+export ELM_PARAM=elm_parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
 
 
  #REMOVE EXISTING CASE IF PRESENT
@@ -60,7 +68,6 @@ rm -r ${CASEROOT}/${CASE_NAME}
 
 # CREATE THE CASE
 ${ACME_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial"
-
 
 cd ${CASEROOT}/${CASE_NAME} 
 
@@ -151,7 +158,7 @@ use_fates_ed_st3 = .true.
 use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
 use_fates_inventory_init = .false.
-fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
+fates_inventory_ctrl_filename = '$PROJECT_DIR/${SITE_NAME}/bci_inv_file_list.txt'
 hist_fincl2 = 'H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
 hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA', 
 'EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
