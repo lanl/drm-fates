@@ -29,7 +29,6 @@ SRCDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)	   #Locate the directory of
 source "$SRCDIR/../tools/yaml.sh"
 #parse_yaml "$SRCDIR/../config.yaml"
 create_variables "$SRCDIR/../config.yaml"
-echo $MAC
 
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
@@ -62,6 +61,7 @@ export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.'met.v5.2016-2
 export FATES_PARAM=fates_params_default_13Nov2019_1pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
 export ELM_PARAM=elm_parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
 
+echo CASE_NAME > CASE_NAME.txt
 
  #REMOVE EXISTING CASE IF PRESENT
 rm -r ${CASEROOT}/${CASE_NAME}
