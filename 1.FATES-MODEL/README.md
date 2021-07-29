@@ -19,7 +19,7 @@ python src/create.basecase.py
 
 4. To generate ELM clone cases each associated with an ensemble member, run:
 ```
-python src/create.ELM.ensembles.py 
+python src/create.ELM.ensemble.py 
 ```
 
 5. To run the parallel emsemble simulations as per elm.py, run the following command:
