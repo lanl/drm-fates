@@ -21,10 +21,10 @@ TAG: HPU.TEST
 COMPSET: ICLM45ED
 MAC: badger
 COMPILER: intel
-STOP_N: 3 # years to run
-REST_N: 3 # frequency of yrs to write restart file
-RUN_STARTDATE: 2016-01-01
-DATM_CLMNCEP_YR_START: 2016
+STOP_N: 2 # years to run
+REST_N: 2 # frequency of yrs to write restart file
+RUN_STARTDATE: 2017-01-01
+DATM_CLMNCEP_YR_START: 2017
 DATM_CLMNCEP_YR_END: 2018
 
 #----ELM Run attributes----
