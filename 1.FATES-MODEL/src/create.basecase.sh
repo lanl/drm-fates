@@ -25,10 +25,11 @@
 # Updated by Rutuja Chitra-Tarak
 # READ YAML VARIABLES
 # =======================================================================================
-SRCDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)	   #Locate the directory of this script
-source "$SRCDIR/../tools/yaml.sh"
-#parse_yaml "$SRCDIR/../config.yaml"
-create_variables "$SRCDIR/../config.yaml"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
+echo $SCRIPT_DIR
+source "$SCRIPT_DIR/../tools/yaml.sh"
+#parse_yaml "$SCRIPT_DIR/../config.yaml"
+create_variables "$SCRIPT_DIR/../config.yaml"
 
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
