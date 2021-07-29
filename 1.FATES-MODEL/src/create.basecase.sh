@@ -58,21 +58,21 @@ export CLM_HASH=`cd ${ACME_ROOT}/components/clm/;git log -n 1 --pretty=%h`
 export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git log -n 1 --pretty=%h)`
 export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
 export RES=CLM_USRDAT
-export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.'met.v5.2016-2018'
+export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.$DATM_CLMNCEP_YR_START-$DATM_CLMNCEP_YR_END
 export FATES_PARAM=fates_params_default_13Nov2019_1pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
 export ELM_PARAM=elm_parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
 
 echo $CASE_NAME > BASE_CASE_NAME.txt
 
- #REMOVE EXISTING CASE IF PRESENT
+#REMOVE EXISTING CASE IF PRESENT
 rm -r ${CASEROOT}/${CASE_NAME}
 
 # CREATE THE CASE
-${ACME_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial"
+${ACME_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial" --user-mods-dir ${CASEROOT}/${CASE_NAME}
 
 cd ${CASEROOT}/${CASE_NAME} 
 
-
+echo `pwd`
 # SET PATHS TO SCRATCH ROOT, DOMAIN AND MET DATA (USERS WILL PROB NOT CHANGE THESE)
 # =================================================================================
 
@@ -120,12 +120,12 @@ cd ${CASEROOT}/${CASE_NAME}
 # =================================================================================
 
 ./xmlchange -file env_build.xml -id DEBUG -val FALSE
-./xmlchange -file env_run.xml -id STOP_N -val 3
-./xmlchange -file env_run.xml -id RUN_STARTDATE -val '1016-01-01'
+./xmlchange -file env_run.xml -id STOP_N -val $STOP_N
+./xmlchange -file env_run.xml -id RUN_STARTDATE -val $RUN_STARTDATE
 ./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
-./xmlchange -file env_run.xml -id REST_N -val 3
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val 2016
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val 2018
+./xmlchange -file env_run.xml -id REST_N -val $REST_N
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val $DATM_CLMNCEP_YR_START
+./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val $DATM_CLMNCEP_YR_END
 
 # ========
 # MACHINE SPECIFIC, AND/OR USER PREFERENCE CHANGES (USERS WILL CHANGE THESE)
@@ -174,6 +174,7 @@ EOF
 # #hist_fincl1='NEP','NPP','GPP','TLAI','TSOI_10CM','QVEGT','EFLX_LH_TOT','AR','HR','ED_biomass','ED_bleaf','ED_balive','DDBH_S#CPF','BA_SCPF','NPLANT_SCPF','M1_SCPF','M2_SCPF','M3_SCPF','M4_SCPF','M5_SCPF','M6_SCPF','WIND','ZBOT','FSDS','RH','TBOT','P#BOT','QBOT','RAIN','FLDS'
 
 # MODIFY THE DATM NAMELIST (DANGER ZONE - USERS BEWARE CHANGING)
+echo `pwd`
 
 cat >> user_nl_datm <<EOF
 taxmode = "cycle", "cycle", "cycle"
