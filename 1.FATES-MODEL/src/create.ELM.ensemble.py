@@ -28,10 +28,14 @@ case_arr = list(range(HPU_ID_START, HPU_ID_END + 1))
 os.putenv('case_arr', ' '.join(str(v) for v in case_arr))
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
-os.putenv('BASE_CASE', open("CASE_NAME.txt", "r"))
+ff = open("BASE_CASE_NAME.txt", "r")
+print(ff.read())
+os.putenv('BASE_CASE', ff.read())
 
 # Set the CLONE ROOT Directory
-os.putenv('CLONE_ROOT', config_dict['CASE_DIR'])
+CLONE_ROOT = config_dict['PROJECT_ROOT']+ '/' + config_dict['CASE_DIR']
+print(CLONE_ROOT)
+os.putenv('CLONE_ROOT', CLONE_ROOT)
 
 # This will clone a base case ending with elements of case_arr
 subprocess.call('./src/create.ELM.ensemble.csh')
