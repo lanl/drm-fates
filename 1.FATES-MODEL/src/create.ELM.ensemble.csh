@@ -3,18 +3,20 @@
 #-----------------------------------------------------------------------------------------------
 
 # Python script will pass the CLONE ROOT Directory and BASE_CASE
+set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
-#======================================
+##======================================
+
 
 # Now loop through and create each case 
 foreach case_i (`seq 1 $#arr_case`)
   # Go to CASE scripts directory
   cd $ACME_ROOT/cime/scripts
-
   # Name the case
   set ACME_CASE_CLONE = $BASE_CASE.$case_i 
- 
   # Delete a case by the same name if previously present
   rm -rf $CLONE_ROOT/$ACME_CASE_CLONE
   # Create the Clone Case
@@ -36,6 +38,6 @@ foreach case_i (`seq 1 $#arr_case`)
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
   #rm -rf $RUN_ROOT/$ACME_CASE_CLONE
   cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$ACME_CASE_CLONE/bld/ 
-  echo "============From a base case successfully created a clone with a case name prefix $case_i============"
+  echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
 echo "============In total created $#arr_case clones from a base case============"
