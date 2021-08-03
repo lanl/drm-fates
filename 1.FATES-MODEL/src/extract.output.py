@@ -12,9 +12,18 @@ from rpy2.robjects.conversion import localconverter
 import argparse
 import yaml
 
+# Determine input parameters
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--config_file', action='store',
+                    default='config.yaml')
+args = parser.parse_args()
+
+with open(args.config_file, 'r') as in_file:
+    config_dict = yaml.safe_load(in_file)
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
-R_file = 'extract.output.R'
-outdir=dir_path + '/OutputExtract'
+R_file = dir_path+'/extract.output.R'
+outdir = config_dict['PROJECT_ROOT']+'/'+config_dict['OUTPUT_DIR']
 cloneroot = "/lustre/scratch3/turquoise/rutuja/ACME/cases"
 
 # Defining the R script and loading the instance in Python
@@ -25,15 +34,6 @@ r['source'](R_file)
 extractres_h0_r = robjects.globalenv['extractres_h0']
 extractres_h1_r = robjects.globalenv['extractres_h1']
 extractres_h2_r = robjects.globalenv['extractres_h2']
-
-# Determine input parameters
-parser = argparse.ArgumentParser()
-parser.add_argument('-c', '--config_file', action='store',
-                    default='config.yaml')
-args = parser.parse_args()
-
-with open(args.config_file, 'r') as in_file:
-    config_dict = yaml.safe_load(in_file)
 
 sam_start = config_dict['HPU_ID_START']
 sam_end = config_dict['HPU_ID_END']

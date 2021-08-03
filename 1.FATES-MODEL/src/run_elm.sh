@@ -35,6 +35,6 @@ jobid=$SLURM_JOB_ID
 
 cd $currentdir
 
-python elm.py
+python src/elm.py
 
 echo 'Finished on '`date`
