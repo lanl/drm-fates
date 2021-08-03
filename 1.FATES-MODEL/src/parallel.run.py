@@ -44,13 +44,13 @@ def run_case(casebase,runroot, finalfiletag, startitem,samplenum): # {{{
   if os.path.isdir(casename):
     if os.path.exists(rundir + '/' + finalfile):
       # case was already run succesfully!
-      print 'Skipping case {}'.format(casename)
+      print('Skipping case {}'.format(casename))
       logging.info('success')
       return
     else:
       # run the sample to get the results
       os.chdir(casename)
-      print 'Running case {}'.format(casename)
+      print('Running case {}'.format(casename))
       program = "./case.submit --no-batch"
       os.system(program)
       os.chdir('../')
