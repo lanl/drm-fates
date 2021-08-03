@@ -1,8 +1,8 @@
 #!/bin/sh
 # =======================================================================================
 #
-# This script will create, setup and build and run a multi-site simulation  
-# based on config.yaml.
+# This script will create, setup and build and run a multi-site ELM-FATES simulation  
+# based on config.yaml and extracts outputs.
 
 # Rutuja Chitra-Tarak (Tue Aug 3, 2021)
 # =======================================================================================
