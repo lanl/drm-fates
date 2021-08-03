@@ -126,7 +126,6 @@ extractres_h1 <-
     ## removing Feb 29 because CLM only produces output for 365 days not 366
     cnames <- cnames[format(cnames, "%m-%d") != "02-29"]
     ncol <- length(cnames)
-    
     filter.arr <- read.table(file.path(outdir, filterFile), header = F) # on server
     sam.vec <-
       c(sam.start:sam.end)[filter.arr$V1] 
@@ -158,6 +157,7 @@ extractres_h1 <-
         res.arr[[v]][[k]] <- matrix(NA, nsam, ncol)
       }
     }
+   print(var.dim)
     ##----
     #pb <- txtProgressBar(min = 0, max = nsam, style = 3)
     for (i in 1:nsam) {

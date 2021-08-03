@@ -30,8 +30,7 @@ SCRIPT = config_dict['ELM_RUN_PY']
 ff = open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 BASE_CASE=base_case.strip()
-print(BASE_CASE)
-#BASE_CASE=$(echo $base_case | sed 's/^[ \t]*//;s/[ \t]*$//')
+#BASE_CASE='BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.full.met.v6'
 RUN_ROOT = config_dict['RUN_ROOT']
 FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 

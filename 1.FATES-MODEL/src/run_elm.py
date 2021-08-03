@@ -5,4 +5,4 @@
 """
 
 import subprocess
-subprocess.call(['sh', './run_elm.sh'])
+subprocess.call(['sh', './src/run_elm.sh'])
