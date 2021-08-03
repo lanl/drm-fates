@@ -8,6 +8,7 @@
 !OutputExtract/*.R
 !tools/*.sh
 !data/HPU.Table.csv
+!params/*.nc
 ## but not these files
 !.gitignore
 !*.py
