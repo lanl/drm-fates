@@ -8,7 +8,7 @@ OUTPUT_DIR: output
 PARAM_DIR: params 
 DATA_DIR: data
 CASE_DIR: CASE_DIR
-
+RUN_ROOT: /lustre/scratch3/turquoise/rutuja/ACME/cases
 #----ELM parameter ensemble data----
 HPU_PATH: data/HPU.Table.csv
 
