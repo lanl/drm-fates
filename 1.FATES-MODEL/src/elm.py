@@ -26,9 +26,12 @@ WALL_TIME = config_dict['WALL_TIME']
 N_PROC = N_NODE * N_CPU_PER_NODE
 TOTAL= HPU_ID_END - HPU_ID_START + 1
 
-SCRIPT = "parallel.run.py"
+SCRIPT = config_dict['ELM_RUN_PY']
 ff = open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
-BASE_CASE=ff.read()
+base_case=ff.read()
+BASE_CASE=base_case.strip()
+print(BASE_CASE)
+#BASE_CASE=$(echo $base_case | sed 's/^[ \t]*//;s/[ \t]*$//')
 RUN_ROOT = config_dict['RUN_ROOT']
 FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
@@ -38,4 +41,3 @@ command = "python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + s
 
 print(command)
 os.system(command)
-#os.system('./run_elm2.sh', 'command')
