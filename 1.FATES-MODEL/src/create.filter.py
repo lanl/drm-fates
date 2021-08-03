@@ -12,9 +12,11 @@ from rpy2.robjects.conversion import localconverter
 import os
 import yaml
 import argparse
+import re
 
 # Defining the R script and loading the instance in Python
-R_file = 'OutputExtract/create.filter.R'
+dir_path = os.path.dirname(os.path.realpath(__file__))
+R_file = dir_path+'/create.filter.R'
 r = robjects.r
 r['source'](R_file)
 
@@ -22,8 +24,6 @@ r['source'](R_file)
 r_function_filter = robjects.globalenv['function_filter']
 
 # Preparing input parameters
-outdir = 'OutputExtract'
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
                     default='config.yaml')
@@ -32,14 +32,26 @@ args = parser.parse_args()
 with open(args.config_file, 'r') as in_file:
   config_dict = yaml.safe_load(in_file)
 
-start_n = config_dict['HPU_ID_START']
-stop_n = config_dict['HPU_ID_END']
+outdir = config_dict['PROJECT_ROOT']+'/'+config_dict['OUTPUT_DIR']
 
-filebase="BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.met.v5.2016-2018"
-finaltag="clm2.h0.2020-12.nc"
+sam_start = config_dict['HPU_ID_START']
+sam_stop = config_dict['HPU_ID_END']
+
+start_year = config_dict['DATM_CLMNCEP_YR_START']
+end_year = config_dict['DATM_CLMNCEP_YR_END']
+
+# Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
+ff=open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
+base_case=ff.read()
+#BASE_CASE=base_case.strip()
+BASE_CASE='BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.full.met.v6.2017-2018'
+timetag=str(start_year)+'-'+str(end_year)
+filebase = re.sub(timetag, '', BASE_CASE)
+
+finaltag = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
 # Invoking the R function and getting the result
-df_result_r = r_function_filter(outdir, filebase, finaltag, start_n, stop_n)
+df_result_r = r_function_filter(outdir, filebase, finaltag, sam_start, sam_stop)
 # Converting it back to a pandas dataframe.
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
