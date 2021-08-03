@@ -4,7 +4,7 @@ extractres_h0 <-
   function(sam.start,
            sam.end,
            outdir,
-  	   cloneroot,
+  	   runroot,
 	   filebase,
            var.vec.h0,
            scale.vec.h0,
@@ -27,7 +27,7 @@ extractres_h0 <-
     filetag <- paste0("clm2.h0.", start.year, "-")
     monstr <- sprintf("%02d", 1)
     filename <-
-      paste0(cloneroot,
+      paste0(runroot,
              "/",
              casename,
              "/run/",
@@ -66,7 +66,7 @@ extractres_h0 <-
           #months
           monstr <- sprintf("%02d", j)
           filename <-
-            paste0(cloneroot,
+            paste0(runroot,
                    "/",
                    casename,
                    "/run/",
@@ -112,7 +112,7 @@ extractres_h1 <-
   function(sam.start,
            sam.end,
            outdir,
-   	   cloneroot,
+   	   runroot,
            filebase,
            var.vec.h1,
            scale.vec.h1,
@@ -135,7 +135,7 @@ extractres_h1 <-
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
     casename <- paste(filebase, sam.vec[1], sep = "")
     filetag <- paste0("clm2.h1.", start.year, "-")
-    filename <- paste0(cloneroot,
+    filename <- paste0(runroot,
                        "/",
                        casename,
                        "/run/",
@@ -167,7 +167,7 @@ extractres_h1 <-
       for (yr in start.year:end.year) {
         filetag <- paste("clm2.h1.", yr, "-", sep = "")
         filename <-
-          paste0(cloneroot,
+          paste0(runroot,
                  "/",
                  casename,
                  "/run/",
@@ -217,7 +217,7 @@ extractres_h2 <-
   function(sam.start,
            sam.end,
            outdir,
-  	   cloneroot,
+  	   runroot,
            filebase,
            var.vec.h2,
            scale.vec.h2,
@@ -238,7 +238,7 @@ extractres_h2 <-
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
     casename <- paste(filebase, sam.vec[1], sep = "")
     filetag <- paste0("clm2.h2.", start.year, "-")
-    filename <- paste0(cloneroot,
+    filename <- paste0(runroot,
                        "/",
                        casename,
                        "/run/",
@@ -270,7 +270,7 @@ extractres_h2 <-
         for (yr in start.year:end.year) {
           filetag <- paste("clm2.h2.", yr, "-", sep = "")
           filename <-
-            paste0(cloneroot,
+            paste0(runroot,
                    "/",
                    casename,
                    "/run/",
