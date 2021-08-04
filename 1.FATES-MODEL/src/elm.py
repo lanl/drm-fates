@@ -7,9 +7,10 @@ import yaml
 import os
 import argparse
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default='config.yaml')
+                    default=SCRIPT_DIR+'/../config.yaml')
 args = parser.parse_args()
 
 # generate surface data input
@@ -26,7 +27,7 @@ WALL_TIME = config_dict['WALL_TIME']
 N_PROC = N_NODE * N_CPU_PER_NODE
 TOTAL= HPU_ID_END - HPU_ID_START + 1
 
-SCRIPT = config_dict['ELM_RUN_PY']
+SCRIPT = config_dict['PROJECT_ROOT']+'/'+config_dict['ELM_RUN_PY']
 ff = open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 BASE_CASE=base_case.strip()
@@ -34,7 +35,7 @@ BASE_CASE=base_case.strip()
 RUN_ROOT = config_dict['RUN_ROOT']
 FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
-command = "python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 #command = "mpiexec -n " + str(N_PROC) + " python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
