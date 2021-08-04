@@ -6,7 +6,6 @@
 """
 import os
 import subprocess
-import shlex
 import yaml
 import argparse
 
