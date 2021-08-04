@@ -5,8 +5,10 @@
 #SBATCH -N 1 # number of nodes
 #SBATCH -t 1:00:00
 
-currentdir=`pwd`'/'
-echo 'Started on '`date`' for '$currentdir' starting in '$currentdir
+casedir=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+PY_SRC_PATH=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+
+echo 'Started on '`date`' for '$casedir' starting in '$casedir
 
 #module purge
 #module use /usr/projects/cesm/software/local/modulefiles/all
@@ -27,14 +29,14 @@ echo 'Started on '`date`' for '$currentdir' starting in '$currentdir
 #module load  mpi4py/3.0.0
 #module load netcdf/4.4.1
 
-cd $currentdir
+cd $casedir
 
 date=`date "+%F-%T"`
 
 jobid=$SLURM_JOB_ID
 
-cd $currentdir
+cd $casedir
 
-python src/elm.py
+python $PY_SRC_PATH
 
 echo 'Finished on '`date`
