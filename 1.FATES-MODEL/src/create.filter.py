@@ -13,6 +13,7 @@ import os
 import yaml
 import argparse
 import re
+from pandas.core.index import Index as PandasIndex
 
 # Defining the R script and loading the instance in Python
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -43,10 +44,7 @@ end_year = config_dict['DATM_CLMNCEP_YR_END']
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
-#BASE_CASE=base_case.strip()
-BASE_CASE='BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.full.met.v6.2017-2018'
-timetag=str(start_year)+'-'+str(end_year)
-filebase = re.sub(timetag, '', BASE_CASE)
+filebase = base_case.strip()
 
 finaltag = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
