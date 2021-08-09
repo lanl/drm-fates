@@ -12,7 +12,6 @@ from rpy2.robjects.conversion import localconverter
 import argparse
 import yaml
 from pandas.core.index import Index as PandasIndex
-import re
 
 # Determine input parameters
 parser = argparse.ArgumentParser()
@@ -46,21 +45,14 @@ end_year = config_dict['DATM_CLMNCEP_YR_END']
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
-#BASE_CASE=base_case.strip()
-BASE_CASE='BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.full.met.v6.2017-2018'
-timetag=str(start_year)+'-'+str(end_year)
-filebase = re.sub(timetag, '', BASE_CASE)
+filebase=base_case.strip()
 
 filterFile = "Filter.txt"
 var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI"] 
 #['H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI']
 scale_vec_h1 = [1.0]*len(var_vec_h1) 
-#[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 # Converting python objects into r objects for passing into r function
-#with localconverter(robjects.default_converter + pandas2ri.converter):
-#  sam_start_r = robjects.r(sam_start) 
-#sam_start_r
 
 with localconverter(robjects.default_converter + pandas2ri.converter):
   var_vec_h1_r = robjects.vectors.StrVector(var_vec_h1) 
