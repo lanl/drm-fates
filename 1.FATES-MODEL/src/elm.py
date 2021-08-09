@@ -31,13 +31,12 @@ SCRIPT = config_dict['PROJECT_ROOT']+'/'+config_dict['ELM_RUN_PY']
 ff = open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 BASE_CASE=base_case.strip()
-#BASE_CASE='BCI.ICLM45ED.badger.intel.C700b46fec-F8c9cd1b0.full.met.v6'
 RUN_ROOT = config_dict['RUN_ROOT']
 FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
-command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+#command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-#command = "mpiexec -n " + str(N_PROC) + " python ./" + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+command = "mpiexec -n " + str(N_PROC) + " python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 print(command)
 os.system(command)
