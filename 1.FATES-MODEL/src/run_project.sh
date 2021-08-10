@@ -20,25 +20,25 @@ create_variables "$SCRIPT_DIR/../config.yaml"
 # conda config --add envs_dirs $PROJECT_ROOT
 ## Name of the new conda env is conda_env in the environment.yml file. If such env elready xists, change the name in the file
 # sed -i 's/conda_env/new_env/g' environment.yml
-#conda env create -f environment.yml
+# conda env create -f environment.yml
 
 # Activate the environment
 
-#conda activate conda_env
+conda activate conda_env
  
 # 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
-#python src/generate.inputs.py
+python src/generate.inputs.py
 
  
 # 3. To generate a base case of ELM, run:
 
-#python src/create.basecase.py
+python src/create.basecase.py
 
  
 # 4. To generate ELM clone cases each associated with an ensemble member, run:
 
-#python src/create.ELM.ensemble.py
+python src/create.ELM.ensemble.py
 
  
 # 5. To run the parallel emsemble simulations as per elm.py, run the following command:
@@ -48,10 +48,10 @@ sbatch src/run_elm.sh
  
 # 6. To find which cases are complete (output/Filter.txt) and which are not (output/Missing.txt), run:
 
-#python src/create.filter.py
+python src/create.filter.py
 
  
 # 7. To extract outputs from ELM ensembles (output/exrtact/elm_daily_outputs.txt), run:
 
-#python src/extract.output.py
+python src/extract.output.py
 
