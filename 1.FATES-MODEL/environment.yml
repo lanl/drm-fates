@@ -1,4 +1,4 @@
-name: /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease/conda_env
+name: conda_env 
 channels:
   - conda-forge
   - defaults
@@ -13,13 +13,13 @@ dependencies:
   - binutils_impl_linux-64=2.33.1=he6710b0_7
   - binutils_linux-64=2.33.1=h9595d00_15
   - blas=1.0=mkl
-  - bleach=3.3.1=pyhd3eb1b0_0
+  - bleach=4.0.0=pyhd3eb1b0_0
   - bwidget=1.9.11=1
   - bzip2=1.0.8=h7b6447c_0
-  - ca-certificates=2021.7.5=h06a4308_1
+  - ca-certificates=2021.5.30=ha878542_0
   - cairo=1.14.12=h8948797_3
   - certifi=2021.5.30=py36h06a4308_0
-  - cffi=1.14.6=py36h7f8727e_0
+  - cffi=1.14.0=py36h2e261b9_0
   - cftime=1.5.0=py36h6323ea4_0
   - curl=7.67.0=hbc83047_0
   - decorator=5.0.9=pyhd3eb1b0_0
@@ -73,7 +73,7 @@ dependencies:
   - libwebp-base=1.2.0=h27cfd23_0
   - libxcb=1.14=h7b6447c_0
   - libxml2=2.9.12=h03d6c58_0
-  - lz4-c=1.9.3=h2531618_0
+  - lz4-c=1.9.3=h295c915_1
   - make=4.2.1=h1bed415_1
   - markupsafe=2.0.1=py36h27cfd23_0
   - mistune=0.8.4=py36h7b6447c_0
@@ -90,7 +90,7 @@ dependencies:
   - ncurses=6.2=he6710b0_1
   - nest-asyncio=1.5.1=pyhd3eb1b0_0
   - netcdf4=1.4.2=py36h808af73_0
-  - notebook=6.4.0=py36h06a4308_0
+  - notebook=6.4.1=py36h06a4308_0
   - numpy=1.19.2=py36h54aff64_0
   - numpy-base=1.19.2=py36hfa32c7d_0
   - openssl=1.1.1k=h27cfd23_0
@@ -103,7 +103,7 @@ dependencies:
   - pcre=8.45=h295c915_0
   - pexpect=4.8.0=pyhd3eb1b0_3
   - pickleshare=0.7.5=pyhd3eb1b0_1003
-  - pip=21.1.3=py36h06a4308_0
+  - pip=21.2.2=py36h06a4308_0
   - pixman=0.40.0=h7b6447c_0
   - prometheus_client=0.11.0=pyhd3eb1b0_0
   - prompt-toolkit=3.0.17=pyh06a4308_0
@@ -282,4 +282,3 @@ dependencies:
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.9=haebb681_0
 prefix: /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease/conda_env
-
