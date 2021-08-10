@@ -42,7 +42,7 @@ create_variables "$SCRIPT_DIR/../config.yaml"
 
  
 # 5. To run the parallel emsemble simulations as per elm.py, run the following command:
-sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} /g" src/run_elm.sh
+sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" src/run_elm.sh
 sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" src/run_elm.sh
 sbatch src/run_elm.sh
  
