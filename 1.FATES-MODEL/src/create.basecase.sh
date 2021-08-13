@@ -59,7 +59,7 @@ export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git
 export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
 export RES=CLM_USRDAT
 export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.$DATM_CLMNCEP_YR_START-$DATM_CLMNCEP_YR_END
-export FATES_PARAM=fates_params_default_13Nov2019_1pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
+export FATES_PARAM=fates_params_default_2pft.nc # Name of FATES parameter file in FATES_PARAM_DIR
 export ELM_PARAM=elm_parameter_file_name1.nc # Name of ELM parameter file in ELM_PARAM_DIR
 
 echo $CASE_NAME > BASE_CASE_NAME.txt
