@@ -6,6 +6,7 @@
 set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set MUTATE=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
@@ -27,17 +28,20 @@ foreach case_i (`seq 1 $#arr_case`)
   # Set up the Clone case
   ./case.setup
   ./xmlchange BUILD_COMPLETE="TRUE"
-  # Replace the parameter file for this run
-  set case_num = $arr_case[$case_i]
-  sed -i 's/'c171113.1.nc'/'c171113.${case_num}.nc'/g' user_nl_clm
+  if ($MUTATE == TRUE) then
+  	# Replace the parameter file for this run
+  	set case_num = $arr_case[$case_i]
+  	sed -i 's/'c171113.1.nc'/'c171113.${case_num}.nc'/g' user_nl_clm
 
-  # changes files for both fatesparam and elm params
-  # sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+  	# changes files for both fatesparam and elm params
+  	# sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+  endif
 
   # copy cesm.exe in base case run folder
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
   #rm -rf $RUN_ROOT/$ACME_CASE_CLONE
   cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$ACME_CASE_CLONE/bld/ 
+
   echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
 echo "============In total created $#arr_case clones from a base case============"

@@ -11,6 +11,9 @@ DATA_DIR: data
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
+#----Create exact ELM clones or vary parameter files----
+MUTATE: FALSE
+
 #----ELM parameter ensemble data----
 HPU_PATH: data/HPU.Table.csv
 
