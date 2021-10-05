@@ -24,8 +24,8 @@ PARAM_DIR = config_dict['PARAM_DIR']
 HPU_Table = config_dict['PROJECT_ROOT']+'/'+config_dict['HPU_PATH']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
 
-R_file = PROJECT_ROOT+'/src/generate.inputs.R'
-surf_basefile = 'surfdata_bci_panama_v1_c171113.nc'
+R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
+surf_basefile = config_dict['SURF_BASE']
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
@@ -53,5 +53,7 @@ df_result
 
 if(df_result):
     print('Surface Data file clones generated. New Parameters Substituted Successfully!')
+else:
+    print("ERROR: Parameter substitution was unsuccessful.") 
     exit(0)
 

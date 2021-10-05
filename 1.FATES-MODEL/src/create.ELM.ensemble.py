@@ -34,9 +34,15 @@ BASE_CASE=ff.read()
 # Set the CLONE ROOT Directory
 CLONE_ROOT = config_dict['PROJECT_ROOT']+ '/' + config_dict['CASE_DIR']
 
+# Set the RUN ROOT Directory
+runroot = config_dict['RUN_ROOT']
+
 # Set whether parameter files need to be varied across clones
 MUTATE = config_dict['MUTATE']
 
+# Set the surface basefile to clone
+surf_basefile = config_dict['SURF_BASE']
+
 # This will clone a base case ending with elements of case_arr
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, MUTATE])
+subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE, surf_basefile])

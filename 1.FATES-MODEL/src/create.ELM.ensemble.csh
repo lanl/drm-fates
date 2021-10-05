@@ -6,7 +6,9 @@
 set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
-set MUTATE=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set RUN_ROOT=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set MUTATE=`echo $5 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set surf_basefile=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
@@ -31,7 +33,7 @@ foreach case_i (`seq 1 $#arr_case`)
   if ($MUTATE == TRUE) then
   	# Replace the parameter file for this run
   	set case_num = $arr_case[$case_i]
-  	sed -i 's/'c171113.1.nc'/'c171113.${case_num}.nc'/g' user_nl_clm
+        sed -i 's/'${surf_basefile}nc'/'${surf_basefile}${case_num}.nc'/g' user_nl_clm
 
   	# changes files for both fatesparam and elm params
   	# sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm

@@ -17,10 +17,10 @@ create_variables "$SCRIPT_DIR/../config.yaml"
 # ./src/create.conda.env.sh
 
 # Alternatively, you could also create the environment from yml file:
-# conda config --add envs_dirs $PROJECT_ROOT
+ conda config --add envs_dirs $PROJECT_ROOT
 ## Name of the new conda env is conda_env in the environment.yml file. If such env elready xists, change the name in the file
-# sed -i 's/conda_env/new_env/g' environment.yml
-# conda env create -f environment.yml
+ sed -i 's/conda_env/new_env/g' environment.yml
+ conda env create -f environment.yml
 
 # Activate the environment
 

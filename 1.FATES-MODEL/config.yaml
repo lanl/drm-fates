@@ -31,6 +31,7 @@ REST_N: 2 # frequency of yrs to write restart file
 RUN_STARTDATE: 2017-01-01
 DATM_CLMNCEP_YR_START: 2017
 DATM_CLMNCEP_YR_END: 2018
+SURF_BASE: surfdata_bci_panama_v1_c171113.
 
 #----ELM Run attributes----
 N_NODE: 1 # Make sure that N_NODE*N_CPU_PER_NODE >= (HPU_ID_END-HPU_ID_START)+1

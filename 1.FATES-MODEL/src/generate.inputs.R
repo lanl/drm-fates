@@ -26,8 +26,8 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
   if(!dir.exists(surf.dir)) {dir.create(surf.dir)}
 
   for (i in 1:n.sam) {
-    filename1 <- paste0(PARAM_PATH,"/", surf_basefile)
-    filename2 <- paste0(surf.dir, "/surfdata_bci_panama_v1_c171113.", i, ".nc")
+    filename1 <- paste0(PARAM_PATH,"/", surf_basefile, "nc")
+    filename2 <- paste0(surf.dir, "/", surf_basefile, i, ".nc")
     file.copy(filename1, filename2, overwrite = T)
   }
   
@@ -38,7 +38,7 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
   pb <- txtProgressBar(min = 0, max = n.sam, style = 3)
   for (i in 1:n.sam) {
     setTxtProgressBar(pb, i)
-    filename2 <- paste0(surf.dir, "/surfdata_bci_panama_v1_c171113.", i, ".nc")
+    filename2 <- paste0(surf.dir, "/", surf_basefile, i, ".nc")
     surf_para <- ncdf4::nc_open(filename1, write = T)
     ## Create new data to replace those in the default file
     txr.4 <- data.frame(depth = c(0.007, 0.03, 0.062, 0.11, 0.21, 0.36, 0.62, 1.04, 1.73, 2.86),
@@ -60,7 +60,7 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
     ncdf4::nc_close(surf_para)
   } #i
   ## Check whether a file has been converted as desired:
-  filename.test.4 <- paste0(surf.dir, "/surfdata_bci_panama_v1_c171113.", 1, ".nc")
+  filename.test.4 <- paste0(surf.dir, "/", surf_basefile, 1, ".nc")
   para.test.4 <- ncdf4::nc_open(filename.test.4, write = T)
   ## value in the file
   file.value.4 <- ncdf4::ncvar_get(para.test.4, txr.par.names[1])
