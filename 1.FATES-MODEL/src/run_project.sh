@@ -6,26 +6,12 @@
 
 # Rutuja Chitra-Tarak (Tue Aug 3, 2021)
 # =======================================================================================
-# 0. READ YAML VARIABLES
+# 1. READ YAML VARIABLES
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
 echo $SCRIPT_DIR
 source "$SCRIPT_DIR/../tools/yaml.sh"
 create_variables "$SCRIPT_DIR/../config.yaml"
 
-# 1. To create and activate a conda environment with all the python and R modules needed, run this in a shell:
-
-# ./src/create.conda.env.sh
-
-# Alternatively, you could also create the environment from yml file:
- conda config --add envs_dirs $PROJECT_ROOT
-## Name of the new conda env is conda_env in the environment.yml file. If such env elready xists, change the name in the file
- sed -i 's/conda_env/new_env/g' environment.yml
- conda env create -f environment.yml
-
-# Activate the environment
-
-conda activate conda_env
- 
 # 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
 python src/generate.inputs.py
