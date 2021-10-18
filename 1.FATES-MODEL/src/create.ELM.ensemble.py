@@ -27,15 +27,17 @@ case_vec = list(range(HPU_ID_START, HPU_ID_END + 1))
 #https://stackoverflow.com/questions/11392033/passing-python-array-to-bash-script-and-passing-bash-variable-to-python-functio
 case_arr = ' '.join(str(v) for v in case_vec)
 
+PROJECT_ROOT = SCRIPT_DIR+'/..'
+
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
-ff=open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
+ff=open(PROJECT_ROOT + "/BASE_CASE_NAME.txt", "r")
 BASE_CASE=ff.read()
 
 # Set the CLONE ROOT Directory
-CLONE_ROOT = config_dict['PROJECT_ROOT']+ '/' + config_dict['CASE_DIR']
+CLONE_ROOT = PROJECT_ROOT + '/' + config_dict['CASE_DIR']
 
 # Set the RUN ROOT Directory
-runroot = config_dict['RUN_ROOT']
+runroot = os.environ["RUN_ROOT"]
 
 # Set whether parameter files need to be varied across clones
 MUTATE = config_dict['MUTATE']

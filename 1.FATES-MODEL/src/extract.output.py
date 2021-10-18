@@ -14,18 +14,19 @@ import yaml
 from pandas.core.index import Index as PandasIndex
 
 # Determine input parameters
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default='config.yaml')
+                    default=SCRIPT_DIR+'/../config.yaml')
 args = parser.parse_args()
 
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-R_file = dir_path+'/extract.output.R'
-outdir = config_dict['PROJECT_ROOT']+'/'+config_dict['OUTPUT_DIR']
-runroot = config_dict['RUN_ROOT']
+R_file = SCRIPT_DIR+'/extract.output.R'
+PROJECT_ROOT = SCRIPT_DIR+'/..'
+outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
+runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
@@ -43,7 +44,7 @@ start_year = config_dict['DATM_CLMNCEP_YR_START']
 end_year = config_dict['DATM_CLMNCEP_YR_END']
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
-ff=open(config_dict['PROJECT_ROOT']+"/BASE_CASE_NAME.txt", "r")
+ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 filebase=base_case.strip()
 

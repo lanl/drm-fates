@@ -19,7 +19,8 @@ args = parser.parse_args()
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 
-CLONE_ROOT = config_dict['PROJECT_ROOT']+ '/' + config_dict['CASE_DIR']
-PY_SRC_PATH = config_dict['PROJECT_ROOT']+ '/src/elm.py'
+PROJECT_ROOT = SCRIPT_DIR+'/..'
+CLONE_ROOT = PROJECT_ROOT+ '/' + config_dict['CASE_DIR']
+PY_SRC_PATH = PROJECT_ROOT+ '/src/elm.py'
 
 subprocess.call(['sh', './src/run_elm.sh', CLONE_ROOT, PY_SRC_PATH])

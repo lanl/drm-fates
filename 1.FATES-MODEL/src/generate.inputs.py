@@ -12,16 +12,17 @@ import os
 import argparse
 import yaml
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default='config.yaml')
+                    default=SCRIPT_DIR+'/../config.yaml')
 args = parser.parse_args()
 
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
-PROJECT_ROOT = config_dict['PROJECT_ROOT']
+PROJECT_ROOT = SCRIPT_DIR+'/..'
 PARAM_DIR = config_dict['PARAM_DIR']
-HPU_Table = config_dict['PROJECT_ROOT']+'/'+config_dict['HPU_PATH']
+HPU_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
 
 R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'

@@ -1,25 +1,20 @@
-## 1. Make sure you are on the desired ELM branch. 
+#!/bin/sh
+# =======================================================================================
+# =======================================================================================
+setenv VEGHOME /usr/projects/veg/$user
+setenv ACCOUNT w18_califorest
+module purge
+module use /usr/projects/cesm/software/local/modulefiles/all
+module load acmeenv/1.0.0
  
-cd $ACME_ROOT/
-git checkout rutuja/ELM_FATES_HYDRO_DFLT_pedotrf_HKSAT_ADJ
-# <!-- git clone git@github.com:rutujact/E3SM.git --branch rutuja/ELM_FATES_HYDRO_default_pedotransfer -->
-## If a submodule is not found, update them
+setenv http_proxy "http://proxyout.lanl.gov:8080"
+setenv https_proxy "http://proxyout.lanl.gov:8080"
+setenv ftp_proxy "http://proxyout.lanl.gov:8080"
+setenv HTTP_PROXY "http://proxyout.lanl.gov:8080"
+setenv HTTPS_PROXY "http://proxyout.lanl.gov:8080"
+setenv FTP_PROXY "http://proxyout.lanl.gov:8080"
 
-# git submodule update --init --recursive
-
-## 2. Make sure you are on the desired fates branch. 
-
-cd $FATES_ROOT
-git branch 
-git checkout xuchongang/coastal_veg_ready_to_merge_July_2019_hybrid_static
-
-##  - If not, do:
-  
-# cd /turquoise/usr/projects/veg/rutuja/ACME/components/clm/src/external_models
-
-# git clone git@github.com:rutujact/fates.git --branch xuchongang/coastal_veg_ready_to_merge_July_2019_hybrid_static --single-branch
-
-## 3. Add conda path.
+## 2. Add conda path.
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -30,7 +25,12 @@ else
 endif
 # <<< conda initialize <<<
 
-# 4. Activate conda env
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
-cd ../$SCRIPT_DIR
+# 3. Activate conda env
+#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
+#echo $SCRIPT_DIR
+#source "$SCRIPT_DIR/../tools/yaml.sh"
+#create_variables "$SCRIPT_DIR/../config.yaml"
+#PROJECT_ROOT="$SCRIPT_DIR/.."
+#cd $PROJECT_ROOT
+#echo $PROJECT_ROOT
 conda activate conda_env
