@@ -40,7 +40,7 @@ def run_case(casebase,runroot, finalfiletag, startitem,samplenum): # {{{
  #   os.makedirs(outdir)
  # filename = outdir + '/HU.'+ str(samplenum+startitem)+'.csv'
  # np.savetxt(filename, test_array,comments='', header=header, delimiter=',') 
- 
+
   if os.path.isdir(casename):
     if os.path.exists(rundir + '/' + finalfile):
       # case was already run succesfully!

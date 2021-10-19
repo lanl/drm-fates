@@ -24,7 +24,8 @@ with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 
 R_file = SCRIPT_DIR+'/extract.output.R'
-PROJECT_ROOT = SCRIPT_DIR+'/..'
+PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
+print(PROJECT_ROOT)
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
 runroot = os.environ["RUN_ROOT"]
 
@@ -66,7 +67,7 @@ scale_vec_h1_r
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
 h1_result = extractres_h1_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year)
 if (h1_result):
-    print('Daily outputs extracted successfully for ', var_vec_h1)
+    print('Daily outputs extracted successfully for ', var_vec_h1, 'at ', outdir+"/elm_daily_outputs.txt")
     exit(0)
 else:
    print("Daily outputs not generated")

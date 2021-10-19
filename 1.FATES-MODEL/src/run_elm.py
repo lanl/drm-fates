@@ -19,7 +19,7 @@ args = parser.parse_args()
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 
-PROJECT_ROOT = SCRIPT_DIR+'/..'
+PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 CLONE_ROOT = PROJECT_ROOT+ '/' + config_dict['CASE_DIR']
 PY_SRC_PATH = PROJECT_ROOT+ '/src/elm.py'
 

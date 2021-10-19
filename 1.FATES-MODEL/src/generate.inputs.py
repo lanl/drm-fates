@@ -20,12 +20,12 @@ args = parser.parse_args()
 
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
-PROJECT_ROOT = SCRIPT_DIR+'/..'
+PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_DIR = config_dict['PARAM_DIR']
 HPU_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
 
-R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
+R_file = PROJECT_ROOT+'/src/generate.inputs.R'
 surf_basefile = config_dict['SURF_BASE']
 
 # Defining the R script and loading the instance in Python
