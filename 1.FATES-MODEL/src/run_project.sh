@@ -8,7 +8,6 @@
 # =======================================================================================
 # 1. READ YAML VARIABLES
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
-echo $SCRIPT_DIR
 source "$SCRIPT_DIR/../tools/yaml.sh"
 create_variables "$SCRIPT_DIR/../config.yaml"
 
@@ -28,10 +27,20 @@ python src/create.ELM.ensemble.py
 
  
 # 5. To run the parallel emsemble simulations as per elm.py, run the following command:
+python src/elm.py
+MPICOMMAND=`cat $SCRIPT_DIR/../mpi_command.txt`
+CASEDIR=`realpath $SCRIPT_DIR/../${CASE_DIR}`
+
 sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" src/run_elm.sh
 sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" src/run_elm.sh
-sbatch src/run_elm.sh
- 
+sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
+sed -i "s|^mpiexec.*|$MPICOMMAND|g" src/run_elm.sh
+
+sbatch src/run_elm.sh 
+# This does not run currently, so run on the front end
+
+python src/elm.py
+
 # 6. To find which cases are complete (output/Filter.txt) and which are not (output/Missing.txt), run:
 
 python src/create.filter.py
