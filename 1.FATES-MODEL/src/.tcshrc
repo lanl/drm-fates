@@ -1,6 +1,5 @@
 #!/bin/sh
-# =======================================================================================
-# =======================================================================================
+## 1. set environmental variables
 setenv VEGHOME /usr/projects/veg/$user
 setenv ACCOUNT w18_califorest
 module purge
@@ -25,12 +24,3 @@ else
 endif
 # <<< conda initialize <<<
 
-# 3. Activate conda env
-#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
-#echo $SCRIPT_DIR
-#source "$SCRIPT_DIR/../tools/yaml.sh"
-#create_variables "$SCRIPT_DIR/../config.yaml"
-#PROJECT_ROOT="$SCRIPT_DIR/.."
-#cd $PROJECT_ROOT
-#echo $PROJECT_ROOT
-conda activate conda_env
