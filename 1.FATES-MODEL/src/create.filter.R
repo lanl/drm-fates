@@ -4,7 +4,7 @@
 # July 25, 2021
 #-------------------------------------------------
 
-function_filter <- function(outdir, filebase, finaltag, start_n, stop_n){
+function_filter <- function(outdir, runroot, filebase, finaltag, start_n, stop_n){
   id.arr <- c(start_n:stop_n)
   nsam <- length(id.arr)
   pb <- txtProgressBar(min = 0, max = nsam, style = 3)
@@ -16,8 +16,8 @@ function_filter <- function(outdir, filebase, finaltag, start_n, stop_n){
   
   for(i in 1:nsam){
     setTxtProgressBar(pb, i)
-    casename <- paste(filebase,id.arr[i],sep="")
-    filename<-paste(outdir,"/",casename,"/run/", casename,".",finaltag,sep="")
+    casename <- paste(filebase, ".", id.arr[i],sep="")
+    filename<-paste(runroot,"/",casename,"/run/", casename,".",finaltag,sep="")
     if(file.exists(filename)){
       filter.arr[i] <-TRUE
       filename.arr[i] <- filename

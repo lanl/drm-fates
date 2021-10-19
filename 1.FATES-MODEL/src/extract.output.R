@@ -166,7 +166,7 @@ extractres_h1 <-
       sample <- sam.vec[i]
       all.sam.list[[i]]$nsam <- rep(i, length(cnames)) 
       #setTxtProgressBar(pb, i)
-      casename <- paste(filebase, sample, sep = "")
+      casename <- paste(filebase, ".", sample, sep = "")
       for (yr in start.year:end.year) {
         filetag <- paste("clm2.h1.", yr, "-", sep = "")
         filename <-

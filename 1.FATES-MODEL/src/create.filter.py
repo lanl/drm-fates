@@ -33,8 +33,9 @@ args = parser.parse_args()
 with open(args.config_file, 'r') as in_file:
   config_dict = yaml.safe_load(in_file)
 
-PROJECT_ROOT = SCRIPT_DIR+'/..'
+PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
+runroot = os.environ["RUN_ROOT"]
 
 sam_start = config_dict['HPU_ID_START']
 sam_stop = config_dict['HPU_ID_END']
@@ -50,11 +51,11 @@ filebase = base_case.strip()
 finaltag = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
 # Invoking the R function and getting the result
-df_result_r = r_function_filter(outdir, filebase, finaltag, sam_start, sam_stop)
+df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, sam_stop)
 # Converting it back to a pandas dataframe.
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
-print(df_result, ' Cases Finished Successfully!')
+print(int(df_result), ' Cases Finished Successfully!')
 exit(0)
 
