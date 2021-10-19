@@ -30,7 +30,7 @@ echo $SCRIPT_DIR
 source "$SCRIPT_DIR/../tools/yaml.sh"
 #parse_yaml "$SCRIPT_DIR/../config.yaml"
 create_variables "$SCRIPT_DIR/../config.yaml"
-PROJECT_ROOT="$SCRIPT_DIR/.."
+PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
 
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
