@@ -20,13 +20,14 @@ with open(args.config_file, 'r') as in_file:
 #n = config_dict['DURATION']
 HPU_ID_START = config_dict['HPU_ID_START']
 HPU_ID_END = config_dict['HPU_ID_END']
-PROJECT_ROOT = SCRIPT_DIR+'/..'
+PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 LOG_PATH = PROJECT_ROOT+'/'+config_dict['LOG_DIR']
 N_CPU_PER_NODE = config_dict['N_CPU_PER_NODE']
 N_NODE = config_dict['N_NODE']
 WALL_TIME = config_dict['WALL_TIME']
 N_PROC = N_NODE * N_CPU_PER_NODE
 TOTAL= HPU_ID_END - HPU_ID_START + 1
+CASE_DIR=config_dict['CASE_DIR']
 
 SCRIPT = PROJECT_ROOT+'/'+config_dict['ELM_RUN_PY']
 ff = open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
@@ -37,7 +38,19 @@ FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-command = "mpiexec -n " + str(N_PROC) + " python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) +"'" + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-print(command)
-os.system(command)
+file = open("mpi_command.txt", "w")
+file.write(command + "\n")
+file.close()
+
+cc = open(PROJECT_ROOT+"/mpi_command.txt", "r")
+stored_command=cc.read()
+
+print('SUCCESS.\nCommand in "mpi_command.txt" is '+ stored_command)
+exit(0)
+
+# The following option could be used if this file needs to be passed onto src/run_elm.sh via run_elm.py
+# And if front node parallel simulation needs to be run, one would then run python run_elm.py; after letting src/run_elm.sh accept variables from run_elm.py
+# But since sbatch src/run_elm.sh works to parallel run on back nodes, this won't be required
+#os.system(command) 
