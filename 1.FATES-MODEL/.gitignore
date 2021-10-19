@@ -19,7 +19,7 @@
 !*.md
 !*.yml
 # Ignore these directories
-**/conda_env/
+**/elm_env/
 **/CASE_DIR/
 params/clm_params_c180301.nc
 params/fates_params_default_2pft.nc
