@@ -26,8 +26,7 @@
 # READ YAML VARIABLES
 # =======================================================================================
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
-echo $SCRIPT_DIR
-source "$SCRIPT_DIR/../tools/yaml.sh"
+source `realpath "$SCRIPT_DIR/../tools/yaml.sh"`
 #parse_yaml "$SCRIPT_DIR/../config.yaml"
 create_variables "$SCRIPT_DIR/../config.yaml"
 PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
