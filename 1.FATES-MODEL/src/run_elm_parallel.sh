@@ -2,7 +2,7 @@
 # =======================================================================================
 #
 # This script will create, setup and build and run a multi-site ELM-FATES simulation  
-# based on config.yaml and extracts outputs.
+# based on config.yaml.
 
 # Rutuja Chitra-Tarak (Tue Aug 3, 2021)
 # =======================================================================================
@@ -37,16 +37,4 @@ sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
 sed -i "s|^mpiexec.*|$MPICOMMAND|g" src/run_elm.sh
 
 sbatch src/run_elm.sh 
-# This does not run currently, so run on the front end
-
-python src/elm.py
-
-# 6. To find which cases are complete (output/Filter.txt) and which are not (output/Missing.txt), run:
-
-python src/create.filter.py
-
- 
-# 7. To extract outputs from ELM ensembles (output/exrtact/elm_daily_outputs.txt), run:
-
-python src/extract.output.py
 
