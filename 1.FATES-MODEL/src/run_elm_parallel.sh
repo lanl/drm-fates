@@ -12,6 +12,7 @@ source "$SCRIPT_DIR/../tools/yaml.sh"
 create_variables "$SCRIPT_DIR/../config.yaml"
 
 # 1.1 Unzip sample climate data:
+
 unzip data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.0i/
 
 # 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
