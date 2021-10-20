@@ -11,20 +11,20 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Loc
 source "$SCRIPT_DIR/../tools/yaml.sh"
 create_variables "$SCRIPT_DIR/../config.yaml"
 
+# 1.1 Unzip sample climate data:
+unzip data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.0i/
+
 # 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
 python src/generate.inputs.py
-
  
 # 3. To generate a base case of ELM, run:
 
 python src/create.basecase.py
-
  
 # 4. To generate ELM clone cases each associated with an ensemble member, run:
 
 python src/create.ELM.ensemble.py
-
  
 # 5. To run the parallel emsemble simulations as per elm.py, run the following command:
 python src/elm.py
