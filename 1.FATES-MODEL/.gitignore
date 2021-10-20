@@ -8,7 +8,7 @@
 !OutputExtract/*.R
 !tools/*.sh
 !data/HPU.Table.csv
-data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1/*.nc
+!data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1/*.nc
 !params/*.nc
 ## but not these files
 !.gitignore
