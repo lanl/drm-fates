@@ -21,7 +21,7 @@ python src/generate.inputs.py
  
 # 3. To generate a base case of ELM, run:
 
-python src/create.basecase.py
+#python src/create.basecase.py
  
 # 4. To generate ELM clone cases each associated with an ensemble member, run:
 
@@ -37,5 +37,7 @@ sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" src/run_elm.sh
 sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
 sed -i "s|^mpiexec.*|$MPICOMMAND|g" src/run_elm.sh
 
-sbatch src/run_elm.sh 
+sbatch src/run_elm.sh
+# currently this needs to be twice because the first instance produces a false alarm 
+sbatch src/run_elm.sh
 
