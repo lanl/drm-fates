@@ -38,7 +38,7 @@ FINALTAG = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
 
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) +"'" + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(HPU_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 file = open("mpi_command.txt", "w")
 file.write(command + "\n")
