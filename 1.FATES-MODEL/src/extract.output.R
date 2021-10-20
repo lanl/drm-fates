@@ -221,7 +221,7 @@ extractres_h1 <-
 #      save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
 #    }
       all.sam.var <- do.call(rbind, all.sam.list)
-      write.table(all.sam.var, file = file.path(outdir, "extract", "elm_daily_outputs.txt"), row.names = FALSE)
+      write.table(all.sam.var, file = file.path(outdir, "elm_daily_outputs.txt"), row.names = FALSE)
       return(TRUE)
   }
 
