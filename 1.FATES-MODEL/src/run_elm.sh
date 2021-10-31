@@ -29,8 +29,6 @@ date=`date "+%F-%T"`
 
 jobid=$SLURM_JOB_ID
 
-cd $casedir
-
 mpiexec -n 2 python /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease/src/parallel.run.py -c 'HPU.TEST.ICLM45ED.badger.intel.C4a252d21f-F8c9cd1b0d.2017-2018'. -r /lustre/scratch3/turquoise/rutuja/ACME/cases -f clm2.h0.2018-12.nc -s 1 -t 2 -g /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Disease/log
 
 #python $PY_SRC_PATH

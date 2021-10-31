@@ -35,7 +35,7 @@ CASEDIR=`realpath $SCRIPT_DIR/../${CASE_DIR}`
 sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" src/run_elm.sh
 sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" src/run_elm.sh
 sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
-sed -i "s|^mpiexec.*|$MPICOMMAND|g" src/run_elm.sh
+sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
 
 sbatch src/run_elm.sh
 # currently this needs to be twice because the first instance produces a false alarm 
