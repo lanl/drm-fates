@@ -38,6 +38,3 @@ sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
 sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
 
 sbatch src/run_elm.sh
-# currently this needs to be twice because the first instance produces a false alarm 
-sbatch src/run_elm.sh
-

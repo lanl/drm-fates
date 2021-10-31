@@ -22,7 +22,7 @@ conda activate elm_env
 
 sh src/run_elm_parallel.sh
 
-6. You need to wait till simulations have run--depnding on years in config.yaml. Note: Currently sbatch run twice because first instance raises false alarm". You can confirm success if the second round of file of type slurmJOB#.out records "CASE.RUN HAS FINISHED"
+6. You need to wait till simulations have run--depnding on years in config.yaml. You can confirm success if file of type slurmJOB#.out records "CASE.RUN HAS FINISHED"
 
 7. Then extract ELM outputs with:
 

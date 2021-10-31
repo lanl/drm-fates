@@ -43,7 +43,8 @@ foreach case_i (`seq 1 $#arr_case`)
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
   #rm -rf $RUN_ROOT/$ACME_CASE_CLONE
   cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$ACME_CASE_CLONE/bld/ 
-
+  ./case.setup --reset
+  ./xmlchange BUILD_COMPLETE="TRUE"
   echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
 echo "============In total created $#arr_case clones from a base case============"
