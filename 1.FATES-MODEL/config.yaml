@@ -22,6 +22,9 @@ MUTATE: FALSE
 #----ELM parameter ensemble data----
 HPU_PATH: data/HPU.Table.csv
 
+#----Is the parameter enseble for a sensitivity analysis?----
+SENSITIVITY: FALSE
+
 #----Ensemble IDs to run---- 
 HPU_ID_START: 1
 HPU_ID_END: 2 
