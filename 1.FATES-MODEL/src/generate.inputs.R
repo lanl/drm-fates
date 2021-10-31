@@ -46,15 +46,14 @@ generate.surface.files <- function(param.tab, PARAM_PATH, surf_basefile) {
                         PCT_CLAY = rep(c(100 - c(param.tab$SANDPCT[i] + param.tab$SILTPCT[i])), 10), 
                         ORGANIC = rep(param.tab$ORGC[i], 10))
     txr.par.names <- colnames(txr.4)[-1]
-    txr.n.par <- length(txr.par.names)
-    
+    txr.n.par <- length(txr.par.names)  
     
     for (j in 1:txr.n.par) {
       var.name <- txr.par.names[j]
       if (var.name != "NA") {
         surf.para.values <- ncdf4::ncvar_get(surf_para, var.name)
-        surf.para.values <- txr.4[, txr.par.names[j]]
-        ncdf4::ncvar_put(surf_para, var.name, surf.para.values)
+        surf.para.values <- txr.4[, var.name]
+	ncdf4::ncvar_put(surf_para, var.name, surf.para.values)
       } 
     } #j
     ncdf4::nc_close(surf_para)
@@ -63,12 +62,11 @@ generate.surface.files <- function(param.tab, PARAM_PATH, surf_basefile) {
   clonefile.test <- paste0(surf.dir, "/", surf_basefile, 1, ".nc")
   para.test <- ncdf4::nc_open(clonefile.test, write = T)
   ## value in the file
-  file.value <- ncdf4::ncvar_get(para.test, txr.par.names[1])
+  file.value <- ncdf4::ncvar_get(para.test, txr.par.names[1])[1]
   ## value that was to be substituted
-  desired.value <- txr.4[1, txr.par.names[1]]
+  desired.value <- param.tab$SANDPCT[1]
   ncdf4::nc_close(para.test)
   ## make sure the two do match
-
   match <- all(file.value == desired.value)
   return(match)
 }
