@@ -6,7 +6,7 @@
 
 #-------------------------------------------------
 # Create the files
-generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
+generate.surface.files <- function(param.tab, PARAM_PATH, surf_basefile) {
   #*******************
   ## Load packages----
   #*******************
@@ -15,8 +15,8 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
   #*******************
   ## Process inputs----
   #******************* 
-  # HPU.tab is expected to have headers: SANDPCT SILTPCT ORGC  
-  n.sam <- nrow(HPU.tab)
+  # param.tab is expected to have headers: SANDPCT SILTPCT ORGC  
+  n.sam <- nrow(param.tab)
   
   #*******************
   ## Create clones of surface data file to hold changed parameter----
@@ -42,9 +42,9 @@ generate.surface.files <- function(HPU.tab, PARAM_PATH, surf_basefile) {
     surf_para <- ncdf4::nc_open(clonefile2, write = T)
     ## Create new data to replace those in the default file
     txr.4 <- data.frame(depth = c(0.007, 0.03, 0.062, 0.11, 0.21, 0.36, 0.62, 1.04, 1.73, 2.86),
-                        PCT_SAND = rep(HPU.tab$SANDPCT[i], 10),
-                        PCT_CLAY = rep(c(100 - c(HPU.tab$SANDPCT[i] + HPU.tab$SILTPCT[i])), 10), 
-                        ORGANIC = rep(HPU.tab$ORGC[i], 10))
+                        PCT_SAND = rep(param.tab$SANDPCT[i], 10),
+                        PCT_CLAY = rep(c(100 - c(param.tab$SANDPCT[i] + param.tab$SILTPCT[i])), 10), 
+                        ORGANIC = rep(param.tab$ORGC[i], 10))
     txr.par.names <- colnames(txr.4)[-1]
     txr.n.par <- length(txr.par.names)
     

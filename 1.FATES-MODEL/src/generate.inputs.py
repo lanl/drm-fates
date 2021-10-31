@@ -22,7 +22,7 @@ with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_DIR = config_dict['PARAM_DIR']
-HPU_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
+PARAM_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
 
 if(config_dict['SENSITIVITY']):
@@ -40,7 +40,7 @@ r['source'](R_file)
 generate_surface_files_function_r = robjects.globalenv['generate.surface.files']
 
 # Reading and processing data
-df = pd.read_csv(HPU_Table)
+df = pd.read_csv(PARAM_Table)
 
 # Converting it into r object for passing into r function
 # df_r = pandas2ri.ri2py(df)
