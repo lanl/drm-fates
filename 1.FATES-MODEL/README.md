@@ -14,7 +14,7 @@ sh src/run_once.sh
 4. Activate conda environment
 
 ! sh src/activate_env.sh 
-! Somehow the conda activate command throws an error (needs fixing), so run it outside, provided that the environment name matches the one created (*_env):
+! Somehow the conda activate command throws an error (needs fixing), so run it outside, provided that the environment name matches the one created (xx_env):
 
 conda activate elm_env
 
