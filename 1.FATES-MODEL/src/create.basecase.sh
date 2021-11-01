@@ -35,15 +35,15 @@ PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
 # =======================================================================================
 
-export SITE_NAME=bci_0.1x0.1_v4.0i                         	# Name of folder with site data
+export SITE_NAME=$CLIM_DATA_DIR	                        	# Name of folder with site data
 export SITE_BASE_DIR=$PROJECT_ROOT/$DATA_DIR                	# Where is the site folder located? (SITE_NAME)
 export TAG=$TAG                                            	# User defined tag to differentiate runs
 export COMPSET=$COMPSET                                    	# Compset (probably ICLM45ED or ICLM50ED)
 export MAC=$MAC                                           	# Name your machine
 export COMPILER=$COMPILER                                  	# Name your compiler
 export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 	# Where the build is generated (probably on scratch partition)
-export CLM_USRDAT_DOMAIN=${DOMAIN_FILE}   			# Name of domain file in scripts/${SITE_DIR}/
-export CLM_USRDAT_SURDAT=${SURF_FILE} 				# Name of surface file in scripts/${SITE_DIR}/
+export CLM_USRDAT_DOMAIN=$DOMAIN_FILE   			# Name of domain file in scripts/${SITE_DIR}/
+export CLM_USRDAT_SURDAT=$SURF_FILE				# Name of surface file in scripts/${SITE_DIR}/
 export PARAM_BASE_DIR=$PARAM_DIR
 
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
@@ -59,8 +59,8 @@ export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git
 export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
 export RES=CLM_USRDAT
 export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.$DATM_CLMNCEP_YR_START-$DATM_CLMNCEP_YR_END
-export FATES_PARAM=${FATES_PARAM} # Name of FATES parameter file in FATES_PARAM_DIR
-export ELM_PARAM=${ELM_PARAM} # Name of ELM parameter file in ELM_PARAM_DIR
+export FATES_PARAM=$FATES_PARAM # Name of FATES parameter file in FATES_PARAM_DIR
+export ELM_PARAM=$ELM_PARAM # Name of ELM parameter file in ELM_PARAM_DIR
 
 echo $CASE_NAME > BASE_CASE_NAME.txt
 
@@ -181,12 +181,11 @@ taxmode = "cycle", "cycle", "cycle"
 EOF
 
 ./case.setup
-
 # HERE WE NEED TO MODIFY THE STREAM FILE (DANGER ZONE - USERS BEWARE CHANGING)
 ./preview_namelists
 cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.CLM_USRDAT user_datm.streams.txt.CLM1PT.CLM_USRDAT
 `sed -i '/FLDS/d' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
-`sed -i 's/CLM1PT_data/bci_0.1x0.1_met.v5.1/' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
+`sed -i "s/CLM1PT_data/$CLIM_DATA/" user_datm.streams.txt.CLM1PT.CLM_USRDAT`
 
 ./case.build
 echo "============Successfully created a base case============"

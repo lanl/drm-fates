@@ -1,7 +1,7 @@
 
-This project will create and run a parallel ELM-FATES simulation and extract outputs.
+This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
 
-1. First set variables in config.yaml (Well-configured for a toy model run, so no changes needed)
+1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required.)
 
 2. Set environmental variables:
 

@@ -44,6 +44,8 @@ DOMAIN_FILE: domain_bci_panama_v1_c171113.nc
 SURF_FILE: surfdata_bci_panama_v1_c171113.1.nc
 FATES_PARAM: fates_params_default_2pft.nc
 ELM_PARAM: elm_parameter_file_name1.nc
+CLIM_DATA_DIR: bci_0.1x0.1_v4.0i
+CLIM_DATA: bci_0.1x0.1_met.v5.1
 
 #----ELM Run attributes----
 N_NODE: 1 # Make sure that N_NODE*N_CPU_PER_NODE >= (HPU_ID_END-HPU_ID_START)+1
