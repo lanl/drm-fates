@@ -26,7 +26,7 @@ conda env create -f environment.yml
 ## 3. Make sure you are on the desired ELM branch. 
 mkdir -p $ACME_ROOT
 cd $ACME_ROOT
-git clone $ELM_REMOTE 
+git clone $ELM_REMOTE . 
 ## If a submodule is not found, update them
 git submodule update --init --recursive
 
