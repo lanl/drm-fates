@@ -4,9 +4,9 @@
 
 # ----ELM-FATES code----
 ELM_BRANCH: rutuja/ELM_FATES_HYDRO_DFLT_pedotrf_HKSAT_ADJ
-FATES_BRANCH: rutuja/xuc/coastal_veg_ready_to_merge_July_2019
+FATES_BRANCH: xuchongang/coastal_veg_ready_to_merge_July_2019
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_REMOTE: git@github.com:rutujact/fates.git
+FATES_REMOTE: git@github.com:xuchongang/fates.git
 
 # ----Directories under PROJECT ROOT----
 LOG_DIR: log

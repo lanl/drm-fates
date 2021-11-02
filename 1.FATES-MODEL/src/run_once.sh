@@ -26,14 +26,15 @@ conda env create -f environment.yml
 ## 3. Make sure you are on the desired ELM branch. 
 mkdir -p $ACME_ROOT
 cd $ACME_ROOT
-git clone $ELM_REMOTE --branch $ELM_BRANCH --single-branch .
+git clone $ELM_REMOTE 
+## If a submodule is not found, update them
+git submodule update --init --recursive
+
 git checkout $ELM_BRANCH
 
-## If a submodule is not found, update them
-# git submodule update --init --recursive
-
 ## 4. Make sure you are on the desired fates branch. 
-cd $FATES_ROOT
+cd $FATES_ROOT/..
+rm -rf fates/
 git clone $FATES_REMOTE --branch $FATES_BRANCH --single-branch .
-git checkout $FATES_BRANCH
+#git checkout $FATES_BRANCH
 
