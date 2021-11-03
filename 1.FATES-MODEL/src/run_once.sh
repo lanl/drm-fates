@@ -12,13 +12,13 @@ cd $PROJECT_ROOT
 mkdir -p elm_env # create if not already present
 
 # 2. To create the environment from a yml file, run this in a shell:
-conda config --add envs_dirs $PROJECT_ROOT
+#conda config --add envs_dirs $PROJECT_ROOT
 ## Name of the new conda env is conda_env in the environment.yml file. If such env elready xists, change the name in the file
-sed -i 's/conda_env/elm_env/g' environment.yml
-sed -i '/prefix/d' environment.yml
-sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/elm_env" environment.yml
-cd $PROJECT_ROOT
-conda env create -f environment.yml
+#sed -i 's/conda_env/elm_env/g' environment.yml
+#sed -i '/prefix/d' environment.yml
+#sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/elm_env" environment.yml
+#cd $PROJECT_ROOT
+#conda env create -f environment.yml
 
 # Alternatively, you could also create the environment from scratch:
 # ./src/create.conda.env.sh
@@ -33,8 +33,8 @@ git submodule update --init --recursive
 git checkout $ELM_BRANCH
 
 ## 4. Make sure you are on the desired fates branch. 
-cd $FATES_ROOT/..
-rm -rf fates/
-git clone $FATES_REMOTE --branch $FATES_BRANCH --single-branch .
-#git checkout $FATES_BRANCH
+cd $FATES_ROOT
+git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
+git fetch fates_repo 
+git checkout $FATES_BRANCH
 
