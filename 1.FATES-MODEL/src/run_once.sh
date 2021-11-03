@@ -26,15 +26,15 @@ mkdir -p elm_env # create if not already present
 ## 3. Make sure you are on the desired ELM branch. 
 mkdir -p $ACME_ROOT
 cd $ACME_ROOT
-git clone $ELM_REMOTE . 
+
+git clone $ELM_REMOTE .
 ## If a submodule is not found, update them
 git submodule update --init --recursive
 
-git checkout $ELM_BRANCH
+git checkout -b $ELM_BRANCH origin/$ELM_BRANCH 
 
 ## 4. Make sure you are on the desired fates branch. 
 cd $FATES_ROOT
 git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
-git fetch fates_repo 
-git checkout $FATES_BRANCH
+git checkout -b fates_repo/$FATES_BRANCH
 
