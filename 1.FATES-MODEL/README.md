@@ -1,6 +1,9 @@
 This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
 
 0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
+ssh user@wtrw.lanl.gov
+
+ssh ba-fe
 
 cd /usr/projects/veg/$user
 
