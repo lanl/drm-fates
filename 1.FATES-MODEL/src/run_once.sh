@@ -39,5 +39,6 @@ cd ..
 rm -rf fates
 git clone $FATES_REMOTE
 #git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
+cd $FATES_ROOT
 git checkout -b fates_repo/$FATES_BRANCH
 
