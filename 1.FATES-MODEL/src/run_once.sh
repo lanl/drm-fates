@@ -28,12 +28,11 @@ mkdir -p $ACME_ROOT
 cd $ACME_ROOT
 
 #git clone $ELM_REMOTE .
+#git checkout -b $ELM_BRANCH origin/$ELM_BRANCH
 git clone --single-branch --branch $ELM_BRANCH $ELM_REMOTE .
 
 ## If a submodule is not found, update them
 git submodule update --init --recursive
-
-#git checkout -b $ELM_BRANCH origin/$ELM_BRANCH 
 
 ## 4. Make sure you are on the desired fates branch. 
 cd $FATES_ROOT
@@ -42,5 +41,5 @@ rm -rf fates
 git clone $FATES_REMOTE
 #git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
 cd $FATES_ROOT
-git checkout -b fates_repo/$FATES_BRANCH
+git checkout $FATES_BRANCH
 
