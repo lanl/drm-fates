@@ -35,6 +35,9 @@ git checkout -b $ELM_BRANCH origin/$ELM_BRANCH
 
 ## 4. Make sure you are on the desired fates branch. 
 cd $FATES_ROOT
-git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
+cd ..
+rm -rf fates
+git clone $FATES_REMOTE
+#git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
 git checkout -b fates_repo/$FATES_BRANCH
 
