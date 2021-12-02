@@ -11,6 +11,9 @@ mkdir -p ACME_cases
 
 cd ACME_cases
 
+! Before cloning repo, you may need to ssh auntheticate, if you haven't done that already:
+! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
 git clone git@github.com:rutujact/ELM_Workflow.git
 
 cd ELM_Workflow
