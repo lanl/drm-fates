@@ -1,5 +1,18 @@
-
 This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
+
+0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
+
+cd /usr/projects/veg/$user
+
+mkdir -p ACME_cases
+
+cd ACME_cases
+
+git clone git@github.com:rutujact/ELM_Workflow.git
+
+cd ELM_Workflow
+
+vim README.md
 
 1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required.)
 
