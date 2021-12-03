@@ -38,7 +38,9 @@ foreach case_i (`seq 1 $#arr_case`)
   endif
   ./case.setup
   ./xmlchange BUILD_COMPLETE="TRUE"
-  ./xmlchange BATCH_SYSTEM="slurm"
+  #./xmlchange BATCH_SYSTEM="slurm" --file env_batch.xml
+  #./xmlchange BATCH_SYSTEM="slurm" --file LockedFiles/env_batch.xml
+  
   # copy cesm.exe in base case run folder
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
   #rm -rf $RUN_ROOT/$ACME_CASE_CLONE
