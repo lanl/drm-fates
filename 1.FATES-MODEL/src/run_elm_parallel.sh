@@ -21,7 +21,7 @@ python src/generate.inputs.py
  
 # 3. To generate a base case of ELM, run:
 
-#python src/create.basecase.py
+python src/create.basecase.py
  
 # 4. To generate ELM clone cases each associated with an ensemble member, run:
 
