@@ -41,9 +41,19 @@ conda activate elm_env
 
 sh src/run_elm_parallel.sh
 
-6. You need to wait till simulations have run--depnding on years in config.yaml. You can confirm success if file of type slurmJOB#.out records "CASE.RUN HAS FINISHED"
+6. Often the first attempt of running a parallel simulation is unsuccessful. Run this script until you get "sbatch has finished running" & "a simulation ran successfully":
 
-7. Then extract ELM outputs with:
+sh src/run_success.sh
+
+7. To find which simulations (cases) are complete (output/Filter.txt) and which are not (output/Missing.txt), run:
+
+python src/create.filter.py
+
+8.  If all are not complete, try submitting the job again (cases that were already complete, will be skipped):
+
+sh src/run_elm.sh
+
+9. Then to extract ELM outputs with:
 
 sh src/extract_outputs.sh
 

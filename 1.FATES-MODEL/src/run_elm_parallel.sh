@@ -21,7 +21,7 @@ python src/generate.inputs.py
  
 # 3. To generate a base case of ELM, run:
 
-python src/create.basecase.py
+#python src/create.basecase.py
  
 # 4. To generate ELM clone cases each associated with an ensemble member, run:
 
@@ -41,19 +41,3 @@ sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
 # 6. To run parallel simulations on the back node, run sbatch:
 rm slurm*
 sbatch src/run_elm.sh
-
-# 7. Make sure cases have successfully finished, else re-run sbatch:
-if grep -w "Finished on"  slurm*.out; then
-   echo "sbatch has finished running"
-else
-echo "sbatch has not yet finished running"
-fi
-# The following test should ideally be run if sbatch above has finished running,
-# but typically no harm if sbatch is submitted again. It will skip those cases that are completed:
-# This will test if at least one case has finished successfully.
-if grep -w "CASE.RUN HAS FINISHED" slurm*.out; then
-   echo "Simulation ran successfully"
-else
-   echo "Rerunning batch";
-   sbatch src/run_elm.sh
-fi
