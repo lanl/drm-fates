@@ -27,9 +27,13 @@ conda env create -f environment.yml
 mkdir -p $ACME_ROOT
 cd $ACME_ROOT
 
-#git clone $ELM_REMOTE .
-#git checkout -b $ELM_BRANCH origin/$ELM_BRANCH
-git clone --single-branch --branch $ELM_BRANCH $ELM_REMOTE .
+if ! [ -d .git ]; then
+  git clone $ELM_REMOTE .
+fi
+git remote -v | grep -w elm_repo || git remote add elm_repo $ELM_REMOTE
+git remote set-url elm_repo $ELM_REMOTE
+git checkout $ELM_BRANCH
+# git checkout --track elm_repo/$ELM_BRANCH
 
 ## If a submodule is not found, update them
 git submodule update --init --recursive
