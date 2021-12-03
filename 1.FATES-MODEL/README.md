@@ -26,7 +26,7 @@ cd ELM_Workflow
 
 source src/.tcshrc
 
-3. cd into ELM_Disease, then run once to load ELM and FATES branches:
+3. cd into ELM_Disease, then run once to create and activate a conda environment (takes ~10-15 min) and load ELM and FATES branches:
 
 sh src/run_once.sh
 
