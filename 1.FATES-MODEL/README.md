@@ -7,9 +7,9 @@ ssh ba-fe
 
 cd /usr/projects/veg/$user
 
-mkdir -p ACME_cases
+mkdir -p ELM_cases
 
-cd ACME_cases
+cd ELM_cases
 
 ! Before cloning repo, you may need to ssh auntheticate, if you haven't done that already:
 ! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
@@ -18,7 +18,7 @@ git clone git@github.com:rutujact/ELM_Workflow.git
 
 cd ELM_Workflow
 
-vim README.md
+!vim README.md
 
 1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required.)
 
