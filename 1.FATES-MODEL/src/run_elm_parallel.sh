@@ -11,23 +11,29 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Loc
 source `realpath "$SCRIPT_DIR/../tools/yaml.sh"`
 create_variables "$SCRIPT_DIR/../config.yaml"
 
-# 1.1 Unzip sample climate data:
+# 2.  Unzip sample climate data:
 
 unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.0i/
 
-# 2. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
+# 3. To generate parameter table, if sensitivity analysis:
+
+if ${SENSITIVITY}; then
+   python src/generate.param.table.py
+fi
+
+# 4. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
 python src/generate.inputs.py
  
-# 3. To generate a base case of ELM, run:
+# 5. To generate a base case of ELM, run:
 
-#python src/create.basecase.py
+python src/create.basecase.py
  
-# 4. To generate ELM clone cases each associated with an ensemble member, run:
+# 6. To generate ELM clone cases each associated with an ensemble member, run:
 
 python src/create.ELM.ensemble.py
  
-# 5. To prepare the parallel simulation command as per elm.py, run the following command:
+# 7. To prepare the parallel simulation command as per elm.py, run the following command:
 python src/elm.py
 MPICOMMAND=`cat $SCRIPT_DIR/../mpi_command.txt`
 CASEDIR=`realpath $SCRIPT_DIR/../${CASE_DIR}`
@@ -38,6 +44,6 @@ sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
 sed -i '/^mpi/d' src/run_elm.sh
 sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
 
-# 6. To run parallel simulations on the back node, run sbatch:
+# 8. To run parallel simulations on the back node, run sbatch:
 rm slurm*
 sbatch src/run_elm.sh
