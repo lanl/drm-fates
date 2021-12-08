@@ -17,29 +17,27 @@
 ## OR
 ## conda info --envs
 
-## To initialise conda
-# source "${LPYTHON_HOME}/etc/profile.d/conda.csh"
-
-## To initialise conda at login
-# module load python/3.8-anaconda-2020.07
-# conda init tcsh
-# You will need to make sure that ~/.tcshrc runs at the login
 ##**************************************************************
 
-# add the curret directory to the conda env dir
-set currentdir=`pwd`
-conda config --add envs_dirs $currentdir
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
+
+PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
+cd $PROJECT_ROOT
+
+# add the project directory to the conda env dir
+conda config --add envs_dirs $PROJECT_ROOT
+
 # To remove:
-# conda config --remove envs_dirs $currentdir 
+# conda config --remove envs_dirs $PROJECT_ROOT 
 
 # To remove older conda env
-conda remove --prefix $currentdir/conda_env --all
+conda remove --prefix $PROJECT_ROOT/elm_env --all
 
-# Create a conda environment with a specified name, conda_env, and a desired list of modules and their versions
-conda create --name conda_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py pyyaml
+# Create a conda environment with a specified name, elm_env, and a desired list of modules and their versions
+conda create --name elm_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py pyyaml r-lhds
 
 # Activate the environment. Activation prepends to PATH.
-conda activate conda_env
+conda activate elm_env
 
 # Add any other modules that were not found by the default conda channels
 conda install -c conda-forge tzlocal 
@@ -55,14 +53,14 @@ conda install -c conda-forge tzlocal
 # Run with
 #./create.conda.env.sh
 
-# With conda versions that end in yyyy-mo, path to the  conda_env would be automatically added. If not,
+# With conda versions that end in yyyy-mo, path to the  elm_env would be automatically added. If not,
 # Make sure the conda env is on the PATH
 # echo $PATH
-# set PATH=$currentdir'/conda_env/bin':$PATH
+# set PATH=$currentdir'/elm_env/bin':$PATH
 # echo $PATH
 
 # Activate the environment
-# conda activate conda_env
+# conda activate elm_env
 # Export your active environment to a new file:
 # conda env export > environment.yml
 
