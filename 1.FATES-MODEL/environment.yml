@@ -233,6 +233,7 @@ dependencies:
   - r-scales=1.0.0=r36h29659fb_0
   - r-selectr=0.4_1=r36h6115d3f_0
   - r-shiny=1.3.2=r36h6115d3f_0
+  - r-slhd=2.1_1=r36h29659fb_0
   - r-sourcetools=0.1.7=r36h29659fb_0
   - r-spatial=7.3_11=r36h96ca727_4
   - r-squarem=2017.10_1=r36h6115d3f_0

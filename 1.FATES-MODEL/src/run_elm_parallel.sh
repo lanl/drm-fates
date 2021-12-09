@@ -17,7 +17,7 @@ unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.
 
 # 3. To generate parameter table, if sensitivity analysis:
 
-if ${SENSITIVITY}; then
+if [ ${SENSITIVITY} ]; then
    python src/generate.param.table.py
 fi
 
