@@ -17,7 +17,7 @@ unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.
 
 # 3. To generate parameter table, if sensitivity analysis:
 
-if ${SENSITIVITY}; then
+if [ ${SENSITIVITY} ]; then
    python src/generate.param.table.py
 fi
 
@@ -46,4 +46,4 @@ sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
 
 # 8. To run parallel simulations on the back node, run sbatch:
 rm slurm*
-sbatch src/run_elm.sh
+#sbatch src/run_elm.sh

@@ -17,13 +17,25 @@ CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
 #----Create exact ELM clones or vary parameter files----
-MUTATE: FALSE
+MUTATE: TRUE
 
 #----ELM parameter ensemble data----
 HPU_PATH: data/HPU.Table.csv
 
 #----Is the parameter enseble for a sensitivity analysis?----
-SENSITIVITY: FALSE
+SENSITIVITY: TRUE
+SEN_PATH: output/Param.Table.csv
+RANGE: 
+  PARAMETERS: 
+  - "aveDTB"
+  - "FMAX"
+  MINPARAM:
+  - 0
+  - 0.01
+  MAXPARAM:
+  - 18
+  - 0.80
+SLICES: 10
 
 #----Ensemble IDs to run---- 
 HPU_ID_START: 1

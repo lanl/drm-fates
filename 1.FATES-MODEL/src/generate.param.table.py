@@ -1,7 +1,7 @@
 """
-# Generate clones of a parameter file and substitutes desired parameter values
+# Generate parameter table for sensitivity analysis
 # Rutuja Chitra-Tarak
-# July 7, 2021
+# Dec 9, 2021
 """
 import pandas as pd
 import rpy2
@@ -21,36 +21,30 @@ args = parser.parse_args()
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
-PARAM_DIR = config_dict['PARAM_DIR']
-PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
+PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
+SLICES = config_dict['SLICES']
 
-if(config_dict['SENSITIVITY']):
-	R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
-	PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
-else:
-	R_file = PROJECT_ROOT+'/src/generate.inputs.R'
-	PARAM_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
+pd_df = pd.DataFrame({'par.names': config_dict['RANGE']['PARAMETERS'],
+                      'min.param': config_dict['RANGE']['MINPARAM'],
+                      'max.param': config_dict['RANGE']['MAXPARAM']})
 
-surf_basefile = config_dict['SURF_BASE']
+R_file = PROJECT_ROOT+'/src/generate.param.table.R'
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
 r['source'](R_file)
 
 # Loading the function we have defined in R.
-generate_surface_files_function_r = robjects.globalenv['generate.surface.files']
-
-# Reading and processing data
-df = pd.read_csv(PARAM_Table)
+generate_param_table_function_r = robjects.globalenv['generate.param.table']
 
 # Converting it into r object for passing into r function
 # df_r = pandas2ri.ri2py(df)
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_r = robjects.conversion.py2ri(df) # in later rpy2 versions use py2rpy
+  df_r = robjects.conversion.py2ri(pd_df) # in later rpy2 versions use py2rpy
 df_r
 
 #Invoking the R function and getting the result
-df_result_r = generate_surface_files_function_r(df_r, PARAM_PATH, surf_basefile)
+df_result_r = generate_param_table_function_r(df_r, SLICES, PARAM_Table)
 # Converting it back to a pandas dataframe.
 # df_result = pandas2ri.py2ri(df_result_r)
 with localconverter(robjects.default_converter + pandas2ri.converter):
@@ -58,8 +52,8 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 df_result
 
 if(df_result):
-    print('Surface Data file clones generated. New Parameters Substituted Successfully!')
+    print('Successfully generated parameter table for sensitivity analysis.')
 else:
-    print("ERROR: Parameter substitution was unsuccessful.") 
+    print("ERROR: Parameter table generation for sensitivity analysis  was unsuccessful.") 
     exit(0)
 
