@@ -16,48 +16,47 @@ DATA_DIR: data
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
-#----Create exact ELM clones or vary parameter files----
+#----Create exact ELM clones or mutate/vary parameter files----
 MUTATE: TRUE
 
-#----ELM parameter ensemble data----
-HPU_PATH: data/HPU.Table.csv
+#----ELM parameter ensemble data across sites----
+SITES_PARAM_PATH: data/HPU.Table.csv
 
 #----Is the parameter enseble for a sensitivity analysis?----
-SENSITIVITY: TRUE
-SEN_PATH: output/Param.Table.csv
+SENSITIVITY: TRUE # This turns off multi-site runs 
+SEN_PATH: output/Param.Table.csv # output file
 RANGE: 
   PARAMETERS: 
-  - "aveDTB"
-  - "FMAX"
+    - fates_rootb_par
   MINPARAM:
-  - 0
-  - 0.01
+    - 0.217
   MAXPARAM:
-  - 18
-  - 0.80
+    - 1.956
 SLICES: 10
 
 #----Ensemble IDs to run---- 
-HPU_ID_START: 1
-HPU_ID_END: 2 
+SIM_ID_START: 1
+SIM_ID_END: 4 
 
 #----ELM case set-up attributes----
-TAG: HPU.TEST
+TAG: BCI.ROOTB.VAR.INV
 COMPSET: ICLM45ED
 MAC: badger
 COMPILER: intel
-STOP_N: 2 # years to run
-REST_N: 2 # frequency of yrs to write restart file
-RUN_STARTDATE: 2017-01-01
-DATM_CLMNCEP_YR_START: 2017
-DATM_CLMNCEP_YR_END: 2018
-SURF_BASE: surfdata_bci_panama_v1_c171113.
-DOMAIN_FILE: domain_bci_panama_v1_c171113.nc
-SURF_FILE: surfdata_bci_panama_v1_c171113.1.nc
-FATES_PARAM: fates_params_default_2pft.nc
-ELM_PARAM: elm_parameter_file_name1.nc
+STOP_N: 50 # years to run
+REST_N: 10 # frequency of yrs to write restart file
+RUN_STARTDATE: 1971-01-01
+DATM_CLMNCEP_YR_START: 1971
+DATM_CLMNCEP_YR_END: 2020
+PARAM_FILE:
+  DOMAIN: domain_bci_panama_v1_c171113.nc
+  SURF: surfdata_bci_panama_v1_c171113.3563.nc
+  FATES: fates_parameter_file_name.3563.nc
+  ELM: elm_parameter_file_name.3563.nc
+CLONE_BASE: fates_parameter_file_name. # base file to clone
+CLONE_TYPE: FATES # parameter file type to change
 CLIM_DATA_DIR: bci_0.1x0.1_v4.0i
-CLIM_DATA: bci_0.1x0.1_met.v5.1
+CLIM_DATA: bci_0.1x0.1_met.v6.1
 
 #----ELM Run attributes----
 N_NODE: 1 # Make sure that N_NODE*N_CPU_PER_NODE >= (HPU_ID_END-HPU_ID_START)+1
