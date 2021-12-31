@@ -37,8 +37,8 @@ PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
 runroot = os.environ["RUN_ROOT"]
 
-sam_start = config_dict['HPU_ID_START']
-sam_stop = config_dict['HPU_ID_END']
+sam_start = config_dict['SIM_ID_START']
+sam_stop = config_dict['SIM_ID_END']
 
 start_year = config_dict['DATM_CLMNCEP_YR_START']
 end_year = config_dict['DATM_CLMNCEP_YR_END']

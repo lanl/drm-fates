@@ -38,8 +38,8 @@ r['source'](R_file)
 extractres_h1_r = robjects.globalenv['extractres_h1']
 #extractres_h2_r = robjects.globalenv['extractres_h2']
 
-sam_start = config_dict['HPU_ID_START']
-sam_end = config_dict['HPU_ID_END']
+sam_start = config_dict['SIM_ID_START']
+sam_end = config_dict['SIM_ID_END']
 
 start_year = config_dict['DATM_CLMNCEP_YR_START']
 end_year = config_dict['DATM_CLMNCEP_YR_END']
@@ -50,7 +50,7 @@ base_case=ff.read()
 filebase=base_case.strip()
 
 filterFile = "Filter.txt"
-var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI"] 
+var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI", "QVEGE", "QVEGT", "QDRAI", "QOVER"] 
 #['H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI']
 scale_vec_h1 = [1.0]*len(var_vec_h1) 
 
