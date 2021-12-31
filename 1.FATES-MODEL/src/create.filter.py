@@ -40,6 +40,8 @@ runroot = os.environ["RUN_ROOT"]
 sam_start = config_dict['SIM_ID_START']
 sam_stop = config_dict['SIM_ID_END']
 
+nsam = sam_stop - sam_start + 1
+print(nsam)
 start_year = config_dict['DATM_CLMNCEP_YR_START']
 end_year = config_dict['DATM_CLMNCEP_YR_END']
 
@@ -56,6 +58,6 @@ df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, 
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
-print(int(df_result), ' Cases Finished Successfully!')
+print(int(df_result),' out of ',nsam,' cases Finished Successfully!')
 exit(0)
 
