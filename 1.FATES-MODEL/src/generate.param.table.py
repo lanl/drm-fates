@@ -22,12 +22,12 @@ with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
+outdir=config_dict['OUTPUT_DIR']
 SLICES = config_dict['SLICES']
 
 pd_df = pd.DataFrame({'par.names': config_dict['RANGE']['PARAMETERS'],
                       'min.param': config_dict['RANGE']['MINPARAM'],
                       'max.param': config_dict['RANGE']['MAXPARAM']})
-
 R_file = PROJECT_ROOT+'/src/generate.param.table.R'
 
 # Defining the R script and loading the instance in Python
@@ -44,7 +44,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 df_r
 
 #Invoking the R function and getting the result
-df_result_r = generate_param_table_function_r(df_r, SLICES, PARAM_Table)
+df_result_r = generate_param_table_function_r(df_r, SLICES, outdir, PARAM_Table)
 # Converting it back to a pandas dataframe.
 # df_result = pandas2ri.py2ri(df_result_r)
 with localconverter(robjects.default_converter + pandas2ri.converter):
