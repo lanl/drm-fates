@@ -8,9 +8,14 @@ set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set RUN_ROOT=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set MUTATE=`echo $5 | sed 's/^[ \t]*//;s/[ \t]*$//'`
-set surf_basefile=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set clone_base=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set clone_file=`echo $7 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set clone_type=`echo $8 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
+echo ($MUTATE == TRUE)
+echo params/${clone_file}
+echo params/${clone_type}.params/${clone_base}${arr_case}.nc
 ##======================================
 
 
@@ -31,10 +36,10 @@ foreach case_i (`seq 1 $#arr_case`)
   if ($MUTATE == TRUE) then
         # Replace the parameter file for this run
         set case_num = $arr_case[$case_i]
-        sed -i 's/'${surf_basefile}nc'/'${surf_basefile}${case_num}.nc'/g' user_nl_clm
-        
-        # changes files for both fatesparam and elm params
-        sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+        #sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
+	sed -i 's/'${clone_file}'/'${clone_base}${case_num}.nc'/g' user_nl_clm
+	#sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
+        #sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
   endif
   ./case.setup
   ./xmlchange BUILD_COMPLETE="TRUE"

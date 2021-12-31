@@ -23,6 +23,7 @@ with open(args.config_file, 'r') as in_file:
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_DIR = config_dict['PARAM_DIR']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
+CLONE_TYPE = config_dict['CLONE_TYPE']
 
 if(config_dict['SENSITIVITY']):
 	R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
@@ -31,14 +32,14 @@ else:
 	R_file = PROJECT_ROOT+'/src/generate.inputs.R'
 	PARAM_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
 
-surf_basefile = config_dict['SURF_BASE']
-
+clone_base = config_dict['CLONE_BASE']
+file_to_clone = config_dict['PARAM_FILE'][CLONE_TYPE]
 # Defining the R script and loading the instance in Python
 r = robjects.r
 r['source'](R_file)
 
 # Loading the function we have defined in R.
-generate_surface_files_function_r = robjects.globalenv['generate.surface.files']
+generate_parameter_files_function_r = robjects.globalenv['generate.parameter.files']
 
 # Reading and processing data
 df = pd.read_csv(PARAM_Table)
@@ -50,7 +51,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 df_r
 
 #Invoking the R function and getting the result
-df_result_r = generate_surface_files_function_r(df_r, PARAM_PATH, surf_basefile)
+df_result_r = generate_parameter_files_function_r(df_r, PARAM_PATH, CLONE_TYPE, clone_base, file_to_clone)
 # Converting it back to a pandas dataframe.
 # df_result = pandas2ri.py2ri(df_result_r)
 with localconverter(robjects.default_converter + pandas2ri.converter):

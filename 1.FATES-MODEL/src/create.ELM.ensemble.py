@@ -15,15 +15,15 @@ parser.add_argument('-c', '--config_file', action='store',
                     default=SCRIPT_DIR+'/../config.yaml')
 args = parser.parse_args()
 
-# generate surface data input
+# generate parameter data input
 with open(args.config_file, 'r') as in_file:
     config_dict = yaml.safe_load(in_file)
 
-HPU_ID_START = config_dict['HPU_ID_START']
-HPU_ID_END = config_dict['HPU_ID_END']
+SIM_ID_START = config_dict['SIM_ID_START']
+SIM_ID_END = config_dict['SIM_ID_END']
 
 # Set Case ID array
-case_vec = list(range(HPU_ID_START, HPU_ID_END + 1))
+case_vec = list(range(SIM_ID_START, SIM_ID_END + 1))
 #https://stackoverflow.com/questions/11392033/passing-python-array-to-bash-script-and-passing-bash-variable-to-python-functio
 case_arr = ' '.join(str(v) for v in case_vec)
 
@@ -42,9 +42,10 @@ runroot = os.environ["RUN_ROOT"]
 # Set whether parameter files need to be varied across clones
 MUTATE = str(config_dict['MUTATE'])
 
-# Set the surface basefile to clone
-surf_basefile = config_dict['SURF_BASE']
-
+# Set the parameter basefile to clone
+CLONE_BASE = config_dict['CLONE_BASE']
+CLONE_TYPE = config_dict['CLONE_TYPE']
+CLONE_FILE = str(config_dict['PARAM_FILE'][CLONE_TYPE][0])
 # This will clone a base case ending with elements of case_arr
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE, surf_basefile])
+subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE, CLONE_BASE, CLONE_FILE, CLONE_TYPE])
