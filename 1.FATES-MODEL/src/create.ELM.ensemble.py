@@ -45,7 +45,7 @@ MUTATE = str(config_dict['MUTATE'])
 # Set the parameter basefile to clone
 CLONE_BASE = config_dict['CLONE_BASE']
 CLONE_TYPE = config_dict['CLONE_TYPE']
-CLONE_FILE = str(config_dict['PARAM_FILE'][CLONE_TYPE][0])
+CLONE_FILE = str(config_dict['PARAM_FILE'][CLONE_TYPE])
 # This will clone a base case ending with elements of case_arr
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE, CLONE_BASE, CLONE_FILE, CLONE_TYPE])
+subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE.upper(), CLONE_BASE, CLONE_FILE, CLONE_TYPE])

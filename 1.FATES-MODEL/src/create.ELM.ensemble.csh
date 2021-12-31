@@ -12,12 +12,8 @@ set clone_base=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set clone_file=`echo $7 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set clone_type=`echo $8 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
-set arr_case = `echo $case_arr:q | sed 's/,/ /g'`
-echo ($MUTATE == TRUE)
-echo params/${clone_file}
-echo params/${clone_type}.params/${clone_base}${arr_case}.nc
+set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
-
 
 # Now loop through and create each case 
 foreach case_i (`seq 1 $#arr_case`)
