@@ -39,11 +39,11 @@ SIM_ID_START: 1
 SIM_ID_END: 4 
 
 #----ELM case set-up attributes----
-TAG: BCI.ROOTB.VAR.INV
+TAG: BCI.test
 COMPSET: ICLM45ED
 MAC: badger
 COMPILER: intel
-STOP_N: 50 # years to run
+STOP_N: 2 # years to run
 REST_N: 10 # frequency of yrs to write restart file
 RUN_STARTDATE: 1971-01-01
 DATM_CLMNCEP_YR_START: 1971
