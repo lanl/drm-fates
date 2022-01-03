@@ -37,6 +37,9 @@ git checkout $ELM_BRANCH
 ## If a submodule is not found, update them
 git submodule update --init --recursive
 
+## Defaults paths are currently set to scratch3 by HPC folks, which is run-only. Change to scratch4
+sed -i "s|scratch3|scratch4|g" /turquoise/usr/projects/veg/rutuja/ACME/cime/config/e3sm/machines/config_machines.xml
+
 ## 4. Make sure you are on the desired fates branch. 
 cd $FATES_ROOT
 cd ..
