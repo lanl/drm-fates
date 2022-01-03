@@ -50,7 +50,7 @@ base_case=ff.read()
 filebase=base_case.strip()
 
 filterFile = "Filter.txt"
-var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI", "QVEGE", "QVEGT", "QDRAI", "QOVER"] 
+var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI", "QVEGE", "QVEGT", "QDRAI", "QOVER", "SOILPSI", "GPP", "ZWT", "SOILWATER_10CM"] 
 #['H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI']
 scale_vec_h1 = [1.0]*len(var_vec_h1) 
 
