@@ -59,7 +59,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 df_result
 
 if(df_result):
-    print('Surface Data file clones generated. New Parameters Substituted Successfully!')
+    print('Parameter file clones generated. New Parameters Substituted Successfully!')
 else:
     print("ERROR: Parameter substitution was unsuccessful.") 
     exit(0)
