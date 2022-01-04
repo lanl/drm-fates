@@ -27,16 +27,19 @@ SENSITIVITY: TRUE # This turns off multi-site runs
 SEN_PATH: output/Param.Table.csv # output file
 RANGE: 
   PARAMETERS: 
-    - fates_rootb_par
+    - aveDTB
+    - FMAX
   MINPARAM:
-    - 0.217
+    - 0
+    - 0.01
   MAXPARAM:
-    - 1.956
+    - 18
+    - 0.80
 SLICES: 10
 
 #----Ensemble IDs to run---- 
 SIM_ID_START: 1
-SIM_ID_END: 4 
+SIM_ID_END: 2 
 
 #----ELM case set-up attributes----
 TAG: BCI.test
@@ -45,8 +48,8 @@ MAC: badger
 COMPILER: intel
 STOP_N: 2 # years to run
 REST_N: 10 # frequency of yrs to write restart file
-RUN_STARTDATE: 1971-01-01
-DATM_CLMNCEP_YR_START: 1971
+RUN_STARTDATE: 2018-01-01
+DATM_CLMNCEP_YR_START: 2018
 DATM_CLMNCEP_YR_END: 2020
 PARAM_FILE:
   DOMAIN: domain_bci_panama_v1_c171113.nc
