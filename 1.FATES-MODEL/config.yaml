@@ -47,19 +47,19 @@ COMPSET: ICLM45ED
 MAC: badger
 COMPILER: intel
 STOP_N: 2 # years to run
-REST_N: 10 # frequency of yrs to write restart file
-RUN_STARTDATE: 2018-01-01
-DATM_CLMNCEP_YR_START: 2018
-DATM_CLMNCEP_YR_END: 2020
+REST_N: 2 # frequency of yrs to write restart file
+RUN_STARTDATE: 2017-01-01
+DATM_CLMNCEP_YR_START: 2017
+DATM_CLMNCEP_YR_END: 2018
 PARAM_FILE:
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
   FATES: fates_parameter_file_name.3563.nc
   ELM: elm_parameter_file_name.3563.nc
-CLONE_BASE: fates_parameter_file_name. # base file to clone
-CLONE_TYPE: FATES # parameter file type to change
+CLONE_BASE: surfdata_bci_panama_v1_c171113. # base file to clone
+CLONE_TYPE: SURF # parameter file type to change
 CLIM_DATA_DIR: bci_0.1x0.1_v4.0i
-CLIM_DATA: bci_0.1x0.1_met.v6.1
+CLIM_DATA: bci_0.1x0.1_met.v5.1
 
 #----ELM Run attributes----
 N_NODE: 1 # Make sure that N_NODE*N_CPU_PER_NODE >= (HPU_ID_END-HPU_ID_START)+1
