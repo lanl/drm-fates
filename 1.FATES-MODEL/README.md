@@ -24,7 +24,7 @@ cd ELM_Workflow
 
 1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required.)
 
-2. Set environmental variables:
+2. Set environmental variables. Also, re-run this if you get disconnected from HPC at any point in the workflow:
 
 source src/.tcshrc
 
