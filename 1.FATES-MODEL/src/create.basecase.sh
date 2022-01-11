@@ -160,7 +160,7 @@ use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
 use_fates_inventory_init = .false.
 fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
-hist_fincl2 = 'H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
+hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
 hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA', 
 'EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
 hist_nhtfrq = 0, -24, -1
