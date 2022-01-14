@@ -25,17 +25,26 @@ SITES_PARAM_PATH: data/HPU.Table.csv
 #----Is the parameter enseble for a sensitivity analysis?----
 SENSITIVITY: TRUE # This turns off multi-site runs 
 SEN_PATH: output/Param.Table.csv # output file
-RANGE: 
-  PARAMETERS: 
+RANGE:
+    PARAMETERS: 
+      - aveDTB
+      - FMAX
+      - fates_rootb_par
+    MINPARAM:
+      - 0
+      - 0.01
+      - 0.217
+    MAXPARAM:
+      - 18
+      - 0.80
+      - 1.956
+SLICES: 10
+PARAM_KEY:
+  SURF:
     - aveDTB
     - FMAX
-  MINPARAM:
-    - 0
-    - 0.01
-  MAXPARAM:
-    - 18
-    - 0.80
-SLICES: 10
+  FATES:
+    - fates_rootb_par
 
 #----Ensemble IDs to run---- 
 SIM_ID_START: 1
@@ -56,8 +65,12 @@ PARAM_FILE:
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
   FATES: fates_parameter_file_name.3563.nc
   ELM: elm_parameter_file_name.3563.nc
-CLONE_BASE: surfdata_bci_panama_v1_c171113. # base file to clone
-CLONE_TYPE: SURF # parameter file type to change
+CLONE_BASE: 
+  SURF: surfdata_bci_panama_v1_c171113.
+  FATES: fates_parameter_file_name. # base file to clone
+CLONE_TYPE: 
+  - SURF 
+  - FATES # parameter file type to change
 CLIM_DATA_DIR: bci_0.1x0.1_v4.0i
 CLIM_DATA: bci_0.1x0.1_met.v5.1
 

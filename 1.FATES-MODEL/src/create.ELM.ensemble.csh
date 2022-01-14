@@ -12,11 +12,13 @@ set clone_base=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set clone_file=`echo $7 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set clone_type=`echo $8 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
+set clone_type_len=`echo $clone_type:q | sed 's/,/ /g'`
 set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
 
 # Now loop through and create each case 
-foreach case_i (`seq 1 $#arr_case`)
+foreach case_i (`seq 1 2)
+#foreach case_i (`seq 1 $#arr_case`)
   # Go to CASE scripts directory
   cd $ACME_ROOT/cime/scripts
   # Name the case
@@ -32,10 +34,17 @@ foreach case_i (`seq 1 $#arr_case`)
   if ($MUTATE == TRUE) then
         # Replace the parameter file for this run
         set case_num = $arr_case[$case_i]
-        #sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
-        sed -i 's:'${clone_file}':'${clone_type}.params/${clone_base}${case_num}.nc':g' user_nl_clm
-	#sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
-        #sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+           	foreach clone_type_i (`seq 1 $#clone_type_len`)
+echo ${clone_file}[$clone_type_i]
+echo clone_type_i
+echo ${clone_type}[$clone_type_i]
+echo ${clone_base}[$clone_type_i]${case_num}
+
+        	#sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
+#        	sed -i 's:'${clone_file}[$clone_type_i]':'${clone_type}[$clone_type_i].params/${clone_base}[$clone_type_i]${case_num}.nc':g' user_nl_clm
+		#sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
+        	#sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+  		endif
   endif
   ./case.setup
   ./xmlchange BUILD_COMPLETE="TRUE"

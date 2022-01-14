@@ -24,6 +24,19 @@ PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_DIR = config_dict['PARAM_DIR']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
 CLONE_TYPE = config_dict['CLONE_TYPE']
+PARAM_KEY = config_dict['PARAM_KEY']
+
+clone_type = []
+file_to_clone = []
+clone_base = []
+for i in range(0,len(CLONE_TYPE)):
+   clone_type.append(config_dict['CLONE_TYPE'][i])
+   file_to_clone.append(config_dict['PARAM_FILE'][config_dict['CLONE_TYPE'][i]])
+   clone_base.append(config_dict['CLONE_BASE'][config_dict['CLONE_TYPE'][i]])
+
+clone_pd_df = pd.DataFrame({'clone_type': clone_type,
+		            'file_to_clone': file_to_clone,
+			    'clone_base': clone_base})
 
 if(config_dict['SENSITIVITY']):
 	R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
@@ -32,8 +45,6 @@ else:
 	R_file = PROJECT_ROOT+'/src/generate.inputs.R'
 	PARAM_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
 
-clone_base = config_dict['CLONE_BASE']
-file_to_clone = config_dict['PARAM_FILE'][CLONE_TYPE]
 # Defining the R script and loading the instance in Python
 r = robjects.r
 r['source'](R_file)
@@ -50,8 +61,14 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
   df_r = robjects.conversion.py2ri(df) # in later rpy2 versions use py2rpy
 df_r
 
+with localconverter(robjects.default_converter + pandas2ri.converter):
+  clone_pd_df_r = robjects.conversion.py2ri(clone_pd_df) # in later rpy2 versions use py2rpy
+clone_pd_df_r
+
+PARAM_KEY_r = rpy2.robjects.ListVector(PARAM_KEY)
+
 #Invoking the R function and getting the result
-df_result_r = generate_parameter_files_function_r(df_r, PARAM_PATH, CLONE_TYPE, clone_base, file_to_clone)
+df_result_r = generate_parameter_files_function_r(df_r, PARAM_PATH, clone_pd_df_r, PARAM_KEY_r)
 # Converting it back to a pandas dataframe.
 # df_result = pandas2ri.py2ri(df_result_r)
 with localconverter(robjects.default_converter + pandas2ri.converter):
