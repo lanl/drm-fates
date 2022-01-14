@@ -43,9 +43,21 @@ runroot = os.environ["RUN_ROOT"]
 MUTATE = str(config_dict['MUTATE'])
 
 # Set the parameter basefile to clone
-CLONE_BASE = config_dict['CLONE_BASE']
 CLONE_TYPE = config_dict['CLONE_TYPE']
-CLONE_FILE = str(config_dict['PARAM_FILE'][CLONE_TYPE])
+
+clone_type = []
+file_to_clone = []
+clone_base = []
+for i in range(0,len(CLONE_TYPE)):
+   clone_type.append(config_dict['CLONE_TYPE'][i])
+   file_to_clone.append(config_dict['PARAM_FILE'][config_dict['CLONE_TYPE'][i]])
+   clone_base.append(config_dict['CLONE_BASE'][config_dict['CLONE_TYPE'][i]])
+
+clone_b = ' '.join(str(n) for n in clone_base)
+clone_t = ' '.join(str(n) for n in clone_type)
+file_t_c = ' '.join(str(n) for n in file_to_clone)
+clone_len = str(len(CLONE_TYPE))
+
 # This will clone a base case ending with elements of case_arr
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE.upper(), CLONE_BASE, CLONE_FILE, CLONE_TYPE])
+subprocess.call(['tcsh', './zest.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE.upper(), clone_b, file_t_c, clone_t, clone_len])
