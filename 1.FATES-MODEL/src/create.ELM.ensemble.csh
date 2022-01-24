@@ -16,7 +16,6 @@ set clone_type_len=`echo $9 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
 
-
 ## Now loop through and create each case
 #foreach case_i (`seq 1 2`)
 foreach case_i (`seq 1 $#arr_case`)
@@ -40,6 +39,6 @@ foreach case_i (`seq 1 $#arr_case`)
              		sed -i 's:'$clone_file[$clone_type_i]':'$clone_type[$clone_type_i].params/$clone_base[$clone_type_i]${case_num}.nc':g' user_nl_clm
              		#sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
              		#sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
-             end
+		end  
   endif
 end

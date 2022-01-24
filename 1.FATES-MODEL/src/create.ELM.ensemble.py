@@ -60,4 +60,4 @@ clone_len = str(len(CLONE_TYPE))
 
 # This will clone a base case ending with elements of case_arr
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './zest.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE.upper(), clone_b, file_t_c, clone_t, clone_len])
+subprocess.call(['tcsh', './src/create.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, runroot, MUTATE.upper(), clone_b, file_t_c, clone_t, clone_len])
