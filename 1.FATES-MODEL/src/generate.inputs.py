@@ -43,7 +43,7 @@ if(config_dict['SENSITIVITY']):
 	PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
 else:
 	R_file = PROJECT_ROOT+'/src/generate.inputs.R'
-	PARAM_Table = PROJECT_ROOT+'/'+config_dict['HPU_PATH']
+	PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
