@@ -32,13 +32,24 @@ foreach case_i (`seq 1 $#arr_case`)
 #
   # Set up the Clone case
   if ($MUTATE == TRUE) then
-        # Replace the parameter file for this run
-        set case_num = $arr_case[$case_i]
-        	foreach clone_type_i (`seq 1 $clone_type_len`)
-             		#sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
-             		sed -i 's:'$clone_file[$clone_type_i]':'$clone_type[$clone_type_i].params/$clone_base[$clone_type_i]${case_num}.nc':g' user_nl_clm
-             		#sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
-             		#sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
-		end  
+     # Replace the parameter file for this run
+     set case_num = $arr_case[$case_i]
+        foreach clone_type_i (`seq 1 $clone_type_len`)
+          #sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
+          sed -i 's:'$clone_file[$clone_type_i]':'$clone_type[$clone_type_i].params/$clone_base[$clone_type_i]${case_num}.nc':g' user_nl_clm
+          #sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
+          #sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
+	end  
   endif
+  ./case.setup
+  ./xmlchange BUILD_COMPLETE="TRUE"
+  #./xmlchange BATCH_SYSTEM="slurm" --file env_batch.xml
+  #./xmlchange BATCH_SYSTEM="slurm" --file LockedFiles/env_batch.xml
+
+  # copy cesm.exe in base case run folder
+  # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
+  # rm -rf $RUN_ROOT/$ACME_CASE_CLONE
+  cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$ACME_CASE_CLONE/bld/
+  echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
+echo "============In total created $#arr_case clones from a base case============"
