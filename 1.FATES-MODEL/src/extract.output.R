@@ -129,42 +129,42 @@ extractres_h1 <-
       c(sam.start:sam.end)[filter.arr$V1] 
     nsam <- length(sam.vec)
     # base data.frames
-#    all.var.df <- data.frame(date = cnames)
-#    all.var.df$year <- format(all.var.df$date, "%Y")
-#    all.var.df$doy <- format(all.var.df$date, "%j")
-#    all.var.df[, var.vec.h1] <- NA
-#    all.sam.list <- rep(list(all.var.df), nsam)
+    all.var.df <- data.frame(date = cnames)
+    all.var.df$year <- format(all.var.df$date, "%Y")
+    all.var.df$doy <- format(all.var.df$date, "%j")
+    all.var.df[, var.vec.h1] <- NA
+    all.sam.list <- rep(list(all.var.df), nsam)
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
-    casename <- paste(filebase, sam.vec[1], sep = ".")
-    filetag <- paste0("clm2.h1.", start.year, "-")
-    filename <- paste0(runroot,
-                       "/",
-                       casename,
-                       "/run/",
-                       casename,
-                       ".",
-                       filetag,
-                       "01-01-00000.nc")
-    nc <- nc_open(filename, write = F)
-    res.arr <- vector("list", length = length(var.vec.h1))
+#    casename <- paste(filebase, sam.vec[1], sep = "")
+#    filetag <- paste0("clm2.h1.", start.year, "-")
+#    filename <- paste0(runroot,
+#                       "/",
+#                       casename,
+#                       "/run/",
+#                       casename,
+#                       ".",
+#                       filetag,
+#                       "01-01-00000.nc")
+#    nc <- nc_open(filename, write = F)
+#    res.arr <- vector("list", length = length(var.vec.h1))
     var.dim <- vector()
-    for (v in 1:length(var.vec.h1)) {
-      var.name <- var.vec.h1[v]
-      val <- ncvar_get(nc, var.name)
-      if (length(dim(val)) == 1) {
-        var.dim[v] <- 1
-      } else {
-        var.dim[v] <- dim(val)[1]
-      }
-      for (k in 1:var.dim[v]) {
-        res.arr[[v]][[k]] <- matrix(NA, nsam, ncol)
-      }
-    }
+#    for (v in 1:length(var.vec.h1)) {
+#      var.name <- var.vec.h1[v]
+#      val <- ncvar_get(nc, var.name)
+#      if (length(dim(val)) == 1) {
+#        var.dim[v] <- 1
+#      } else {
+#        var.dim[v] <- dim(val)[1]
+#      }
+#      for (k in 1:var.dim[v]) {
+#        res.arr[[v]][[k]] <- matrix(NA, nsam, ncol)
+#      }
+#    }
     ##----
     #pb <- txtProgressBar(min = 0, max = nsam, style = 3)
     for (i in 1:nsam) {
       sample <- sam.vec[i]
-#      all.sam.list[[i]]$nsam <- rep(i, length(cnames)) 
+      all.sam.list[[i]]$nsam <- rep(i, length(cnames)) 
       #setTxtProgressBar(pb, i)
       casename <- paste(filebase, ".", sample, sep = "")
       for (yr in start.year:end.year) {
@@ -191,14 +191,14 @@ extractres_h1 <-
           index.start <- (yr - start.year) * 365 + 1
           index.end <- index.start + 365 - 1
           if (var.dim[v] == 1) {
-#            all.sam.list[[i]][index.start:index.end, var.name] <- val * scale
-           res.arr[[v]][[1]][i, index.start:index.end] <- val * scale
+            all.sam.list[[i]][index.start:index.end, var.name] <- val * scale
+#           res.arr[[v]][[1]][i, index.start:index.end] <- val * scale
           } else {
             # Only saving 1st depth
-#            all.sam.list[[i]][index.start:index.end, var.name] <- val[1,] * scale
-            for (k in 1:var.dim[v]) {
-              res.arr[[v]][[k]][i, index.start:index.end] <- val[k,] * scale
-            }
+            all.sam.list[[i]][index.start:index.end, var.name] <- val[1,] * scale
+#            for (k in 1:var.dim[v]) {
+#              res.arr[[v]][[k]][i, index.start:index.end] <- val[k,] * scale
+#            }
           } 	
         }
         nc_close(nc)
@@ -207,21 +207,21 @@ extractres_h1 <-
       # if (i %% 200 == 0)
       #  print(sample)
     }
-    for (v in 1:length(var.vec.h1)) {
-      var.name <- var.vec.h1[v]
-      for (k in 1:var.dim[v]) {
-        res.arr[[v]][[k]] <- as.data.frame(res.arr[[v]][[k]])
-        colnames(res.arr[[v]][[k]]) <- cnames
-        rownames(res.arr[[v]][[k]]) <- sam.vec
-      }
-      # data is stored as a list
-      var.res.arr <- res.arr[[v]]
-      out.file.name <- paste0(var.name, ".h1.extract.Rdata")
-      if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
-      save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
-    }
-#      all.sam.var <- do.call(rbind, all.sam.list)
-#      write.table(all.sam.var, file = file.path(outdir, "elm_daily_outputs.txt"), row.names = FALSE)
+#    for (v in 1:length(var.vec.h1)) {
+#      var.name <- var.vec.h1[v]
+#      for (k in 1:var.dim[v]) {
+#        res.arr[[v]][[k]] <- as.data.frame(res.arr[[v]][[k]])
+#        colnames(res.arr[[v]][[k]]) <- cnames
+#        rownames(res.arr[[v]][[k]]) <- sam.vec
+#      }
+#      # data is stored as a list
+#      var.res.arr <- res.arr[[v]]
+#      out.file.name <- paste0(var.name, ".h1.extract.Rdata")
+#      if(!dir.exists(file.path(outdir, "extract"))) {dir.create(file.path(outdir, "extract"))}
+#      save(var.res.arr, file = file.path(outdir, "extract", out.file.name)) # on server
+#    }
+      all.sam.var <- do.call(rbind, all.sam.list)
+      write.table(all.sam.var, file = file.path(outdir, "elm_daily_outputs.txt"), row.names = FALSE)
       return(TRUE)
   }
 
