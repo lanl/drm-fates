@@ -17,8 +17,12 @@ unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip -d data/bci_0.1x0.1_v4.
 
 # 3. To generate parameter table, if sensitivity analysis:
 
-if [ ${SENSITIVITY} ]; then
-   python src/generate.param.table.py
+if [ ${SENSITIVITY} == TRUE ]; then
+        if [ ${BUILD_PARAM_TABLE} == TRUE ]; then
+                echo "Building Parameter Sensitivity Table"
+        else
+                echo "Parameter Sensitivity Table given, Not building"
+        fi
 fi
 
 # 4. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:

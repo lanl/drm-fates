@@ -39,11 +39,14 @@ clone_pd_df = pd.DataFrame({'clone_type': clone_type,
 			    'clone_base': clone_base})
 
 if(config_dict['SENSITIVITY']):
-	R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
-	PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
+    R_file = PROJECT_ROOT+'/src/generate.inputs_sen.R'
+    if(config_dict['BUILD_PARAM_TABLE']):
+        PARAM_Table = PROJECT_ROOT+'/'+config_dict['BUILT_PARAM_TABLE_PATH']
+    else:
+        PARAM_Table = PROJECT_ROOT+'/'+config_dict['GIVEN_PARAM_TABLE_PATH']
 else:
-	R_file = PROJECT_ROOT+'/src/generate.inputs.R'
-	PARAM_Table = PROJECT_ROOT+'/'+config_dict['SEN_PATH']
+        R_file = PROJECT_ROOT+'/src/generate.inputs.R'
+        PARAM_Table = PROJECT_ROOT+'/'+config_dict['SITES_PARAM_TABLE_PATH']
 
 # Defining the R script and loading the instance in Python
 r = robjects.r
@@ -74,6 +77,8 @@ df_result_r = generate_parameter_files_function_r(df_r, PARAM_PATH, clone_pd_df_
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
+
+print ("Parameter Table used for mutating parameter files is  "+PARAM_Table)
 
 if(df_result):
     print('Parameter file clones generated. New Parameters Substituted Successfully!')
