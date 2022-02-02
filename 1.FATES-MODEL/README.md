@@ -53,7 +53,7 @@ python src/create.filter.py
 
 8.  If all are not complete, try submitting the job again (cases that were already complete, will be skipped):
 
-sh src/run_elm.sh
+sbatch src/run_elm.sh
 
 9. Then to extract ELM outputs with:
 
