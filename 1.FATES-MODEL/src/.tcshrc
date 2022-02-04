@@ -4,7 +4,7 @@ setenv VEGHOME /usr/projects/veg/$user
 setenv ACCOUNT w18_califorest
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
-module load acmeenv/1.0.0
+module load e3smenv/1.1.0
  
 setenv http_proxy "http://proxyout.lanl.gov:8080"
 setenv https_proxy "http://proxyout.lanl.gov:8080"

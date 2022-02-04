@@ -42,8 +42,8 @@ export COMPSET=$COMPSET                                    	# Compset (probably 
 export MAC=badger                                           	# Name your machine
 export COMPILER=intel	                                  	# Name your compiler
 export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 	# Where the build is generated (probably on scratch partition)
-export CLM_USRDAT_DOMAIN="$PARAM_FILE_DOMAIN"   		# Name of domain file in scripts/${SITE_DIR}/
-export CLM_USRDAT_SURDAT="$PARAM_FILE_SURF"			# Name of surface file in scripts/${SITE_DIR}/
+export ELM_USRDAT_DOMAIN="$PARAM_FILE_DOMAIN"   		# Name of domain file in scripts/${SITE_DIR}/
+export ELM_USRDAT_SURDAT="$PARAM_FILE_SURF"			# Name of surface file in scripts/${SITE_DIR}/
 export PARAM_BASE_DIR=$PARAM_DIR
 
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
@@ -54,10 +54,10 @@ export DIN_LOC_ROOT_FORCE=${SITE_BASE_DIR}
 export FATES_PARAM_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR  	#location of FATES parameter file
 export ELM_PARAM_DIR=$PROJECT_ROOT/$PARAM_BASE_DIR   	#location of ELM parameter file
 
-export CLM_HASH=`cd ${ACME_ROOT}/components/clm/;git log -n 1 --pretty=%h`
-export FATES_HASH=`(cd ${ACME_ROOT}/components/clm/src/external_models/fates;git log -n 1 --pretty=%h)`
+export CLM_HASH=`cd ${E3SM_ROOT}/components/elm/;git log -n 1 --pretty=%h`
+export FATES_HASH=`(cd ${E3SM_ROOT}/components/elm/src/external_models/fates;git log -n 1 --pretty=%h)`
 export GIT_HASH=C${CLM_HASH}-F${FATES_HASH}
-export RES=CLM_USRDAT
+export RES=ELM_USRDAT
 export CASE_NAME=${TAG}.${COMPSET}.${MAC}.${COMPILER}.${GIT_HASH}.$DATM_CLMNCEP_YR_START-$DATM_CLMNCEP_YR_END
 export FATES_PARAM="$PARAM_FILE_FATES" # Name of FATES parameter file in FATES_PARAM_DIR
 export ELM_PARAM="$PARAM_FILE_ELM" # Name of ELM parameter file in ELM_PARAM_DIR
@@ -68,7 +68,7 @@ echo $CASE_NAME > BASE_CASE_NAME.txt
 rm -r ${CASEROOT}/${CASE_NAME}
 
 # CREATE THE CASE
-${ACME_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial" --user-mods-dir ${CASEROOT}/${CASE_NAME}
+${E3SM_ROOT}/cime/scripts/create_newcase -case ${CASEROOT}/${CASE_NAME} -res ${RES} -compset ${COMPSET} -mach ${MAC} -compiler ${COMPILER} -mpilib="mpi-serial" --user-mods-dir ${CASEROOT}/${CASE_NAME}
 
 cd ${CASEROOT}/${CASE_NAME} 
 
@@ -76,12 +76,12 @@ echo `pwd`
 # SET PATHS TO SCRATCH ROOT, DOMAIN AND MET DATA (USERS WILL PROB NOT CHANGE THESE)
 # =================================================================================
 
-./xmlchange -file env_run.xml -id ATM_DOMAIN_FILE -val ${CLM_USRDAT_DOMAIN}
+./xmlchange -file env_run.xml -id ATM_DOMAIN_FILE -val ${ELM_USRDAT_DOMAIN}
 ./xmlchange -file env_run.xml -id ATM_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
-./xmlchange -file env_run.xml -id LND_DOMAIN_FILE -val ${CLM_USRDAT_DOMAIN}
+./xmlchange -file env_run.xml -id LND_DOMAIN_FILE -val ${ELM_USRDAT_DOMAIN}
 ./xmlchange -file env_run.xml -id LND_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
 ./xmlchange -file env_run.xml -id DATM_MODE -val CLM1PT
-./xmlchange -file env_run.xml -id CLM_USRDAT_NAME -val ${SITE_NAME}
+./xmlchange -file env_run.xml -id ELM_USRDAT_NAME -val ${SITE_NAME}
 ./xmlchange -file env_run.xml -id DIN_LOC_ROOT_CLMFORC -val ${DIN_LOC_ROOT_FORCE}
 #./xmlchange -file env_build.xml -id CESMSCRATCHROOT -val ${CASE_NAME}
 
@@ -149,11 +149,11 @@ echo `pwd`
 # MODIFY THE CLM NAMELIST (USERS MODIFY AS NEEDED)
 # =================================================================================
 
-cat >> user_nl_clm <<EOF
-fsurdat = '${CLM_SURFDAT_DIR}/${CLM_USRDAT_SURDAT}'
+cat >> user_nl_elm <<EOF
+fsurdat = '${CLM_SURFDAT_DIR}/${ELM_USRDAT_SURDAT}'
 fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
 paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
-use_fates_spitfire = .false.
+!use_fates_spitfire = .false.
 use_fates_planthydro = .false.
 use_fates_ed_st3 = .false.
 use_var_soil_thick = .true.
@@ -183,9 +183,9 @@ EOF
 ./case.setup
 # HERE WE NEED TO MODIFY THE STREAM FILE (DANGER ZONE - USERS BEWARE CHANGING)
 ./preview_namelists
-cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.CLM_USRDAT user_datm.streams.txt.CLM1PT.CLM_USRDAT
-`sed -i '/FLDS/d' user_datm.streams.txt.CLM1PT.CLM_USRDAT`
-`sed -i "s/CLM1PT_data/$CLIM_DATA/" user_datm.streams.txt.CLM1PT.CLM_USRDAT`
+cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.ELM_USRDAT user_datm.streams.txt.CLM1PT.ELM_USRDAT
+`sed -i '/FLDS/d' user_datm.streams.txt.CLM1PT.ELM_USRDAT`
+`sed -i "s/CLM1PT_data/$CLIM_DATA/" user_datm.streams.txt.CLM1PT.ELM_USRDAT`
 
 ./case.build
 echo "============Successfully created a base case============"

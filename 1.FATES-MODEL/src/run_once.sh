@@ -23,8 +23,8 @@ conda env create -f environment.yml
 # ./src/create.conda.env.sh
 
 ## 3. Make sure you are on the desired ELM branch. 
-mkdir -p $ACME_ROOT
-cd $ACME_ROOT
+mkdir -p $E3SM_ROOT
+cd $E3SM_ROOT
 
 if ! [ -d .git ]; then
   git clone $ELM_REMOTE .
@@ -36,9 +36,6 @@ git checkout $ELM_BRANCH
 
 ## If a submodule is not found, update them
 git submodule update --init --recursive
-
-## Defaults paths are currently set to scratch3 by HPC folks, which is run-only. Change to scratch4
-sed -i "s|scratch3|scratch4|g" /turquoise/usr/projects/veg/${USER}/ACME/cime/config/e3sm/machines/config_machines.xml
 
 ## 4. Make sure you are on the desired fates branch. 
 cd $FATES_ROOT
