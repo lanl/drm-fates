@@ -156,15 +156,13 @@ paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
 !use_fates_spitfire = .false.
 use_fates_planthydro = .false.
 use_fates_ed_st3 = .false.
-use_var_soil_thick = .true.
+!use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
 use_fates_inventory_init = .false.
 fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
 hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
-hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA', 
-'EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
-hist_nhtfrq = 0, -24, -1
-hist_mfilt = 1, 365, 8760
+hist_nhtfrq = 0, -24
+hist_mfilt = 1, 365
 EOF
 
 # Useful user_nl_clm arguments: 
@@ -172,6 +170,10 @@ EOF
 # hist_mfilt             = 480      
 # hist_nhtfrq            = -1  
 # #hist_fincl1='NEP','NPP','GPP','TLAI','TSOI_10CM','QVEGT','EFLX_LH_TOT','AR','HR','ED_biomass','ED_bleaf','ED_balive','DDBH_S#CPF','BA_SCPF','NPLANT_SCPF','M1_SCPF','M2_SCPF','M3_SCPF','M4_SCPF','M5_SCPF','M6_SCPF','WIND','ZBOT','FSDS','RH','TBOT','P#BOT','QBOT','RAIN','FLDS'
+
+#hist_fincl3 = 'H2OSOI', 'SOILPSI', 'ED_biomass', 'NEP', 'NPP', 'GPP', 'TV', 'C_LBLAYER', 'C_STOMATA','EFLX_LH_TOT', 'WIND', 'ZBOT', 'FSA', 'PARVEGLN', 'FSDS', 'FLDS', 'RH', 'TBOT', 'QBOT', 'PBOT', 'RAIN', 'QRUNOFF', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS'
+#hist_nhtfrq = 0, -24, -1
+#hist_mfilt = 1, 365, 8760
 
 # MODIFY THE DATM NAMELIST (DANGER ZONE - USERS BEWARE CHANGING)
 echo `pwd`
