@@ -38,11 +38,11 @@ git checkout $ELM_BRANCH
 git submodule update --init --recursive
 
 ## 4. Make sure you are on the desired fates branch. 
-cd $FATES_ROOT
-cd ..
-rm -rf fates
-git clone $FATES_REMOTE
+#cd $FATES_ROOT
+#cd ..
+#rm -rf fates
+#git clone $FATES_REMOTE
 #git remote -v | grep -w fates_repo || git remote add fates_repo $FATES_REMOTE
-cd $FATES_ROOT
-git checkout $FATES_BRANCH
+#cd $FATES_ROOT
+#git checkout $FATES_BRANCH
 
