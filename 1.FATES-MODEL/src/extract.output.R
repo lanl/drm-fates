@@ -22,7 +22,7 @@ extractres_h0 <-
     
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
     casename <- paste(filebase, sam.vec[1], sep = "")
-    filetag <- paste0("clm2.h0.", start.year, "-")
+    filetag <- paste0("elm.h0.", start.year, "-")
     monstr <- sprintf("%02d", 1)
     filename <-
       paste0(runroot,
@@ -59,7 +59,7 @@ extractres_h0 <-
       setTxtProgressBar(pb, i)
       casename <- paste(filebase, sample, sep = "")
       for (yr in start.year:end.year) {
-        filetag <- paste("clm2.h0.", yr, "-", sep = "")
+        filetag <- paste("elm.h0.", yr, "-", sep = "")
         for (j in 1:nmonth) {
           #months
           monstr <- sprintf("%02d", j)
@@ -136,7 +136,7 @@ extractres_h1 <-
     all.sam.list <- rep(list(all.var.df), nsam)
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
 #    casename <- paste(filebase, sam.vec[1], sep = "")
-#    filetag <- paste0("clm2.h1.", start.year, "-")
+#    filetag <- paste0("elm.h1.", start.year, "-")
 #    filename <- paste0(runroot,
 #                       "/",
 #                       casename,
@@ -168,7 +168,7 @@ extractres_h1 <-
       #setTxtProgressBar(pb, i)
       casename <- paste(filebase, ".", sample, sep = "")
       for (yr in start.year:end.year) {
-        filetag <- paste("clm2.h1.", yr, "-", sep = "")
+        filetag <- paste("elm.h1.", yr, "-", sep = "")
         filename <-
           paste0(runroot,
                  "/",
@@ -250,7 +250,7 @@ extractres_h2 <-
     
     ## to get the length of value vector (for H2OSOI the number of depths)#-----
     casename <- paste(filebase, sam.vec[1], sep = "")
-    filetag <- paste0("clm2.h2.", start.year, "-")
+    filetag <- paste0("elm.h2.", start.year, "-")
     filename <- paste0(runroot,
                        "/",
                        casename,
@@ -281,7 +281,7 @@ extractres_h2 <-
       setTxtProgressBar(pb, i)
       casename <- paste(filebase, sample, sep = "")
         for (yr in start.year:end.year) {
-          filetag <- paste("clm2.h2.", yr, "-", sep = "")
+          filetag <- paste("elm.h2.", yr, "-", sep = "")
           filename <-
             paste0(runroot,
                    "/",

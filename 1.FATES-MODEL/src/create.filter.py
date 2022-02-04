@@ -47,7 +47,8 @@ ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 filebase = base_case.strip()
 finalyear = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
-finaltag = "clm2.h0."+ str(finalyear) +"-12.nc"
+finaltag = "elm.h0."+ str(finalyear) +"-12.nc"
+print('finaltag check is ' + finaltag)
 
 # Invoking the R function and getting the result
 df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, sam_stop)
@@ -55,6 +56,6 @@ df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, 
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.rpy2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
-print(int(df_result),' out of ',nsam,' cases Finished Successfully!')
+print(' ', int(df_result),' out of ',nsam,' cases Finished Successfully!')
 exit(0)
 
