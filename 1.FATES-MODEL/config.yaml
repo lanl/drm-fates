@@ -17,17 +17,17 @@ CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
 #----ELM-FATES base case set-up attributes----
-TAG: NEW.ELM.test
+TAG: NEW.ELM.defaultFATES
 COMPSET: IELMFATES
-STOP_N: 2 # years to run
-REST_N: 2 # frequency of yrs to write restart file
+STOP_N: 1 # years to run
+REST_N: 1 # frequency of yrs to write restart file
 RUN_STARTDATE: 2010-01-01
 DATM_CLMNCEP_YR_START: 2010
-DATM_CLMNCEP_YR_END: 2012
+DATM_CLMNCEP_YR_END: 2011
 PARAM_FILE: # Files in PARAM_DIR
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
-  FATES: fates_parameter_file_name.3563.nc
+  FATES: fates_params_default.nc
   ELM: elm_parameter_file_name.3563.nc
 CLONE_BASE:
   SURF: surfdata_bci_panama_v1_c171113.
