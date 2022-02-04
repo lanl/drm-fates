@@ -3,9 +3,9 @@
 #------------------------------------------#
 
 #----ELM-FATES code. User may change these----
-ELM_BRANCH: rutuja/ELM_FATES_HYDRO_DFLT_pedotrf_HKSAT_ADJ
+ELM_BRANCH: master_badger_jan31_2022
 FATES_BRANCH: rutuja/xuc/coastal_veg_ready_to_merge_July_2019
-ELM_REMOTE: git@github.com:rutujact/E3SM.git
+ELM_REMOTE: git@github.com:xuchongang/E3SM.git
 FATES_REMOTE: git@github.com:rutujact/fates.git
 
 #----Directories under PROJECT ROOT; user need not change----
@@ -17,13 +17,13 @@ CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
 #----ELM-FATES base case set-up attributes----
-TAG: BCI.test
-COMPSET: ICLM45ED
+TAG: NEW.ELM.test
+COMPSET: IELMFATES
 STOP_N: 2 # years to run
 REST_N: 2 # frequency of yrs to write restart file
-RUN_STARTDATE: 2017-01-01
-DATM_CLMNCEP_YR_START: 2017
-DATM_CLMNCEP_YR_END: 2018
+RUN_STARTDATE: 2010-01-01
+DATM_CLMNCEP_YR_START: 2010
+DATM_CLMNCEP_YR_END: 2012
 PARAM_FILE: # Files in PARAM_DIR
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
@@ -36,7 +36,7 @@ CLONE_TYPE:
   - SURF
   - FATES # parameter file type to change
 CLIM_DATA_DIR: bci_0.1x0.1_v4.0i # Under DATA_DIR
-CLIM_DATA: bci_0.1x0.1_met.v5.1 # Under CLIM_DATA_DIR
+CLIM_DATA: bci_0.1x0.1_met.v4_pio2 # Under CLIM_DATA_DIR
 
 #----Is this a multi-site analysis, or a single-site sensitivity analysis?----
 SENSITIVITY: FALSE # TRUE => single-site sensitivity; FALSE => multi-site runs. # For a single site run w/o sensitivity, keep SENSITIVITY: TRUE and set MUTATE: FALSE & SIM_ID_END: 1 below

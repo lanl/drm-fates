@@ -8,6 +8,7 @@
 !OutputExtract/*.R
 !tools/*.sh
 !data/HPU.Table.csv
+!data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v4_pio2.zip
 !data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip
 !params/*.nc
 ## but not these files
