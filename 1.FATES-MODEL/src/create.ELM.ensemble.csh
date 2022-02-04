@@ -20,15 +20,15 @@ set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 #foreach case_i (`seq 1 2`)
 foreach case_i (`seq 1 $#arr_case`)
   # Go to CASE scripts directory
-  cd $ACME_ROOT/cime/scripts
+  cd $E3SM_ROOT/cime/scripts
   # Name the case
-  set ACME_CASE_CLONE = $BASE_CASE.$case_i
+  set E3SM_CASE_CLONE = $BASE_CASE.$case_i
   # Delete a case by the same name if previously present
-  rm -rf $CLONE_ROOT/$ACME_CASE_CLONE
+  rm -rf $CLONE_ROOT/$E3SM_CASE_CLONE
   # Create the Clone Case
- ./create_clone -case $CLONE_ROOT/$ACME_CASE_CLONE -clone  $CLONE_ROOT/$BASE_CASE
+ ./create_clone -case $CLONE_ROOT/$E3SM_CASE_CLONE -clone  $CLONE_ROOT/$BASE_CASE
   # Go to CLONE case directory
-  cd $CLONE_ROOT/$ACME_CASE_CLONE
+  cd $CLONE_ROOT/$E3SM_CASE_CLONE
 #
   # Set up the Clone case
   if ($MUTATE == TRUE) then
@@ -48,8 +48,8 @@ foreach case_i (`seq 1 $#arr_case`)
 
   # copy cesm.exe in base case run folder
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
-  # rm -rf $RUN_ROOT/$ACME_CASE_CLONE
-  cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$ACME_CASE_CLONE/bld/
+  # rm -rf $RUN_ROOT/$E3SM_CASE_CLONE
+  cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$E3SM_CASE_CLONE/bld/
   echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
 echo "============In total created $#arr_case clones from a base case============"
