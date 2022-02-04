@@ -153,7 +153,7 @@ cat >> user_nl_elm <<EOF
 fsurdat = '${CLM_SURFDAT_DIR}/${ELM_USRDAT_SURDAT}'
 fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
 paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
-!use_fates_spitfire = .false.
+fates_spitfire_mode = 0
 use_fates_planthydro = .false.
 use_fates_ed_st3 = .false.
 !use_var_soil_thick = .true.
@@ -190,4 +190,3 @@ cp ${RUN_ROOT}/${CASE_NAME}/run/datm.streams.txt.CLM1PT.ELM_USRDAT user_datm.str
 `sed -i "s/CLM1PT_data/$CLIM_DATA/" user_datm.streams.txt.CLM1PT.ELM_USRDAT`
 
 ./case.build
-echo "============Successfully created a base case============"
