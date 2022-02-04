@@ -196,6 +196,7 @@ dependencies:
   - r-modelmetrics=1.2.2=r36h29659fb_0
   - r-modelr=0.1.4=r36h6115d3f_0
   - r-munsell=0.5.0=r36h6115d3f_0
+  - r-ncdf4=1.17=r36h4fa2c38_4
   - r-nlme=3.1_139=r36ha65eedd_0
   - r-nnet=7.3_12=r36h96ca727_0
   - r-numderiv=2016.8_1=r36h6115d3f_0
@@ -286,5 +287,5 @@ dependencies:
   - zipp=3.5.0=pyhd3eb1b0_0
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.9=haebb681_0
-
 prefix: /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_master/elm_env
+
