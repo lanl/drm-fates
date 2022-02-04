@@ -25,7 +25,6 @@ with open(args.config_file, 'r') as in_file:
 
 R_file = SCRIPT_DIR+'/extract.output.R'
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
-print(PROJECT_ROOT)
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
 runroot = os.environ["RUN_ROOT"]
 
@@ -38,11 +37,10 @@ r['source'](R_file)
 extractres_h1_r = robjects.globalenv['extractres_h1']
 #extractres_h2_r = robjects.globalenv['extractres_h2']
 
-sam_start = config_dict['SIM_ID_START']
-sam_end = config_dict['SIM_ID_END']
-
+sam_start = int(config_dict['SIM_ID_START'])
+sam_end = int(config_dict['SIM_ID_END'])
 start_year = config_dict['DATM_CLMNCEP_YR_START']
-end_year = str(int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1)
+end_year = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
