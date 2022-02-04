@@ -39,7 +39,7 @@ CLIM_DATA_DIR: bci_0.1x0.1_v4.0i # Under DATA_DIR
 CLIM_DATA: bci_0.1x0.1_met.v4_pio2 # Under CLIM_DATA_DIR
 
 #----Is this a multi-site analysis, or a single-site sensitivity analysis?----
-SENSITIVITY: FALSE # TRUE => single-site sensitivity; FALSE => multi-site runs. # For a single site run w/o sensitivity, keep SENSITIVITY: TRUE and set MUTATE: FALSE & SIM_ID_END: 1 below
+SENSITIVITY: TRUE # TRUE => single-site sensitivity; FALSE => multi-site runs. # For a single site run w/o sensitivity, keep SENSITIVITY: TRUE and set MUTATE: FALSE & SIM_ID_END: 1 below
 
 #----Parameter table if this is a multi-site analysis; else ignore----
 SITES_PARAM_TABLE_PATH: data/HPU.Table.csv # Used if SENSITIVITY: FALSE
