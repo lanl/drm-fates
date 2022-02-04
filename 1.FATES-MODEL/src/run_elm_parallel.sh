@@ -20,6 +20,7 @@ unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v4_pio2.zip -d data/bci_0.1x0.1_
 if [ ${SENSITIVITY} == TRUE ]; then
         if [ ${BUILD_PARAM_TABLE} == TRUE ]; then
                 echo "Building Parameter Sensitivity Table"
+		#python src/generate.param.table.py
         else
                 echo "Parameter Sensitivity Table given, Not building"
         fi
@@ -27,11 +28,11 @@ fi
 
 # 4. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
-python src/generate.inputs.py
+#python src/generate.inputs.py
  
 # 5. To generate a base case of ELM, run:
 
-python src/create.basecase.py
+#python src/create.basecase.py
  
 # 6. To generate ELM clone cases each associated with an ensemble member, run:
 
