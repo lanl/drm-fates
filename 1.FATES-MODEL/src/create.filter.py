@@ -41,9 +41,6 @@ sam_start = config_dict['SIM_ID_START']
 sam_stop = config_dict['SIM_ID_END']
 
 nsam = sam_stop - sam_start + 1
-print(nsam)
-start_year = config_dict['DATM_CLMNCEP_YR_START']
-end_year = config_dict['DATM_CLMNCEP_YR_END']
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
@@ -51,6 +48,7 @@ base_case=ff.read()
 filebase = base_case.strip()
 finalyear = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
 finaltag = "clm2.h0."+ str(finalyear) +"-12.nc"
+
 # Invoking the R function and getting the result
 df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, sam_stop)
 # Converting it back to a pandas dataframe.
