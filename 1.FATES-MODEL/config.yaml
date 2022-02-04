@@ -54,7 +54,7 @@ RANGE:
     PARAMETERS: 
       - aveDTB
       - FMAX
-      - fates_rootb_par
+      - fates_fnrt_prof_b
     MINPARAM:
       - 0
       - 0.01
@@ -69,7 +69,7 @@ PARAM_KEY:
     - aveDTB
     - FMAX
   FATES:
-    - fates_rootb_par
+    - fates_fnrt_prof_b
 
 #----Create simulations with cloned or mutated parameter files?----
 MUTATE: TRUE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
