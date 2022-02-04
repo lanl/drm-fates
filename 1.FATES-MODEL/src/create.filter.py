@@ -49,14 +49,13 @@ end_year = config_dict['DATM_CLMNCEP_YR_END']
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 filebase = base_case.strip()
-
-finaltag = "clm2.h0."+ str(config_dict['DATM_CLMNCEP_YR_END']) +"-12.nc"
-
+finalyear = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
+finaltag = "clm2.h0."+ str(finalyear) +"-12.nc"
 # Invoking the R function and getting the result
 df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, sam_stop)
 # Converting it back to a pandas dataframe.
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
+  df_result = robjects.conversion.rpy2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
 print(int(df_result),' out of ',nsam,' cases Finished Successfully!')
 exit(0)

@@ -42,7 +42,7 @@ sam_start = config_dict['SIM_ID_START']
 sam_end = config_dict['SIM_ID_END']
 
 start_year = config_dict['DATM_CLMNCEP_YR_START']
-end_year = config_dict['DATM_CLMNCEP_YR_END']
+end_year = str(int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1)
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
