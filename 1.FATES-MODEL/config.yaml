@@ -27,7 +27,7 @@ DATM_CLMNCEP_YR_END: 2011
 PARAM_FILE: # Files in PARAM_DIR
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
-  FATES: fates_params_default.nc
+  FATES: fates_params_opt224_vmn6phi_080621.nc
   ELM: elm_parameter_file_name.3563.nc
 CLONE_BASE:
   SURF: surfdata_bci_panama_v1_c171113.
