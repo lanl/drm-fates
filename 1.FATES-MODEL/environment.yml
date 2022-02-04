@@ -57,6 +57,8 @@ dependencies:
   - jupyterlab_pygments=0.1.2=py_0
   - krb5=1.17.2=h926e7f8_0
   - ld_impl_linux-64=2.33.1=h53a641e_7
+  - libblas=3.9.0=1_h6e990d7_netlib
+  - libcblas=3.9.0=3_h893e4fe_netlib
   - libcurl=7.76.1=hc4aaa36_1
   - libedit=3.1.20210216=h27cfd23_1
   - libev=4.33=h516909a_1
@@ -65,6 +67,7 @@ dependencies:
   - libgfortran-ng=7.5.0=ha8ba4b0_17
   - libgfortran4=7.5.0=ha8ba4b0_17
   - libgomp=9.3.0=h5101ec6_17
+  - liblapack=3.9.0=3_h893e4fe_netlib
   - libnetcdf=4.7.4=nompi_h56d31a8_107
   - libnghttp2=1.43.0=h812cca2_0
   - libpng=1.6.37=hbc83047_0
@@ -93,6 +96,7 @@ dependencies:
   - ncurses=6.2=he6710b0_1
   - nest-asyncio=1.5.1=pyhd3eb1b0_0
   - netcdf-fortran=4.5.3=nompi_hfef6a68_101
+  - netcdf4=1.5.6=nompi_py36hb848c25_102
   - notebook=6.4.1=py36h06a4308_0
   - numpy=1.19.2=py36h54aff64_0
   - numpy-base=1.19.2=py36hfa32c7d_0
@@ -265,6 +269,7 @@ dependencies:
   - r-zoo=1.8_6=r36h96ca727_0
   - readline=8.1=h46c0cb4_0
   - rpy2=3.4.5=py36r36h4d9540e_0
+  - scipy=1.5.3=py36h976291a_0
   - send2trash=1.5.0=pyhd3eb1b0_1
   - setuptools=52.0.0=py36h06a4308_0
   - simplegeneric=0.8.1=py_1
