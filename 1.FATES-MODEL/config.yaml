@@ -72,7 +72,7 @@ PARAM_KEY:
     - fates_fnrt_prof_b
 
 #----Create simulations with cloned or mutated parameter files?----
-MUTATE: TRUE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
+MUTATE: FALSE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
 
 #----Ensemble IDs to run---- 
 SIM_ID_START: 1
