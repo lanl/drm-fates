@@ -151,15 +151,15 @@ echo `pwd`
 
 cat >> user_nl_elm <<EOF
 fsurdat = '${CLM_SURFDAT_DIR}/${ELM_USRDAT_SURDAT}'
-fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
+!fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
 paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
-fates_spitfire_mode = 0
-use_fates_planthydro = .false.
-use_fates_ed_st3 = .false.
+!fates_spitfire_mode = 0
+!use_fates_planthydro = .false.
+!use_fates_ed_st3 = .false.
 !use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
-use_fates_inventory_init = .false.
-fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
+!use_fates_inventory_init = .false.
+!fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
 hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
 hist_nhtfrq = 0, -24
 hist_mfilt = 1, 365
