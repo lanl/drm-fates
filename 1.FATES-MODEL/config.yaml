@@ -4,9 +4,7 @@
 
 #----ELM-FATES code. User may change these----
 ELM_BRANCH: master_badger_jan31_2022
-FATES_BRANCH: rutuja/xuc/coastal_veg_ready_to_merge_July_2019
 ELM_REMOTE: git@github.com:xuchongang/E3SM.git
-FATES_REMOTE: git@github.com:rutujact/fates.git
 
 #----Directories under PROJECT ROOT; user need not change----
 LOG_DIR: log
@@ -17,8 +15,8 @@ CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 
 #----ELM-FATES base case set-up attributes----
-TAG: NEW.ELM.defaultFATES
-COMPSET: IELMFATES
+TAG: E3SMv2
+COMPSET: ICLM45ED
 STOP_N: 1 # years to run
 REST_N: 1 # frequency of yrs to write restart file
 RUN_STARTDATE: 2010-01-01
@@ -27,14 +25,11 @@ DATM_CLMNCEP_YR_END: 2011
 PARAM_FILE: # Files in PARAM_DIR
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
-  FATES: fates_params_opt224_vmn6phi_080621.nc
   ELM: elm_parameter_file_name.3563.nc
 CLONE_BASE:
-  SURF: surfdata_bci_panama_v1_c171113.
-  FATES: fates_parameter_file_name. # base file to clone
+  SURF: surfdata_bci_panama_v1_c171113. # base file to clone
 CLONE_TYPE:
-  - SURF
-  - FATES # parameter file type to change
+  - SURF # parameter file type to change
 CLIM_DATA_DIR: bci_0.1x0.1_v4.0i # Under DATA_DIR
 CLIM_DATA: bci_0.1x0.1_met.v4_pio2 # Under CLIM_DATA_DIR
 
@@ -54,25 +49,20 @@ RANGE:
     PARAMETERS: 
       - aveDTB
       - FMAX
-      - fates_fnrt_prof_b
     MINPARAM:
       - 0
       - 0.01
-      - 0.217
     MAXPARAM:
       - 18
       - 0.80
-      - 1.956
 SLICES: 10
 PARAM_KEY:
   SURF:
     - aveDTB
     - FMAX
-  FATES:
-    - fates_fnrt_prof_b
 
 #----Create simulations with cloned or mutated parameter files?----
-MUTATE: FALSE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
+MUTATE: TRUE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
 
 #----Ensemble IDs to run---- 
 SIM_ID_START: 1
