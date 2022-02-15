@@ -28,7 +28,7 @@ fi
 
 # 4. To generate multiple parameter files based on paramter ensembles in HPU.Table.csv, run:
 
-#python src/generate.inputs.py
+python src/generate.inputs.py
  
 # 5. To generate a base case of ELM, run:
 
