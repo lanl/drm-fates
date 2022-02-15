@@ -14,6 +14,7 @@ mkdir -p elm_env # create if not already present
 # 2. To create the environment from a yml file, run this in a shell:
 # Let conda know the path to the new conda env and update it in environment.yml file
 conda config --add envs_dirs $PROJECT_ROOT
+conda config --set env_prompt envname
 sed -i '/prefix/d' environment.yml
 sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/elm_env" environment.yml
 cd $PROJECT_ROOT
