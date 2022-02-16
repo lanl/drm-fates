@@ -160,7 +160,7 @@ paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
 !hist_empty_htapes = .true.
 !use_fates_inventory_init = .false.
 !fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/bci_inv_file_list.txt'
-hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
+hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI'
 hist_nhtfrq = 0, -24
 hist_mfilt = 1, 365
 EOF
