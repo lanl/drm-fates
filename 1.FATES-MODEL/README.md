@@ -15,8 +15,11 @@ cd ELM_cases
 ! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
 mkdir -p cimmid
+
 cd cimmid
+
 git clone git@github.com:rutujact/ELM_Workflow.git .
+
 git checkout cimmid
 
 !vim README.md
