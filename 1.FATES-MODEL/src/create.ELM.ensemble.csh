@@ -36,7 +36,7 @@ foreach case_i (`seq 1 $#arr_case`)
      set case_num = $arr_case[$case_i]
         foreach clone_type_i (`seq 1 $clone_type_len`)
           #sed -i 's/'${clone_base}nc'/'${clone_base}${case_num}.nc'/g' user_nl_clm
-          sed -i 's:'$clone_file[$clone_type_i]':'$clone_type[$clone_type_i].params/$clone_base[$clone_type_i]${case_num}.nc':g' user_nl_clm
+          sed -i 's:'$clone_file[$clone_type_i]':'$clone_type[$clone_type_i].params/$clone_base[$clone_type_i]${case_num}.nc':g' user_nl_elm
           #sed -i "s|'params/${clone_file}'|'params/${clone_type}.params/${clone_base}${case_num}.nc'|g" user_nl_clm
           #sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
 	end  
