@@ -20,7 +20,7 @@ unzip -u data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v4_pio2.zip -d data/bci_0.1x0.1_
 if [ ${SENSITIVITY} == TRUE ]; then
         if [ ${BUILD_PARAM_TABLE} == TRUE ]; then
                 echo "Building Parameter Sensitivity Table"
-		i#python src/generate.param.table.py
+		python src/generate.param.table.py
         else
                 echo "Parameter Sensitivity Table given, Not building"
         fi
