@@ -8,7 +8,7 @@
 #casedir=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 #PY_SRC_PATH=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
-casedir='/turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Workflow/CASE_DIR'
+casedir='/turquoise/usr/projects/veg/rutuja/ACME_cases/cimmid/CASE_DIR'
 echo 'Started on '`date`' for '$casedir' starting in '$casedir
 
 module purge
@@ -28,7 +28,7 @@ cd $casedir
 date=`date "+%F-%T"`
 
 jobid=$SLURM_JOB_ID
-mpiexec -n 2 python /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Workflow/src/parallel.run.py -c 'HPU.TEST.ICLM45ED.badger.intel.C2e72f5f4e-Fc47f968ee.2017-2018.' -r /lustre/scratch3/turquoise/rutuja/ACME/cases -f clm2.h0.2018-12.nc -s 1 -t 2 -g /turquoise/usr/projects/veg/rutuja/ACME_cases/ELM_Workflow/log
+mpiexec -n 2 python /turquoise/usr/projects/veg/rutuja/ACME_cases/cimmid/src/parallel.run.py -c 'E3SMv2.IELM.badger.intel.Cead8f1ada2-F387082946.2010-2011.' -r /lustre/scratch4/turquoise/rutuja/E3SM/scratch -f clm2.h0.2010-12.nc -s 1 -t 2 -g /turquoise/usr/projects/veg/rutuja/ACME_cases/cimmid/log
 
 
 #python $PY_SRC_PATH
