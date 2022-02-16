@@ -3,8 +3,8 @@
 #------------------------------------------#
 
 #----ELM-FATES code. User may change these----
-ELM_BRANCH: master_badger_jan31_2022
-ELM_REMOTE: git@github.com:xuchongang/E3SM.git
+ELM_BRANCH: E3SM_v2.0_fates_with_var_soil_thick
+ELM_REMOTE: git@github.com:rutujact/E3SM.git
 
 #----Directories under PROJECT ROOT; user need not change----
 LOG_DIR: log
