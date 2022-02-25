@@ -117,6 +117,7 @@ def runTreeQF():
         print('Tree program run successfully!')
     else:
         print('Tree program failed to execute...')
+        status=subprocess.call(["./trees"])
         
     return
 
