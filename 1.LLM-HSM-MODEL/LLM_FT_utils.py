@@ -545,7 +545,7 @@ def Treeoflife(file_names):
         cellnum = int(line_tf[1])
         #print (line_tf[1],cellnum)
         totfuel = 0.0
-        sppflag = int(line_td[0])
+        sppflag = float(line_td[0])
         #print(line_td[0], sppflag)
         for cid in range(cellnum):
             cellptr = int(line_tf[cid+2])
