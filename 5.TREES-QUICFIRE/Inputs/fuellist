@@ -18,7 +18,7 @@
       itrees=2                ! Trees flag (1 is generalized tree data, 2 is specific tree data with locations, 3 is specific tree data with randomized locations)
       ntspecies=2             ! Number of Tree Species
       tfuelbins=1             ! Number of size bins to distribute branches
-      treefile='treelist_LLM-400x400.txt' ! Trees text file with data
+      treefile='treelist_LLM.dat' ! Trees text file with data
       tdnx=                   ! Range of x cells with trees (if unspecified then whole domain)
       tdny=                   ! Range of y cells with trees (if unspecified then whole domain)
 
