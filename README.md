@@ -60,6 +60,9 @@ Run FIRETEC or QUICFIRE
 ------------
 
 A) \* QUICFIRE run notes \* <br/>
+    Remember to manually set the datafile path on L19 in QUIC_fire.inp.
+    This file is found at /7.QUICFIRE-MODEL/projects/Tester/
+
 QUICFIRE Diretory Tree <br/>
 mac_compile  projects  source_code<br/>
                         ``/`` ``\``<br/>
