@@ -118,7 +118,12 @@ def runTreeQF():
     else:
         print('Tree program failed to execute...')
         status=subprocess.call(["./trees"])
-        
+        ### Copying Tree Files to Fire Affects Assessment
+        copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
+        copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
+        copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
+        copyfile('LLM_litter_tree.dat','../8.CROWN-SCORCH/LLM_litter_tree.dat')
+
     return
 
 def runQF(): 
@@ -151,6 +156,7 @@ def runQF():
 
 def runCrownScorch():
     os.chdir("../../../8.CROWN-SCORCH")
+    copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     status=subprocess.call(["./trees"])
     if status==0:
         print('Tree program run successfully!')
@@ -158,9 +164,9 @@ def runCrownScorch():
         print('Tree program failed to execute...')
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
-                  'treelist_LLM-400x400.txt',
-                  'LLM_litter_WG.txt', 
-                  'LLM_litter_trees.txt', 
+                  'treelist_LLM.dat',
+                  'LLM_litter_WG.dat', 
+                  'LLM_litter_trees.dat', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
