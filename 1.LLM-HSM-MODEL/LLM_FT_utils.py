@@ -199,6 +199,9 @@ def save_litter_LLM_FT(filename,ftitle,litter,fplot):
     new_litter=regrid_LLM2FT(nx,ny,200,200,"linear",litter);
     if fplot=='plot':
         axx=plot_area_matrix(new_litter,ftitle,'yes')
+        plt.ioff()
+        plt.savefig('litter.png')
+        plt.close()
     print ('sum of the old litter matrix:',litter.sum())
     print ('sum of the new litter matrix:', new_litter.sum())
     np.savetxt(filename,  (1/(4*1.5))*new_litter, fmt='%.2f')
