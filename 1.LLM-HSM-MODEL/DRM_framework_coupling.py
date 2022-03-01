@@ -157,11 +157,7 @@ def runQF():
 def runCrownScorch():
     os.chdir("../../../8.CROWN-SCORCH")
     copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
-    status=subprocess.call(["./trees"])
-    if status==0:
-        print('Tree program run successfully!')
-    else:
-        print('Tree program failed to execute...')
+    
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
                   'treelist_LLM.dat',
