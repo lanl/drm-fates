@@ -163,7 +163,7 @@ def runCrownScorch():
                   'TreeTracker.txt', 
                   'treelist_LLM.dat',
                   'LLM_litter_WG.dat', 
-                  'LLM_litter_trees.dat', 
+                  'LLM_litter_tree.dat', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
