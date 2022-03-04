@@ -202,7 +202,7 @@ def updateTreelist(p):
     df.to_csv('treelist_LLM.dat', sep=' ',header=False,index=False)
 
     file_in='treelist_LLM.dat'
-    file_out='FT2LLM/treelist_LLM.dat'
+    file_out='LLM2FT/treelist_LLM.dat'
     llmft.save_FT_treelist(file_in,file_out,0)
     
     return
