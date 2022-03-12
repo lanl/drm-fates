@@ -151,7 +151,7 @@ def runQF():
     #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
     #that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
-    pff.main(900) #ASK ADAM!
+    pff.main(3000) #ASK ADAM!
     
     return
 
