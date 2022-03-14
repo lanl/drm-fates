@@ -27,7 +27,7 @@
 ! IGNITION LOCATIONS
 1					! 1 = rectangle, 2 = square ring, 3 = circular ring, 4 = file (QF_Ignitions.inp), 5 = time-dependent ignitions (QF_IgnitionPattern.inp), 6 = ignite.dat (firetech ARA), 7 = ignite.dat (firetech v3)
 380.0
-50.0
+5.0
 15.0
 390.0
 100
