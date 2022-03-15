@@ -127,7 +127,7 @@ def runTreeQF():
 
     return
 
-def runQF(): 
+def runQF(i): 
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
@@ -152,6 +152,12 @@ def runQF():
     #that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
     pff.main(3000) #ASK ADAM!
+
+    direc = "Plots"
+    dd = direc + str(i)
+    print (os.getcwd())
+    os.rename('Plots', dd)
+    os.mkdir('Plots')
     
     return
 
@@ -221,8 +227,20 @@ llmft.create_treelist(llm,'LLM2FT/treelist_LLM.dat')
 
 for i in range(ncycle):
     runTreeQF()                       # runs the tree program to create QF inputs
-    runQF()                           # runs QuickFire
+    runQF(i)                           # runs QuickFire
     runCrownScorch()                  # runs the tree program to create LLM inputs 
     llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
+    hsi_plt.plot_species_scores(llm)  # Plotting HVI
+    plt.savefig('HVI.png')
+    sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
     savelittersLLMQF(llm)
     updateTreelist(llm)               # this also updates dbh and cr 
+    dd = 'HVI.' + str(i) + '.png'
+    print (dd)
+    #plt.savefig('HVI.png') 
+    os.rename('HVI.png', dd)
+
+print ('ADAM SQ', llm.sq_sc)
+print ('ADAM GT', llm.gt_sc)
+print ('ADAM RCW',sc_rcw)
+np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')        
