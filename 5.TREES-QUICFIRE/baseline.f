@@ -467,7 +467,7 @@
       if (ilitter.eq.2) then
           print*,'Reading LLM tree litter'
           allocate(rhofxy(nx,ny))
-          open(1, file="LLM_litter_tree.dat")
+          open(1, file="LLM_litter_trees.dat")
             read(1,*) rhofxy
           close(1)
       endif
