@@ -109,7 +109,7 @@ def runTreeQF():
     dst='../5.TREES-QUICFIRE/'
     copyfile(src+'LLM_litter_WG.dat',dst+'LLM_litter_WG.dat')
     copyfile(src+'treelist_LLM.dat',dst+'treelist_LLM.dat')
-    copyfile(src+'LLM_litter_trees.dat',dst+'LLM_litter_tree.dat')
+    copyfile(src+'LLM_litter_trees.dat',dst+'LLM_litter_trees.dat')
 
     os.chdir(dst)
     status=subprocess.call(["./trees"])
