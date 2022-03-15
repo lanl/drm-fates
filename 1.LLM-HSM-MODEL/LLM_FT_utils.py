@@ -266,7 +266,9 @@ def save_FT_treelist(fin,fout,graph):
     htlc=np.zeros(n)
     hmaxcr=np.zeros(n)
     canopydensity=np.zeros(n)
-    newdata=np.zeros((n,8))
+    moist=np.zeros(n)
+    sizescale=np.zeros(n)
+    newdata=np.zeros((n,10))
 
     htlc=data[:,-1]*0.7649-4.1628
     htlc[htlc<0]=0
@@ -275,6 +277,8 @@ def save_FT_treelist(fin,fout,graph):
     hmaxcr[data[:,0]==2]=0
     canopydensity[data[:,0]==2]=0.6
     canopydensity[data[:,0]==1]=0.2
+    moist[:]=1.0
+    sizescale[:]=0.000347222
 
     newdata[:,0:3]=data[:,0:3] #tid,x,y
     newdata[:,3]=data[:,-1] #height
@@ -282,6 +286,8 @@ def save_FT_treelist(fin,fout,graph):
     newdata[:,5]=2*data[:,3] #Cdimater
     newdata[:,6]=hmaxcr 
     newdata[:,7]=canopydensity
+    newdata[:,8]=moist
+    newdata[:,9]=sizescale
 
     df_new = pd.DataFrame(newdata)
     if graph:
