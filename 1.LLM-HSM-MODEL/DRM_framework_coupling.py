@@ -123,7 +123,7 @@ def runTreeQF():
     copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
     copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
     copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
-    copyfile('LLM_litter_tree.dat','../8.CROWN-SCORCH/LLM_litter_tree.dat')
+    copyfile('LLM_litter_trees.dat','../8.CROWN-SCORCH/LLM_litter_trees.dat')
 
     return
 
@@ -163,7 +163,7 @@ def runCrownScorch():
                   'TreeTracker.txt', 
                   'treelist_LLM.dat',
                   'LLM_litter_WG.dat', 
-                  'LLM_litter_tree.dat', 
+                  'LLM_litter_trees.dat', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
                   '../1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
