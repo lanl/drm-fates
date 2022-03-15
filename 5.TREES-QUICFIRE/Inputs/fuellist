@@ -24,7 +24,7 @@
 
       ilitter=2               ! Litter flag
       litterconstant=5        ! Exponential constant to determine increase of litter mass under trees
-      litterfile='LLM_litter_tree.dat' ! Litter text file with generalized-data
+      litterfile='LLM_litter_trees.dat' ! Litter text file with generalized-data
 
       itreatment=0            ! Treatment flag (0 is no treatment, 1 slashlayer, 2 slashpile, 3 clearing)
       sdnx=25,75              ! Range of x cells undergoing treatment
