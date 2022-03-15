@@ -322,7 +322,7 @@ def plot_outputs(qu, qf, ignitions, flags, fb):
 
     fuel_dens = read_fireca_field("fuels-dens-", temp_ntimes, temp_time, qf, 0)
     # ADAM CHANGES
-    Drhofp=np.divide(fuel_dens[9][:,:,:],fuel_dens[0][:,:,:])
+    Drhofp=np.divide(fuel_dens[(qf.time[-1]/100)][:,:,:],fuel_dens[0][:,:,:])
     Drhofp[np.isnan(Drhofp)]=1
     PercRhofChange = 0.0
     print("ADAM ATCHLEY",qf.time,qf.nx,qf.ny,qf.nz)
