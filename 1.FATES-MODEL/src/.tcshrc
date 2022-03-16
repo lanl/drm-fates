@@ -1,6 +1,6 @@
 #!/bin/sh
 ## 1. set environmental variables
-setenv VEGHOME /usr/projects/veg/$user
+setenv VEGHOME /usr/projects/cimmid/users/$user
 setenv ACCOUNT w18_califorest
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
