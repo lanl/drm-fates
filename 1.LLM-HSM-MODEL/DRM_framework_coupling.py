@@ -156,6 +156,8 @@ def runQF(i):
     direc = "Plots"
     dd = direc + str(i)
     print (os.getcwd())
+    if os.path.exists(dd):
+       shutil.rmtree(dd)
     os.rename('Plots', dd)
     os.mkdir('Plots')
     
