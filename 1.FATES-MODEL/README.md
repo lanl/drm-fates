@@ -1,11 +1,17 @@
+About
+--------------------------------------------------------------------------------
+
 This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
+
+Workflow
+--------------------------------------------------------------------------------
 
 0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
 ssh user@wtrw.lanl.gov
 
 ssh ba-fe
 
-cd /usr/projects/veg/$user
+cd /usr/projects/cimmid/users/$user
 
 mkdir -p ELM_cases
 
@@ -14,11 +20,11 @@ cd ELM_cases
 ! Before cloning repo, you may need to ssh auntheticate, if you haven't done that already:
 ! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
-mkdir -p cimmid
+mkdir -p proj1
 
-cd cimmid
+cd proj1
 
-git clone git@github.com:rutujact/ELM_Workflow.git .
+git clone git@github.com:lanl/cimmid-e3sm.git .
 
 git checkout cimmid
 
@@ -30,14 +36,14 @@ git checkout cimmid
 
 source src/.tcshrc
 
-3. cd into ELM_Disease, then run once to create and activate a conda environment (takes ~10-15 min) and load ELM and FATES branches:
+3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches:
 
 sh src/run_once.sh
 
 4. Activate conda environment
 
 ! sh src/activate_env.sh 
-! Somehow the conda activate command throws an error (needs fixing), so run it outside, provided that the environment name matches the one created (xx_env):
+! Somehow the conda activate command throws an error (needs fixing), so run it outside:
 
 conda activate elm_env
 
@@ -45,7 +51,7 @@ conda activate elm_env
 
 sh src/run_elm_parallel.sh
 
-6. Often the first attempt of running a parallel simulation is unsuccessful. Run this script until you get "sbatch has finished running" & "a simulation ran successfully":
+6. Run this script until you get "sbatch has finished running" & "a simulation ran successfully":
 
 sh src/run_success.sh
 
@@ -57,14 +63,14 @@ python src/create.filter.py
 
 sbatch src/run_elm.sh
 
-9. Then to extract ELM outputs with:
+9. Then to extract ELM outputs, run:
 
 sh src/extract_outputs.sh
 
-Acknowledgement
+Acknowledgements
 --------------------------------------------------------------------------------
 
-This workflow was developed by Rutuja Chitra-Tarak (rutuja@lanl.gov). Some python scripts, developed by Chonggang Xu (cxu@lanl.gov), were repurposed for use in this workflow. These two should be acknowledged in publications. 
+This workflow was developed by Rutuja Chitra-Tarak (rutuja@lanl.gov). Some python scripts, developed by Chonggang Xu (cxu@lanl.gov), were repurposed for use in this workflow. Those two should be acknowledged in publications. 
 
 The Energy Exascale Earth System Model (E3SM) Project should be acknowledged in publications as the origin of the model using 
 [these guidelines](https://e3sm.org/resources/policies/acknowledge-e3sm/).
