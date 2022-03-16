@@ -15,6 +15,7 @@ import os
 import os.path
 import subprocess
 from shutil import copyfile
+import shutil
 import sys
 sys.path.insert(0, '../7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
