@@ -114,17 +114,17 @@ def runTreeQF():
 
     os.chdir(dst)
     status=subprocess.call(["./trees"])
+    while status != 0:
+       print('Tree program failed to execute...')
+       status=subprocess.call(["./trees"])
+
     if status==0:
         print('Tree program run successfully!')
-    else:
-        print('Tree program failed to execute...')
-        status=subprocess.call(["./trees"])
-
-    ### Copying Tree Files to Fire Affects Assessment
-    copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
-    copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
-    copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
-    copyfile('LLM_litter_trees.dat','../8.CROWN-SCORCH/LLM_litter_trees.dat')
+        ### Copying Tree Files to Fire Affects Assessment
+        copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
+        copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
+        copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
+        copyfile('LLM_litter_trees.dat','../8.CROWN-SCORCH/LLM_litter_trees.dat')
 
     return
 
