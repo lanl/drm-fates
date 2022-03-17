@@ -378,7 +378,7 @@
 !     +              ii_real, jj_real, kk, trhof(ift_index,ii_real,jj_real,kk)
 !                  endif
                   ! ###### Check the Index here  ######
-                  cellid(cellnum) = (ii_real+(jj_real*200)+(kk*200*200))
+                  cellid(cellnum) = (ii_real+(jj_real*nx)+(kk*nx*ny))
                   ! ###### Check the Index here  ######
                   cellfuel(cellnum) = rhoftemp
                   tfueltot = tfueltot + cellfuel(cellnum)
