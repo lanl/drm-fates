@@ -463,7 +463,7 @@ def Treeoflife(file_names):
     Nx = 200
     Ny = 200
     Nz = 27    ### 16 for FIRETEC, 27 or 30 for QUICFire
-    s = (200,200)
+    s = (Nx,Ny)
     cellnum = 0
     cellptr = 0
     conccell = 0
