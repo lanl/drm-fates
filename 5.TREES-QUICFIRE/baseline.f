@@ -377,7 +377,7 @@
 !                    print*,'ADAM i, j, k ', tbulkdensity(ift,i), cellcount, rhoftemp, 
 !     +              ii_real, jj_real, kk, trhof(ift_index,ii_real,jj_real,kk)
 !                  endif
-                  ! ###### Check the Index here  ######
+                  ! ###### Check the Index here  ######. Think about capping tree hieght...... AA ~ 3/18/22
                   cellid(cellnum) = (ii_real+(jj_real*nx)+(kk*nx*ny))
                   ! ###### Check the Index here  ######
                   cellfuel(cellnum) = rhoftemp
