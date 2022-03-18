@@ -1,4 +1,4 @@
-name: elm_env
+name: /turquoise/usr/projects/cimmid/users/rutuja/ELM_cases/test/elm_env
 channels:
   - conda-forge
   - defaults
@@ -17,10 +17,10 @@ dependencies:
   - bwidget=1.9.11=1
   - bzip2=1.0.8=h7b6447c_0
   - c-ares=1.17.1=h7f98852_1
-  - ca-certificates=2021.10.8=ha878542_0
+  - ca-certificates=2022.2.1=h06a4308_0
   - cairo=1.14.12=h8948797_3
   - certifi=2021.5.30=py36h06a4308_0
-  - cffi=1.14.0=py36h2e261b9_0
+  - cffi=1.14.6=py36h400218f_0
   - cftime=1.5.0=py36h6323ea4_0
   - curl=7.76.1=h979ede3_1
   - decorator=5.0.9=pyhd3eb1b0_0
@@ -33,18 +33,18 @@ dependencies:
   - gcc_linux-64=7.3.0=h553295d_15
   - gfortran_impl_linux-64=7.3.0=hdf63c60_1
   - gfortran_linux-64=7.3.0=h553295d_15
-  - glib=2.63.1=h5a9c865_0
+  - glib=2.69.1=h4ff587b_1
   - graphite2=1.3.14=h23475e2_0
   - gsl=2.4=h14c3975_4
   - gxx_impl_linux-64=7.3.0=hdf63c60_1
   - gxx_linux-64=7.3.0=h553295d_15
-  - harfbuzz=1.8.8=hffaf4a1_0
+  - harfbuzz=2.8.1=h6f93f22_0
   - hdf4=4.2.13=h3ca952b_2
   - hdf5=1.10.6=nompi_h7c3c948_1111
   - icu=58.2=he6710b0_3
   - importlib-metadata=3.10.0=py36h06a4308_0
   - importlib_metadata=3.10.0=hd3eb1b0_0
-  - intel-openmp=2021.3.0=h06a4308_3350
+  - intel-openmp=2022.0.1=h06a4308_3633
   - ipykernel=5.3.4=py36h5ca1d4c_0
   - ipython=7.16.1=py36h5ca1d4c_0
   - ipython_genutils=0.2.0=pyhd3eb1b0_1
@@ -62,7 +62,7 @@ dependencies:
   - libcurl=7.76.1=hc4aaa36_1
   - libedit=3.1.20210216=h27cfd23_1
   - libev=4.33=h516909a_1
-  - libffi=3.2.1=hf484d3e_1007
+  - libffi=3.3=he6710b0_2
   - libgcc-ng=9.3.0=h5101ec6_17
   - libgfortran-ng=7.5.0=ha8ba4b0_17
   - libgfortran4=7.5.0=ha8ba4b0_17
@@ -105,7 +105,7 @@ dependencies:
   - pandas=1.1.5=py36ha9443f7_0
   - pandoc=2.12=h06a4308_0
   - pandocfilters=1.4.3=py36h06a4308_1
-  - pango=1.42.4=h049681c_0
+  - pango=1.45.3=hd140c19_0
   - parso=0.8.2=pyhd3eb1b0_0
   - pcre=8.45=h295c915_0
   - pexpect=4.8.0=pyhd3eb1b0_3
@@ -119,7 +119,7 @@ dependencies:
   - pygments=2.9.0=pyhd3eb1b0_0
   - pyparsing=2.4.7=pyhd3eb1b0_0
   - pyrsistent=0.17.3=py36h7b6447c_0
-  - python=3.6.10=h8356626_1011_cpython
+  - python=3.6.13=h12debd9_1
   - python-dateutil=2.8.2=pyhd3eb1b0_0
   - python_abi=3.6=2_cp36m
   - pytz=2021.1=pyhd3eb1b0_0
@@ -274,7 +274,7 @@ dependencies:
   - setuptools=52.0.0=py36h06a4308_0
   - simplegeneric=0.8.1=py_1
   - six=1.16.0=pyhd3eb1b0_0
-  - sqlite=3.33.0=h62c20be_0
+  - sqlite=3.38.0=hc218d9a_0
   - terminado=0.9.4=py36h06a4308_0
   - testpath=0.5.0=pyhd3eb1b0_0
   - tk=8.6.10=hbc83047_0
@@ -292,5 +292,5 @@ dependencies:
   - zipp=3.5.0=pyhd3eb1b0_0
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.9=haebb681_0
+prefix: /turquoise/usr/projects/cimmid/users/rutuja/ELM_cases/test/elm_env
 
-prefix: turquoise/usr/projects/veg/rutuja/ACME_cases/cimmid/elm_env
