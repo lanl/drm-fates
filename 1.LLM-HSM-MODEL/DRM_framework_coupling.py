@@ -88,15 +88,19 @@ def dbh_cr(p):
     
     return p
 
-def savelittersLLMQF(p):
+def savelittersLLMQF(p,i):
     filename='LLM2FT/LLM_litter_WG.dat'
     ftitle='WG litter [kg/4m2]'
-    llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'noplot')
+    llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot')
+    newname = 'litter_WG.' + str(i) + '.png'
+    os.rename('litter.png', newname)
 
     filename='LLM2FT/LLM_litter_trees.dat'
     ftitle='LLP + HW litter [kg/4m2]'
     tree_litter=p.litterHW+p.litter
-    llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'noplot')
+    llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'plot')
+    newname = 'litter_Tree.' + str(i) + '.png'
+    os.rename('litter.png', newname)
 
     percent_LP_litter=np.sum(p.litter)/np.sum(p.litterHW+p.litter)
     percent_HW_litter=np.sum(p.litterHW)/np.sum(p.litterHW+p.litter)
@@ -200,20 +204,37 @@ def runLLMcyclical(p,nyears):
     
     return p
 
-def updateTreelist(p):
+def updateTreelist(p,ii):
     ftlist='FT2LLM/AfterFireTrees.txt'
     [lp_list,hw_list]=llmft.update_tree_info_per_location(p,ftlist,0)
 
     df_hw = pd.DataFrame(hw_list)
     df = pd.DataFrame(lp_list)
     df=df.append(df_hw)
-    #df.plot(subplots=True, layout=(4,2),figsize=(12, 10));
+    df.plot(subplots=True, layout=(4,2),figsize=(12, 10));
     df.to_csv('treelist_LLM.dat', sep=' ',header=False,index=False)
 
     file_in='treelist_LLM.dat'
     file_out='LLM2FT/treelist_LLM.dat'
     llmft.save_FT_treelist(file_in,file_out,0)
     
+    df = pd.read_csv('LLM2FT/treelist_LLM.dat',sep=' ',
+                names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
+                      "htlc [m]","CRDiameter [m]","hmaxcr [m]",
+                      "canopydensity  [kg/m3]", "CR fuel moist [frac]",
+                      "CR fuel size scale [m]" ])
+    df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
+    plt.tight_layout()
+    plt.savefig('TreeData.png')
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(df["x coord [m]"].values,df["y coord [m]"].values,'.')
+    plt.title('Tree distribution in the FT domain');   
+    print("Total number of trees: ",df["x coord [m]"].size )
+    newname = 'TreeMap.' + str(ii) + '.png'
+    plt.savefig('TreeMap.png')
+    os.rename('TreeMap.png', newname)
+
     return
 
 #-----main------
@@ -228,7 +249,28 @@ llm=dbh_cr(llm)            # calculates dbh and crown radius
 savelittersLLMQF(llm)
 llmft.create_treelist(llm,'LLM2FT/treelist_LLM.dat')
 
+#### MAKE INTO FUNCTION
+df = pd.read_csv('LLM2FT/treelist_LLM.dat',sep=' ',
+                    names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
+                        "htlc [m]","CRDiameter [m]","hmaxcr [m]",
+                        "canopydensity  [kg/m3]", "CR fuel moist [frac]",
+                        "CR fuel size scale [m]" ])
+df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
+plt.tight_layout()
+plt.savefig('TreeInfo.png')
+
+plt.figure(figsize=(8, 6))
+plt.plot(df["x coord [m]"].values,df["y coord [m]"].values,'.')
+plt.title('Tree distribution in the FT domain');
+print("Total number of trees: ",df["x coord [m]"].size )
+plt.savefig('TreePlot.0.png')
+
+hsi_plt.plot_species_scores(llm)
+plt.savefig('HVI.0.png')
+#### MAKE ABOVE INTO FUNTION
+
 for i in range(ncycle):
+    ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
     runQF(i)                           # runs QuickFire
     runCrownScorch()                  # runs the tree program to create LLM inputs 
@@ -236,8 +278,8 @@ for i in range(ncycle):
     hsi_plt.plot_species_scores(llm)  # Plotting HVI
     plt.savefig('HVI.png')
     sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
-    savelittersLLMQF(llm)
-    updateTreelist(llm)               # this also updates dbh and cr 
+    savelittersLLMQF(llm,ii)
+    updateTreelist(llm,ii)               # this also updates dbh and cr 
     dd = 'HVI.' + str(i) + '.png'
     print (dd)
     #plt.savefig('HVI.png') 
