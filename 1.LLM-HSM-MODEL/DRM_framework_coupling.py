@@ -246,7 +246,7 @@ ncycle=2      # number of loops
 LLMspinup(nyears)          # temporary llm class
 llm=LLMtransient(nyears)   # permanent llm class
 llm=dbh_cr(llm)            # calculates dbh and crown radius 
-savelittersLLMQF(llm)
+savelittersLLMQF(llm,0)
 llmft.create_treelist(llm,'LLM2FT/treelist_LLM.dat')
 
 #### MAKE INTO FUNCTION
