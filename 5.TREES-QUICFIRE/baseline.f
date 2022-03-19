@@ -235,8 +235,8 @@
       real,external:: paraboloid,normal
 
       integer cellnum, cn
-      integer, dimension(200) :: cellid
-      real, dimension(200) :: cellfuel 
+      integer, dimension(nx) :: cellid
+      real, dimension(nx) :: cellfuel 
       real tfueltot
 
  
