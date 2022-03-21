@@ -19,6 +19,7 @@ import shutil
 import sys
 sys.path.insert(0, '../7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
+import Buffer as buff
 
 def LLMspinup(nyears):
     # --spinup run ---
@@ -269,17 +270,28 @@ hsi_plt.plot_species_scores(llm)
 plt.savefig('HVI.0.png')
 #### MAKE ABOVE INTO FUNTION
 
+## Change Coordinates for QUICFIRE HERE ###
+#buff.add_sat()
+buff.add_tree_buff()
+buff.add_surf_buff()
+
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
     runQF(i)                           # runs QuickFire
-    runCrownScorch()                  # runs the tree program to create LLM inputs 
+    runCrownScorch()                  # runs the tree program to create LLM inputs
+    ## Change Coordinates Back to Eco system model HERE ###
+    #buff.remove_tree_buff()
+    #buff.remove_surf_buff()
     llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
     hsi_plt.plot_species_scores(llm)  # Plotting HVI
     plt.savefig('HVI.png')
     sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
     savelittersLLMQF(llm,ii)
     updateTreelist(llm,ii)               # this also updates dbh and cr 
+    ## Change Coordinates for QUICFIRE HERE ###
+    #buff.add_tree_buff()
+    #buff.add_surf_buff()    
     dd = 'HVI.' + str(i) + '.png'
     print (dd)
     #plt.savefig('HVI.png') 
