@@ -6,6 +6,10 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       program fuel_maps
 
+      use grid_variables
+      use infile_variables
+      use treatment_variables
+
       print *,'===================================='
       print *,' Running TREES to generate fuel     '
       print *,' files for FIRETEC or QUIC-Fire     '
@@ -15,14 +19,22 @@
       call namelist_input
       call define_constant_variables
       call define_grid_variables
-      print*, 'HERE ADAM 0' 
+      
+      !-----Fuel Read-in
+      if(ifuelin.eq.1) call grid_readin
+
       !-----Establish baseline
       call baseline
-      print*, 'HERE ADAM 1'
+
       !-----Perform fuel treatments
-      call treatment
-      print*, 'HERE ADAM 2'
+      if(itreatment.ne.0) call treatment
+      
       !-----Export data to binary files
-      call output
+      print*,'Singlefuel',singlefuel
+      if(singlefuel.eq.1)then
+        call output_1fuel
+      else
+        call output_nfuel
+      endif
 
       end

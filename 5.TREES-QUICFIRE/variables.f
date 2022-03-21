@@ -20,14 +20,31 @@
             
       integer nx,ny,nz
       real    dx,dy,dz
-      real    aa1
-      integer nfuel,zmax
+      real    aa1,ndatax,ndatay,datalocx,datalocy !JSM added ndatax, etc.
+      integer nfuel,zmax,singlefuel,ifiretecshock
       real,allocatable:: rhof(:,:,:,:),sizescale(:,:,:,:),moist(:,:,:,:),fueldepth(:,:,:,:)
-      real,allocatable:: satarray(:,:,:)
       real,allocatable:: zs(:,:),zheight(:,:,:)
       character:: topofile*50
       
       end module grid_variables
+      
+      module infile_variables
+      !-----------------------------------------------------------------
+      ! Variables for importing fuel files
+      !-----------------------------------------------------------------
+      implicit none
+            
+      integer ifuelin
+      integer inx,iny,inz
+      real    idx,idy,idz
+      real    iaa1
+      integer iintpr
+      integer infuel
+      real,allocatable:: irhof(:,:,:,:),iss(:,:,:,:),imoist(:,:,:,:),iafd(:,:,:,:)
+      real,allocatable:: izs(:,:),izheight(:,:,:)
+      character:: rhoffile*50,moistfile*50,ssfile*50,afdfile*50
+      
+      end module infile_variables
 
       module baseline_variables
       !-----------------------------------------------------------------
@@ -36,16 +53,19 @@
       implicit none
     
       integer:: igrass,itrees,ilitter 
-      integer:: ngrass,ntspecies,tfuelbins
+      integer:: ngrass
       real:: grassconstant,litterconstant
       real,allocatable:: grhof(:,:,:,:),gsizescale(:,:,:,:),gmoist(:,:,:,:),gfueldepth(:,:,:)
       real,allocatable:: trhof(:,:,:,:),tsizescale(:,:,:,:),tmoist(:,:,:,:),tfueldepth(:,:,:)
       real,allocatable:: lrhof(:,:,:,:),lsizescale(:,:,:,:),lmoist(:,:,:,:),lfueldepth(:,:,:)
       character:: grassfile*50,treefile*50,litterfile*50
 
-      real,allocatable:: tcanopy(:),tlocation(:,:)
-      real,allocatable:: tmoisture(:,:),tss(:,:),tbulkdensity(:,:)
+      integer:: istem,ntspecies,tfuelbins,ntreefueltypes
+      real,allocatable:: tstemdensity(:),tlocation(:,:,:)
+      real,allocatable:: t1moisture(:,:),t1ss(:,:),t1bulkdensity(:,:)
+      real,allocatable:: t2moisture(:,:,:),t2ss(:,:,:),t2bulkdensity(:,:,:)
       real,allocatable:: theight(:,:),tcrownbotheight(:,:),tcrownmaxheight(:,:),tcrowndiameter(:,:)
+      real,allocatable:: trhomicro(:),tdbh(:,:),tstemmoist(:),tbarkthick(:,:),tbarkmoist(:)
       integer,allocatable:: ntrees(:),tspecies(:)
       real,allocatable:: gdepth(:),grho(:),gss(:),gmoisture(:)
       real,allocatable:: ldepth(:),lrho(:),lss(:),lmoisture(:)

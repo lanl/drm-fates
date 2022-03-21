@@ -1,7 +1,7 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ! metryc contains functions used to define the grid
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-      real function zcart(sigma,zsij)
+      real function zcart(aa1,sigma,nz,dz,zsij)
       !-----------------------------------------------------------------
       ! zcart is a function which computes the cartesian vertical 
       ! coordianate
@@ -9,11 +9,11 @@
       ! aa1 is the logrithmic stretching coefficient
       ! zs is the vertical height of the ground
       !-----------------------------------------------------------------
-      use grid_variables
       implicit none
 
-      real zb,zsij,f
-      real aa2,aa3    
+      integer nz
+      real zb,dz,zsij,f
+      real aa1,aa2,aa3    
       real sigma,gdeform
       
       zb = nz*dz

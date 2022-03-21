@@ -1,5 +1,5 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-! define_variables definess all variables, both constant and 
+! define_variables defines all variables, both constant and 
 ! user-defined, used throughout the program
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       subroutine define_constant_variables
@@ -18,47 +18,111 @@
       ! Grid variables
       !-----------------------------------------------------------------
       use grid_variables
+      use infile_variables
       use baseline_variables
       
       implicit none
 
       integer i,j,k
+      integer ii,jj
+      integer xbot,xtop,ybot,ytop
+      real    cells,xfrac,yfrac
       real,external:: zcart
+      real,dimension(2):: xcor,ycor
            
-      nfuel = ngrass+ntspecies*(ilitter+tfuelbins)
-      allocate(rhof(nfuel,nx,ny,nz))
-      allocate(sizescale(nfuel,nx,ny,nz))
-      allocate(moist(nfuel,nx,ny,nz))
-      allocate(fueldepth(nfuel,nx,ny,nz))
-      allocate(satarray(nx,ny,10)) 
-
-      print*, 'ADAM ATCHELY ', nfuel,  ngrass, ntspecies, ilitter, tfuelbins
-
+      ntreefueltypes = istem*2+tfuelbins
+      nfuel = infuel+ngrass+ntspecies*ntreefueltypes
+      if(ilitter.eq.1) nfuel=nfuel+ntspecies
+      allocate(rhof(nfuel,nx,ny,nz)); rhof(:,:,:,:)=0.0
+      allocate(sizescale(nfuel,nx,ny,nz)); sizescale(:,:,:,:)=0.0
+      allocate(moist(nfuel,nx,ny,nz)); moist(:,:,:,:)=0.0
+      allocate(fueldepth(nfuel,nx,ny,nz)); fueldepth(:,:,:,:)=0.0
+      
       !-----------------------------------------------------------------
       ! Create topo layer (Should be adjusted for non-flat topo)
       !-----------------------------------------------------------------
       
       allocate(zs(nx,ny))
+      allocate(izs(inx,iny))
       allocate(zheight(nx,ny,nz))
+      allocate(izheight(inx,iny,inz))
       
-      if (topofile.eq.'flat'.or.topofile.eq.'') then
+      if(ifuelin.eq.1.and.(inx.ne.nx.or.idx.ne.dx.or.
+     &  iny.ne.ny.or.idy.ne.dy.or.inz.ne.nz.or.idz.ne.dz
+     &  .or.aa1.ne.iaa1)) iintpr=1
+
+      if (topofile.eq.'flat'.or.topofile.eq.'') then ! No topo
         zs(:,:)=0.0
+        izs(:,:)=0.0
         print *,'Not using topo'      
-      else
+      elseif (iintpr.eq.1) then ! Topo with existing fuels
+        print *,'Reading given fuel topo file = ',topofile
+        open (1,file=topofile,form='unformatted',status='old')
+        read (1) izs
+        close (1)
+        do i=1,nx
+          do j=1,ny
+            xcor(1) = (i-1)*dx ! Real x lower edge
+            xcor(2) = i*dx     ! Real x upper edge
+            xbot    = floor(xcor(1)/idx+1) ! Fuel readin grid x lower edge
+            xtop    = floor(xcor(2)/idx+1) ! Fuel readin grid x upper edge
+            ycor(1) = (j-1)*dy ! Real y lower edge
+            ycor(2) = j*dy     ! Real y upper edge
+            ybot    = floor(ycor(1)/idy+1) ! Fuel readin grid y lower edge
+            ytop    = floor(ycor(2)/idy+1) ! Fuel readin grid y upper edge
+            cells   = 0.
+            do ii=xbot,xtop
+              do jj=ybot,ytop
+                xfrac  = (min(ii*idx,xcor(2))-max((ii-1)*idx,xcor(1)))/idx
+                yfrac  = (min(jj*idy,ycor(2))-max((jj-1)*idy,ycor(1)))/idy
+                cells  = cells+xfrac*yfrac
+                zs(i,j)= zs(i,j)+xfrac*yfrac*izs(ii,jj)
+              enddo
+            enddo
+            zs(i,j) = zs(i,j)/cells
+          enddo
+        enddo
+      else ! Normal topo
+        print *,'Reading topo file = ',topofile
         open (1,file=topofile,form='unformatted',status='old')
         read (1) zs
         close (1)
-        print *,'Reading topo file = ',topofile
       endif
-      
+      if(minval(zs).gt.0)then ! Reduce topo values to least common value
+        izs = izs-minval(zs)
+        zs  = zs-minval(zs)
+        open (2,file='toporeduced.dat',form='unformatted',status='unknown')
+        write(2) zs
+        close(2)
+      endif
+
       do i=1,nx
         do j=1,ny
           do k=1,nz
-            zheight(i,j,k) = zcart((k-1)*dz,zs(i,j))
+            if (aa1.eq.0) then
+              zheight(i,j,k) = zs(i,j)+(k-1)*dz
+            else
+              zheight(i,j,k) = zcart(aa1,(k-1)*dz,nz,dz,zs(i,j))
+            endif
             if(i.eq.1.and.j.eq.1) print*,'cell',k,'bottom height',zheight(i,j,k)
           enddo
         enddo
       enddo
+      if (iintpr.eq.1) then ! Topo with existing fuels
+        print*,'Readin fuel grid heights'
+        do i=1,inx
+          do j=1,iny
+            do k=1,inz
+              if (iaa1.eq.0) then
+                izheight(i,j,k) = izs(i,j)+(k-1)*idz
+              else
+                izheight(i,j,k) = zcart(iaa1,(k-1)*idz,inz,idz,izs(i,j))
+              endif
+              if(i.eq.1.and.j.eq.1) print*,'cell',k,'bottom height',izheight(i,j,k)
+            enddo
+          enddo
+        enddo
+      endif
 
       end subroutine define_grid_variables
 
@@ -71,32 +135,34 @@
 
       implicit none
 
-      integer i,j,itree
-      real,dimension(7+3*tfuelbins):: temp_array
-      
+      real,allocatable:: rhofxy(:,:)
+      integer ift
+
+      allocate(rhofxy(nx,ny))
+
       if (igrass.ne.0) then
-        allocate(grhof(ngrass,nx,ny,nz))
-        allocate(gsizescale(ngrass,nx,ny,nz))
-        allocate(gmoist(ngrass,nx,ny,nz))
-        allocate(gfueldepth(ngrass,nx,ny))
+        allocate(grhof(ngrass,nx,ny,nz)); grhof(:,:,:,:)=0.0
+        allocate(gsizescale(ngrass,nx,ny,nz)); gsizescale(:,:,:,:)=0.0
+        allocate(gmoist(ngrass,nx,ny,nz)); gmoist(:,:,:,:)=0.0
+        allocate(gfueldepth(ngrass,nx,ny)); gfueldepth(:,:,:)=0.0
       endif
       if (itrees.ne.0) then
-        allocate(trhof(ntspecies*tfuelbins,nx,ny,nz))
-        allocate(tsizescale(ntspecies*tfuelbins,nx,ny,nz))
-        allocate(tmoist(ntspecies*tfuelbins,nx,ny,nz))
-        allocate(tfueldepth(ntspecies*tfuelbins,nx,ny))
+        allocate(trhof(ntspecies*ntreefueltypes,nx,ny,nz)); trhof(:,:,:,:)=0.0
+        allocate(tsizescale(ntspecies*ntreefueltypes,nx,ny,nz)); tsizescale(:,:,:,:)=0.0
+        allocate(tmoist(ntspecies*ntreefueltypes,nx,ny,nz)); tmoist(:,:,:,:)=0.0
+        allocate(tfueldepth(ntspecies*ntreefueltypes,nx,ny)); tfueldepth(:,:,:)=0.0
       endif
       if (ilitter.ne.0) then
-        allocate(lrhof(ntspecies,nx,ny,nz))
-        allocate(lsizescale(ntspecies,nx,ny,nz))
-        allocate(lmoist(ntspecies,nx,ny,nz))
-        allocate(lfueldepth(ntspecies,nx,ny))
+        allocate(lrhof(ntspecies,nx,ny,nz)); lrhof(:,:,:,:)=0.0
+        allocate(lsizescale(ntspecies,nx,ny,nz)); lsizescale(:,:,:,:)=0.0
+        allocate(lmoist(ntspecies,nx,ny,nz)); lmoist(:,:,:,:)=0.0
+        allocate(lfueldepth(ntspecies,nx,ny)); lfueldepth(:,:,:)=0.0
       endif
 
       !-----------------------------------------------------------------
       ! Groundfuel variables unique to the ground fuels baseline
       !-----------------------------------------------------------------
-      if (igrass.ne.0) then
+      if (igrass.eq.1) then
         allocate(grho(ngrass))
         allocate(gmoisture(ngrass))
         allocate(gss(ngrass))
@@ -108,82 +174,33 @@
         read (1,*) gss        ! size scale of grass [m]
         read (1,*) gdepth     ! depth of grass [m]
         close (1)
+      elseif (igrass.eq.2) then
+        print*,'Reading 2D ground fuel file from LLM'
+        open (1,file="LLM_litter_WG.dat")
+        read(1,*) rhofxy
+        close(1)
+        grhof(1,:,:,1)=rhofxy
+        open (2,file="LLM_litter_trees.dat")
+        read(2,*) rhofxy
+        close(2)
+        grhof(1,:,:,1)=grhof(1,:,:,1)+rhofxy
+        gmoist(1,:,:,1)=0.05
+        gsizescale(ift,:,:,1)=0.0005
+        gfueldepth(ift,:,:)=0.2
       endif
       
       !-----------------------------------------------------------------
       ! Tree variables unique to the tree baseline
       !-----------------------------------------------------------------
       if (itrees.eq.1) then
-        allocate(ntrees(ntspecies)) ! Number of trees for each species
-        allocate(tcanopy(ntspecies)) ! Canopy closure [fraction]
-        allocate(theight(2,ntspecies)) ! Tree heights [m]
-        allocate(tcrownbotheight(2,ntspecies)) ! Height to live crown [m]
-        allocate(tcrowndiameter(2,ntspecies)) ! Crown diameter [m]
-        allocate(tcrownmaxheight(2,ntspecies)) ! Height to max crown diameter [m]
-        allocate(tbulkdensity(tfuelbins,ntspecies)) ! Crown fuel bulk density [kg/m3]
-        allocate(tmoisture(tfuelbins,ntspecies)) ! Crown fuel moisture content [fraction]
-        allocate(tss(tfuelbins,ntspecies)) ! Crown fuel size scale [m]
-      
-        open (2,file=treefile)
-        read (2,*) tcanopy
-        read (2,*) theight(1,:)
-        read (2,*) theight(2,:)
-        read (2,*) tcrownbotheight(1,:)
-        read (2,*) tcrownbotheight(2,:)
-        read (2,*) tcrowndiameter(1,:)
-        read (2,*) tcrowndiameter(2,:)
-        read (2,*) tcrownmaxheight(1,:)
-        read (2,*) tcrownmaxheight(2,:)
-        do i=1,tfuelbins
-          read(2,*) tbulkdensity(i,:)
-          read(2,*) tmoisture(i,:)
-          read(2,*) tss(i,:)
-        enddo
-        close (2)
-      endif
-      
-      if (itrees.eq.2.or.itrees.eq.3) then
-        itree = 0
-        open (2,file=treefile)
-        print*, 'Adam ', treefile
-        do
-          read (2,*,end=10)
-          itree = itree+1
-        enddo
-10      rewind(2)
-        
-        allocate(ntrees(1)) ! Total number of trees
-        allocate(tspecies(itree)) ! Tree cartesian coordinates [m,m]
-        allocate(tlocation(itree,2)) ! Tree cartesian coordinates [m,m]
-        allocate(theight(itree,1))   ! Tree heights [m]
-        allocate(tcrownbotheight(itree,1)) ! Height to live crown [m]
-        allocate(tcrowndiameter(itree,1)) ! Crown diameter [m]
-        allocate(tcrownmaxheight(itree,1)) ! Height to max crown diameter [m]
-        allocate(tbulkdensity(tfuelbins,itree)) ! Crown fuel bulk density [kg/m3]
-        allocate(tmoisture(tfuelbins,itree)) ! Crown fuel moisture content [fraction]
-        allocate(tss(tfuelbins,itree)) ! Crown fuel size scale [m]
-     
-        ntrees(1) = itree 
-        open (2,file=treefile)
-        print*, 'itree',itree,treefile
-        do i=1,itree
-          read (2,*) temp_array(:)
-          tspecies(i) = temp_array(1)
-          tlocation(i,:) = temp_array(2:3)
-          theight(i,1) = temp_array(4)
-          tcrownbotheight(i,1) = temp_array(5)
-          tcrowndiameter(i,1) = temp_array(6)
-          tcrownmaxheight(i,1) = temp_array(7)
-          do j=1,tfuelbins
-            tbulkdensity(j,i) = temp_array(7+(j-1)*tfuelbins+1)
-            tmoisture(j,i)    = temp_array(7+(j-1)*tfuelbins+2)
-            tss(j,i)          = temp_array(7+(j-1)*tfuelbins+3)
-          enddo
-        enddo
-        close (2)
+        call treesGeneral_readin
+      else if(itrees.eq.2.or.itrees.eq.3) then
+        call treelist_readin
+      else if(itrees.eq.7) then
+        call treelist_fastfuels
       endif
 
-      if (ilitter.ne.0) then ! Elchin changed it to not equal to escape segfault
+      if (ilitter.eq.1) then
         allocate(lrho(ntspecies))
         allocate(lmoisture(ntspecies))
         allocate(lss(ntspecies))
