@@ -463,7 +463,7 @@ def Treeoflife(file_names):
     # DEFINE DOMAIN
     Nx = 200
     Ny = 200
-    Nz = 27    ### 16 for FIRETEC, 27 or 30 for QUICFire
+    Nz = 38    ### 16 for FIRETEC, 27 or 38 for QUICFire
     s = (Nx,Ny)
     cellnum = 0
     cellptr = 0
