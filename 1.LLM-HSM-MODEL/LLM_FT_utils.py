@@ -299,6 +299,7 @@ def update_tree_info_per_location(pp,ftreelist,graph):
     # updating CR and dbh for LLPs and HWs
     lp_height=pp.old_ht.copy()
     lp_height[lp_height<1.37]=1.37
+    lp_height[lp_height>38]=38.0 # Trees can't be taller than 38 meters
     lp_dbh=dbh1_model(lp_height)
     #print dbh
     if graph:
