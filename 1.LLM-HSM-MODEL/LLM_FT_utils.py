@@ -77,7 +77,7 @@ def plot_area_matrix(xx,title,pbar='yes'):
     if ftype=='litter':
        im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=12)
     else:
-       im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=8)
+       im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=6)
     cbar=fig.colorbar(im, ax=ax, extend='both')
     cbar.ax.tick_params(labelsize=20)
     plt.title(title,fontsize=30)
