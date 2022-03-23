@@ -92,14 +92,14 @@ def dbh_cr(p):
 def savelittersLLMQF(p,i):
     filename='LLM2FT/LLM_litter_WG.dat'
     ftitle='WG litter [kg/4m2]'
-    llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot')
+    llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot','grass')
     newname = 'litter_WG.' + str(i) + '.png'
     os.rename('litter.png', newname)
 
     filename='LLM2FT/LLM_litter_trees.dat'
     ftitle='LLP + HW litter [kg/4m2]'
     tree_litter=p.litterHW+p.litter
-    llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'plot')
+    llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'plot','litter')
     newname = 'litter_Tree.' + str(i) + '.png'
     os.rename('litter.png', newname)
 
