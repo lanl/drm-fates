@@ -71,7 +71,21 @@ def plot_area_matrix(xx,title,pbar='yes'):
     plt.yticks(fontsize=30)
     #plt.gridon()
     return ax
-    
+
+   def plot_area_matrix_LLM_FT(xx,title,ftype):
+    fig, ax = plt.subplots(figsize=(14, 8))
+    if ftype=='litter':
+       im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=12)
+    else:
+       im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=8)
+    cbar=fig.colorbar(im, ax=ax, extend='both')
+    cbar.ax.tick_params(labelsize=20)
+    plt.title(title,fontsize=30)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=30)
+    #plt.gridon()
+    return ax
+
 def count_tress(tt,llm_model):
     x0=2.5
     y0=2.5
