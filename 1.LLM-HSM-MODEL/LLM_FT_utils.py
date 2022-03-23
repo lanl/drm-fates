@@ -279,9 +279,11 @@ def save_FT_treelist(fin,fout,graph):
     canopydensity[data[:,0]==1]=0.2
     moist[:]=1.0
     sizescale[:]=0.000347222
+    ht_array = data[:,-1]
+    ht_array[ht_array>38]=37.95959595959    
 
     newdata[:,0:3]=data[:,0:3] #tid,x,y
-    newdata[:,3]=data[:,-1] #height
+    newdata[:,3]=ht_array #height
     newdata[:,4]=htlc
     newdata[:,5]=2*data[:,3] #Cdimater
     newdata[:,6]=hmaxcr 
@@ -299,7 +301,6 @@ def update_tree_info_per_location(pp,ftreelist,graph):
     # updating CR and dbh for LLPs and HWs
     lp_height=pp.old_ht.copy()
     lp_height[lp_height<1.37]=1.37
-    lp_height[lp_height>38]=38.0 # Trees can't be taller than 38 meters
     lp_dbh=dbh1_model(lp_height)
     #print dbh
     if graph:
