@@ -72,7 +72,7 @@ def plot_area_matrix(xx,title,pbar='yes'):
     #plt.gridon()
     return ax
 
-   def plot_area_matrix_LLM_FT(xx,title,ftype):
+    def plot_area_matrix_LLM_FT(xx,title,ftype):
     fig, ax = plt.subplots(figsize=(14, 8))
     if ftype=='litter':
        im = ax.imshow(xx, interpolation = 'nearest', cmap='jet', vmin=0, vmax=12)
