@@ -280,7 +280,7 @@ for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
     runQF(i)                           # runs QuickFire
-    runCrownScorch()                  # runs the tree program to create LLM inputs
+    LiveDead.append(runCrownScorch())                  # runs the tree program to create LLM inputs
     ## Change Coordinates Back to Eco system model HERE ###
     #buff.remove_tree_buff()
     #buff.remove_surf_buff()
