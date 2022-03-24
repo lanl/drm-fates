@@ -272,8 +272,8 @@ plt.savefig('HVI.0.png')
 
 ## Change Coordinates for QUICFIRE HERE ###
 #buff.add_sat()
-buff.add_tree_buff()
-buff.add_surf_buff()
+#buff.add_tree_buff()
+#buff.add_surf_buff()
 
 for i in range(ncycle):
     ii = i + 1
