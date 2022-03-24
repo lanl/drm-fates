@@ -275,6 +275,7 @@ plt.savefig('HVI.0.png')
 #buff.add_tree_buff()
 #buff.add_surf_buff()
 
+LiveDead=[]
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
@@ -283,6 +284,7 @@ for i in range(ncycle):
     ## Change Coordinates Back to Eco system model HERE ###
     #buff.remove_tree_buff()
     #buff.remove_surf_buff()
+    print('Loop Number: ',i)
     llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
     hsi_plt.plot_species_scores(llm)  # Plotting HVI
     plt.savefig('HVI.png')
@@ -297,6 +299,8 @@ for i in range(ncycle):
     #plt.savefig('HVI.png') 
     os.rename('HVI.png', dd)
 
+LiveDead=np.array(LiveDead)
+np.savetxt('LiveDead.txt',LiveDead,fmt='%i')
 print ('ADAM SQ', llm.sq_sc)
 print ('ADAM GT', llm.gt_sc)
 print ('ADAM RCW',sc_rcw)
