@@ -189,7 +189,7 @@ def runCrownScorch():
 
     LiveDead = llmft.Treeoflife(file_names)
     
-    return
+    return LiveDead
     
 def runLLMcyclical(p,nyears):
     os.chdir("../1.LLM-HSM-MODEL")
