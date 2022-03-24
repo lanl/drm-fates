@@ -550,8 +550,10 @@ def Treeoflife(file_names):
     print (file_out_afl,'saved!')
 
     cc = 0
-    c6 = 0
-    c7 = 0
+    D_LLP = 0  #num of dead LLP
+    D_Turk = 0  #num of dead Turkey Oak
+    L_LLP = 0  #num of live LLP AA
+    L_Turk = 0  #num of live Turkey Oak AA
     ## READ IN TREE TRACKER FILE
     newfuel = 0.0
     sppflag = 0
@@ -584,25 +586,28 @@ def Treeoflife(file_names):
                 smallllp = totfuel
             if totfuel > 0.30:
                 aft.write(e_td)
+                L_LLP = L_LLP + 1
             #print ("LLP", totfuel)
             else:
-                c6 = c6 + 1
+                D_LLP = D_LLP + 1
         elif sppflag == 2:
             if smallturk > totfuel:
                 smallturk = totfuel
             if totfuel > 0.75:
                 aft.write(e_td)
+                L_Turk = L_Turk + 1
             #print ("TurkeyOak", totfuel)
             else:
-                c7 = c7 + 1
+                D_Turk = D_Turk + 1
 
     print ("")
     print ("")
     print ('used these files:',file_in_tt,file_in_tl)
     print ('to produce this files:',file_out_aft)
-    print ('Small LLP',smallllp,c6,'Small Turk',smallturk,c7, cc)
-    
-    return
+    print ('Small LLP',smallllp,D_LLP,'Small Turk',smallturk,D_Turk, cc)
+     print ('LLP: Live, Dead, ',L_LLP, D_LLP,'Turkey Oak: Live, Dead, ',L_Turk, D_Turk)
+
+    return LiveDeadList
 
 def check_file_exists(fname):
     if not os.path.exists(fname):
