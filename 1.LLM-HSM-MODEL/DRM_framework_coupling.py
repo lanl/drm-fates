@@ -245,6 +245,11 @@ nyears=5      # number of years for spinup and transient runs
 ncycyear=5    # number of cyclical year run
 ncycle=2      # number of loops
 
+#Build Trees
+os.chdir('../5.TREES-QUICFIRE')
+ierr = call('make', shell=True)
+os.chdir('../1.LLM-HSM-MODEL')
+
 LLMspinup(nyears)          # temporary llm class
 llm=LLMtransient(nyears)   # permanent llm class
 llm=dbh_cr(llm)            # calculates dbh and crown radius 
