@@ -600,6 +600,11 @@ def Treeoflife(file_names):
             else:
                 D_Turk = D_Turk + 1
 
+    LiveDeadList=[]
+    LiveDeadList.append(L_LLP)
+    LiveDeadList.append(D_LLP)
+    LiveDeadList.append(L_Turk)
+    LiveDeadList.append(D_Turk)
     print ("")
     print ("")
     print ('used these files:',file_in_tt,file_in_tl)
