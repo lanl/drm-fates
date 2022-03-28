@@ -605,7 +605,7 @@ def Treeoflife(file_names):
     print ('used these files:',file_in_tt,file_in_tl)
     print ('to produce this files:',file_out_aft)
     print ('Small LLP',smallllp,D_LLP,'Small Turk',smallturk,D_Turk, cc)
-     print ('LLP: Live, Dead, ',L_LLP, D_LLP,'Turkey Oak: Live, Dead, ',L_Turk, D_Turk)
+    print ('LLP: Live, Dead, ',L_LLP, D_LLP,'Turkey Oak: Live, Dead, ',L_Turk, D_Turk)
 
     return LiveDeadList
 
