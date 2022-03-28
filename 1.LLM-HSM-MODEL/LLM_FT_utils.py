@@ -212,7 +212,7 @@ def save_litter_LLM_FT(filename,ftitle,litter,fplot,ftype):
     print ('shape of the litter matrix:',nx,ny)
     new_litter=regrid_LLM2FT(nx,ny,200,200,"linear",litter);
     if fplot=='plot':
-        axx=plot_area_matrix(new_litter,ftitle,ftype)
+        axx=plot_area_matrix_LLM_FT(new_litter,ftitle,ftype)
         plt.ioff()
         plt.savefig('litter.png')
         plt.close()
