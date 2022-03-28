@@ -10,7 +10,7 @@
 25					! After how many fire time steps to average emissions and radiation
 25					! After how many quic updates to print out averaged wind-related files
 ! FIRE GRID
-28					! Number of vertical layers of fire grid cells (integer)
+38					! Number of vertical layers of fire grid cells (integer)
 1					! x - fire grid ratio = (QUIC-URB cell size)/(fire cell size), integer, can only be >= 1
 1					! y - fire grid ratio = (QUIC-URB cell size)/(fire cell size), integer, can only be >= 1
 0					! Vertical stretching flag: 0 = uniform dz, 1 = custom
