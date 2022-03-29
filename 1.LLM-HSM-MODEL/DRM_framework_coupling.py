@@ -286,7 +286,9 @@ for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
     runQF(i)                           # runs QuickFire
-    LiveDead.append(runCrownScorch())                  # runs the tree program to create LLM inputs
+    L=np.array(runCrownScorch())                  # runs the tree program to create LLM inputs
+    L=np.insert(L,0,ii)
+    LiveDead.append(L)    
     ## Change Coordinates Back to Eco system model HERE ###
     #buff.remove_tree_buff()
     #buff.remove_surf_buff()
@@ -306,7 +308,7 @@ for i in range(ncycle):
     os.rename('HVI.png', dd)
 
 LiveDead=np.array(LiveDead)
-np.savetxt('LiveDead.txt',LiveDead,fmt='%i')
+np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
 print ('ADAM SQ', llm.sq_sc)
 print ('ADAM GT', llm.gt_sc)
 print ('ADAM RCW',sc_rcw)
