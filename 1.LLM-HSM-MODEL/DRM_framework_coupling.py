@@ -11,12 +11,12 @@ import time
 import pandas as pd
 import random
 import LLM_FT_utils as llmft
-import os
+import sys,os
 import os.path
 import subprocess
 from shutil import copyfile
+from subprocess import call
 import shutil
-import sys
 sys.path.insert(0, '../7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
 import Buffer as buff
