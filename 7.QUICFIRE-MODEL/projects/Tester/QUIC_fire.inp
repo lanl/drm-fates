@@ -2,7 +2,7 @@
 222				! Random number generator: -1: use time and date, any other integer > 0 is used as the seed
 ! FIRE TIMES
 1488794400		! When the fire is ignited in Unix Epoch time (integer seconds since 1970/1/1 00:00:00)
-3000				! Total simulation time for the fire [s]
+2200				! Total simulation time for the fire [s]
 1					! time step for the fire simulation [s]
 1					! Number of fire time steps done before updating the quic wind field (integer, >= 1)
 100					! After how many fire time steps to print out fire-related files (excluding emissions and radiation)
