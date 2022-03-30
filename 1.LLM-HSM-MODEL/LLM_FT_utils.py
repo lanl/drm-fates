@@ -92,7 +92,7 @@ def count_tress(tt,llm_model):
     
     [n,m]=llm_model.shape
     tree_count=np.zeros((n,m))
-    if np.shape(tt) == 0:
+    if len(np.shape(tt)) == 1:
         print('No Trees!!! - in count_tress LLM_FT_utils')
     else:    
         [n_tree,m_tree]=np.shape(tt)
@@ -165,49 +165,42 @@ def FT_LLM_FT_tlist(tid,tlist,new_count,CR,dbh,ht):
     
     [n,m]=new_count.shape
     tree_count=np.zeros((n,m))
-    #[n,m]=[2,2]
-    [n_tree,m_tree]=np.shape(tlist)
-    #[n,m]=new_count.shape
-    #tree_count=np.zeros((n,m))
+    if len(np.shape(tlist)) == 1:
+       print('ADAM len(np.shape(tlist))==1')
+       print('ADAM No Trees going to FT - probably no Oaks')
+       tlist=[]
+    else:   
+        [n_tree,m_tree]=np.shape(tlist)
+        tlist_array=np.asarray(tlist)
     
-    #print (np.shape(tlist))
-    #print (np.shape(new_count))
-    
-    tlist_array=np.asarray(tlist)
-    
-    for i in range(n):#n
-        x=x0+i*5
-        for j in range(m):#m
-            y=y0+j*5
-            index=[]
-            for ii in range(n_tree):#n_tree
-                xx=tlist[ii][1]
-                yy=tlist[ii][2]
-                if (xx>x-2.5) and (xx<=x+2.5):
-                    if (yy>y-2.5) and (yy<=y+2.5):
-                        tree_count[i,j]=tree_count[i,j]+1
-                        index.append(ii)
-            #print (x,y,index)
-            #print ('old:',tree_count[i,j],'new',new_count[i,j])
+        for i in range(n):#n
+            x=x0+i*5
+            for j in range(m):#m
+                y=y0+j*5
+                index=[]
+                for ii in range(n_tree):#n_tree
+                    xx=tlist[ii][1]
+                    yy=tlist[ii][2]
+                    if (xx>x-2.5) and (xx<=x+2.5):
+                        if (yy>y-2.5) and (yy<=y+2.5):
+                            tree_count[i,j]=tree_count[i,j]+1
+                            index.append(ii)
             
-            for ii in np.asarray(index):
-                tlist[ii][3]=CR[i,j]
-                tlist[ii][4]=dbh[i,j]
-                tlist[ii][5]=ht[i,j]      
-            
-            if tree_count[i,j]>new_count[i,j]:
-                #print ('difference:',tree_count[i,j]-new_count[i,j])
                 for ii in np.asarray(index):
-                    #print ('ii',ii) 
-                    tlist[ii][0]=-999
+                    tlist[ii][3]=CR[i,j]
+                    tlist[ii][4]=dbh[i,j]
+                    tlist[ii][5]=ht[i,j]      
+            
+                if tree_count[i,j]>new_count[i,j]:
+                    for ii in np.asarray(index): 
+                        tlist[ii][0]=-999
                     
-            elif tree_count[i,j]<new_count[i,j]:
-                line=np.round([CR[i,j],dbh[i,j],ht[i,j]],3)
-                #print (line)
-                xx=random.uniform(-2.5,2.5)+x
-                yy=random.uniform(-2.5,2.5)+y
-                line0=np.round([tid,xx,yy],3)
-                tlist.append(np.hstack((line0,line)) )
+                elif tree_count[i,j]<new_count[i,j]:
+                    line=np.round([CR[i,j],dbh[i,j],ht[i,j]],3)
+                    xx=random.uniform(-2.5,2.5)+x
+                    yy=random.uniform(-2.5,2.5)+y
+                    line0=np.round([tid,xx,yy],3)
+                    tlist.append(np.hstack((line0,line)) )
     return tlist
 
 def save_litter_LLM_FT(filename,ftitle,litter,fplot,ftype):
