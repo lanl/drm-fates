@@ -1,4 +1,4 @@
-name: /turquoise/usr/projects/cimmid/users/rutuja/ELM_cases/test/elm_env
+name: elm_env
 channels:
   - conda-forge
   - defaults
@@ -292,5 +292,5 @@ dependencies:
   - zipp=3.5.0=pyhd3eb1b0_0
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.9=haebb681_0
-prefix: /turquoise/usr/projects/cimmid/users/rutuja/ELM_cases/test/elm_env
 
+prefix: /turquoise/usr/projects/cimmid/users/rutuja/ELM_cases/proj7/elm_env
