@@ -51,15 +51,11 @@ conda activate elm_env
 
 sh src/run_elm_parallel.sh
 
-6. Run this script until you get "sbatch has finished running" & "a simulation ran successfully":
-
-sh src/run_success.sh
-
-7. To find which simulations (cases) are complete (output/Filter.txt) and which are not (output/Missing.txt), run:
+6. To find out if all simulations (cases) finished successfully, run this. It will also save which cases are complete (output/Filter.txt) and which are not (output/Missing.txt):
 
 python src/create.filter.py
 
-8.  If all are not complete, try submitting the job again (cases that were already complete, will be skipped):
+7.  If previous message results in a failure, try submitting the job again (cases that were already complete, will be skipped):
 
 sbatch src/run_elm.sh
 
