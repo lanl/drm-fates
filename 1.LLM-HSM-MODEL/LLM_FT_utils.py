@@ -96,18 +96,18 @@ def count_tress(tt,llm_model):
         print('No Trees!!! - in count_tress LLM_FT_utils')
     else:    
         [n_tree,m_tree]=np.shape(tt)
-         print ('number FT of trees in treelist: ',n_tree)
+        print ('number FT of trees in treelist: ',n_tree)
 
-         for i in range(n+1):#n
-             x=x0+i*5
-             for j in range(m+1):#m
-                y=y0+j*5
-                for ii in range(n_tree):#n_tree
-                   xx=tt[ii][1]
-                   yy=tt[ii][2]
-                   if (xx>x-2.5) and (xx<=x+2.5):
-                        if (yy>y-2.5) and (yy<=y+2.5):
-                            tree_count[i,j]=tree_count[i,j]+1
+        for i in range(n+1):#n
+            x=x0+i*5
+            for j in range(m+1):#m
+               y=y0+j*5
+               for ii in range(n_tree):#n_tree
+                  xx=tt[ii][1]
+                  yy=tt[ii][2]
+                  if (xx>x-2.5) and (xx<=x+2.5):
+                       if (yy>y-2.5) and (yy<=y+2.5):
+                           tree_count[i,j]=tree_count[i,j]+1
     print ('total LLM tree count: ',np.sum(tree_count))
 
     return tree_count
