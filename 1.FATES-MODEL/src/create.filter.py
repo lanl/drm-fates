@@ -14,6 +14,7 @@ import yaml
 import argparse
 import re
 from pandas.core.index import Index as PandasIndex
+from fractions import Fraction
 
 # Defining the R script and loading the instance in Python
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -56,6 +57,10 @@ df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, 
 with localconverter(robjects.default_converter + pandas2ri.converter):
   df_result = robjects.conversion.rpy2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
-print(' ', int(df_result),' out of ',nsam,' cases Finished Successfully!')
+print(' ', int(df_result),' out of ',nsam,' cases finished successfully!')
+if Fraction(int(df_result), nsam)==1:
+    print('Success')
+else:
+    print('Failure')
 exit(0)
 
