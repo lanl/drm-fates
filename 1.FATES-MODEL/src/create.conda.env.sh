@@ -34,14 +34,15 @@ conda config --add envs_dirs $PROJECT_ROOT
 conda remove --prefix $PROJECT_ROOT/elm_env --all
 
 # Create a conda environment with a specified name, elm_env, and a desired list of modules and their versions
-conda create --name elm_env python=3.6 r-base=3.6 r-essentials=3.6 rpy2 pandas r-ncdf4 mpi4py pyyaml r-lhds
+conda create --name elm_env python=3.7 r-base r-essentials pandas r-ncdf4 mpi4py pyyaml
 
 # Activate the environment. Activation prepends to PATH.
 conda activate elm_env
 
 # Add any other modules that were not found by the default conda channels
-conda install -c conda-forge tzlocal 
+conda install -c conda-forge tzlocal scipy netcdf4 hdf5
 
+conda install -c --no-channel-priority rpy2 r-slhd
 # ---------------------------------
 # Useful commands
 # -----------------------------------
