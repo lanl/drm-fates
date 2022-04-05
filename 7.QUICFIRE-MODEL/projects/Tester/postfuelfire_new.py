@@ -4,7 +4,7 @@
 
 import math
 import numpy as np
-import pylab
+#import pylab
 import shutil
 import os
 import sys
@@ -12,8 +12,8 @@ import copy
 
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt 
-#from pyevtk.hl import gridToVTK
+import matplotlib.pyplot as plt
+from matplotlib import pylab
 
 # wait = raw_input("PRESS ENTER TO CONTINUE.")
 
