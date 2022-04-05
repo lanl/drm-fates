@@ -42,7 +42,7 @@ conda activate elm_env
 # Add any other modules that were not found by the default conda channels
 conda install -c conda-forge tzlocal scipy netcdf4 hdf5
 
-conda install -c rpy2 r-slhd
+conda install rpy2 r-slhd git
 # ---------------------------------
 # Useful commands
 # -----------------------------------
