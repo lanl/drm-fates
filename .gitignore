@@ -43,7 +43,7 @@ __pycache__
 *.out
 *log
 # Ignore these directories
-**/2.Tree_code/
+**/2.Tree_code/**
 **/5.TREES-FIRETEC/
 **/5.TREES-QUICFIRE/
 **/7.FIRETEC-MODEL/
