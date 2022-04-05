@@ -11,11 +11,11 @@ ssh user@wtrw.lanl.gov
 
 ssh ba-fe
 
-cd /usr/projects/cimmid/users/$user
+cd /usr/projects/higrad/$user
 
-mkdir -p ELM_cases
+mkdir -p E3SM_cases
 
-cd ELM_cases
+cd E3SM_cases
 
 ! Before cloning repo, you may need to ssh auntheticate, if you haven't done that already:
 ! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
@@ -24,9 +24,9 @@ mkdir -p proj1
 
 cd proj1
 
-git clone git@github.com:lanl/cimmid-e3sm.git .
+git clone git@github.com:rutujact/drm-fates.git .
 
-git checkout cimmid
+git checkout main
 
 !vim README.md
 
