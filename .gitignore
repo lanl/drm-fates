@@ -1,6 +1,36 @@
-#ignored files
 #the command below removes all the files in the gitignore from the repo
 #git rm --cached `git ls-files -i --exclude-from=.gitignore`
+# For git to remove all files previously tracked
+# git rm -r --cached . && git add . && git commit -am "Remove ignored files"
+# https://jasonstitt.com/gitignore-whitelisting-patterns
+# Ignore everything
+*
+# But descend into directories
+!*/
+# Un-ignore specific files under subtree
+!data/**
+# But do not ignore these files
+!.gitignore
+!*.py
+!*.R
+!*.yaml
+!**/*.sh
+!*.csh
+!*.md
+!*.yml
+# Ignore these files
 .DS_Store
 __pycache__
 .ipynb_checkpoints
+*.o
+*.dat 
+*.mod 
+*.png 
+*.txt
+# Ignore these directories
+**/2.Tree_code/
+**/5.TREES-FIRETEC/
+**/5.TREES-QUICFIRE/
+**/7.FIRETEC-MODEL/
+**/7.QUICFIRE-MODEL/mac_compile/
+**/7.QUICFIRE-MODEL/source_code/

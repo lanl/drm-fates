@@ -1,5 +1,0 @@
-Information, ParamterTitles first, then actual numbers
-Lat       Long,       elevation,  TimeZone(0=Greenwich,England)
-Year,  Month,  Day,  Hour,   Minute,  Second  TimeIn10minSteps
-30.606949  -86.500379   45.7        -7.0
-2019     5       2     0       0        0       288
