@@ -1,7 +1,10 @@
 #the command below removes all the files in the gitignore from the repo
-#git rm --cached `git ls-files -i --exclude-from=.gitignore`
-# https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+# git rm --cached `git ls-files -i --exclude-from=.gitignore`
+# To make git forget all files previously tracked
+# git rm -r --cached . && git add . && git commit -am "Remove ignored files"
 
+# git ignore rules:
+# https://www.atlassian.com/git/tutorials/saving-changes/gitignor
 # https://jasonstitt.com/gitignore-whitelisting-patterns
 # Ignore everything
 *
