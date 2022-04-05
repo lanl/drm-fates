@@ -20,16 +20,6 @@
 !DOCS/**
 # Do not ignore these files
 !.gitignore
-!**/*.py
-!**/*.R
-!**/*.yaml
-!**/*.sh
-!**/*.csh
-!**/*.md
-!**/*.yml
-!**/*.cpp
-!**/*.f
-!**/*.ipynb
 **/README
 # Ignore these files
 .DS_Store
@@ -43,7 +33,7 @@ __pycache__
 *.out
 *log
 # Ignore these directories
-**/2.Tree_code/**
+**/2.Tree_code
 **/5.TREES-FIRETEC/
 **/5.TREES-QUICFIRE/
 **/7.FIRETEC-MODEL/
