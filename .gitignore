@@ -20,7 +20,7 @@
 !6.CANOPYENERGYBALANCE-MODEL/**
 !8.CROWN-SCORCH/**
 !DOCS/**
-!1.LLM-HSM-MODEL/data/*.txt
+#!1.LLM-HSM-MODEL/data/*.txt
 # Do not ignore these files
 !.gitignore
 **/README
@@ -35,6 +35,7 @@ __pycache__
 *.txt
 *.out
 *log
+!1.LLM-HSM-MODEL/data/*.txt
 # Ignore these directories
 2.Tree_code/**
 5.TREES-FIRETEC/**
