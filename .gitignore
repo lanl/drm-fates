@@ -3,6 +3,9 @@
 # To make git forget all files previously tracked
 # git rm -r --cached . && git add . && git commit -am "Remove ignored files"
 
+# To list files tracked under the current branch
+# git ls-tree -r HEAD --name-only
+
 # git ignore rules:
 # https://www.atlassian.com/git/tutorials/saving-changes/gitignor
 # https://jasonstitt.com/gitignore-whitelisting-patterns
@@ -11,13 +14,13 @@
 # But descend into directories
 !*/
 # Un-ignore specific files under subtree
-!data/**
 !1.LLM-HSM-MODEL/**
 !3.VegMap-ParFlow/**
 !4.PARFLOW-MODEL/**
 !6.CANOPYENERGYBALANCE-MODEL/**
 !8.CROWN-SCORCH/**
 !DOCS/**
+!1.LLM-HSM-MODEL/data/*.txt
 # Do not ignore these files
 !.gitignore
 **/README
@@ -33,9 +36,9 @@ __pycache__
 *.out
 *log
 # Ignore these directories
-**/2.Tree_code
-**/5.TREES-FIRETEC/
-**/5.TREES-QUICFIRE/
-**/7.FIRETEC-MODEL/
-**/7.QUICFIRE-MODEL/mac_compile/
-**/7.QUICFIRE-MODEL/source_code/
+2.Tree_code/**
+5.TREES-FIRETEC/**
+5.TREES-QUICFIRE/**
+7.FIRETEC-MODEL/**
+7.QUICFIRE-MODEL/mac_compile/**
+7.QUICFIRE-MODEL/source_code/**
