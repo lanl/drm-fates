@@ -1,7 +1,7 @@
 #!/bin/sh
 ## 1. set environmental variables
-setenv VEGHOME /usr/projects/higrad/users/$user
-setenv ACCOUNT w22_fire
+setenv VEGHOME /usr/projects/cimmid/users/$user
+setenv ACCOUNT w21_climatedisease
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
 module load e3smenv/1.1.0
