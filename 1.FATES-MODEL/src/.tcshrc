@@ -1,6 +1,6 @@
 #!/bin/sh
 ## 1. set environmental variables
-setenv VEGHOME /usr/projects/higrad/users/$user
+setenv VEGHOME /usr/projects/higrad/$user
 setenv ACCOUNT w22_fire
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
