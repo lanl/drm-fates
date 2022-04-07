@@ -11,7 +11,7 @@ ssh user@wtrw.lanl.gov
 
 ssh ba-fe
 
-cd /usr/projects/higrad/$user
+cd /usr/projects/cimmid/users/$user
 
 mkdir -p E3SM_cases
 
@@ -24,7 +24,7 @@ mkdir -p proj1
 
 cd proj1
 
-git clone git@github.com:rutujact/drm-fates.git .
+git clone git@github.com:lanl/cimmid-e3sm.git .
 
 git checkout main
 
