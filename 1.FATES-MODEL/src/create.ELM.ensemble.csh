@@ -18,7 +18,10 @@ set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 
 ## Now loop through and create each case
 #foreach case_i (`seq 1 2`)
+echo "============In total, now creating $#arr_case clones from a base case============"
+
 foreach case_i (`seq 1 $#arr_case`)
+  echo "============From a base case creating a clone with a case name prefix = $case_i============"
   # Go to CASE scripts directory
   cd $E3SM_ROOT/cime/scripts
   # Name the case
@@ -50,6 +53,4 @@ foreach case_i (`seq 1 $#arr_case`)
   # this is useful if FATES files are changed in the interim (they would have to be built for the base case though and then are copied over here)
   # rm -rf $RUN_ROOT/$E3SM_CASE_CLONE
   cp $RUN_ROOT/$BASE_CASE/bld/e3sm.exe $RUN_ROOT/$E3SM_CASE_CLONE/bld/
-  echo "============From a base case successfully created a clone with a case name prefix = $case_i============"
 end
-echo "============In total created $#arr_case clones from a base case============"
