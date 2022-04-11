@@ -5,12 +5,17 @@
 """
 import pandas as pd
 import rpy2
+from rpy2.robjects.packages import importr # import R's "base" package
+base = importr('base')
 import rpy2.robjects as robjects
-from rpy2.robjects import pandas2ri
+from rpy2.robjects import pandas2ri # install any dependency package if you get error like "module not found"
+pandas2ri.activate()
 from rpy2.robjects.conversion import localconverter
 import os 
 import argparse
 import yaml
+
+print('rpy2 version is', rpy2.__version__)
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
@@ -37,19 +42,22 @@ r['source'](R_file)
 # Loading the function we have defined in R.
 generate_param_table_function_r = robjects.globalenv['generate.param.table']
 
-# Converting it into r object for passing into r function
-# df_r = pandas2ri.ri2py(df)
+# Converting pandas object into r object for passing into r function
+#df_r = pandas2ri.py2ri(df) # This works for rpy2 2.9.4
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_r = robjects.conversion.py2rpy(pd_df) # in later rpy2 versions use py2rpy
-df_r
+ df_r = robjects.conversion.py2ri(pd_df) #For rpy2 versions >2.9 use .py2rpy
+#print(type(df_r))
+#calling function under base package
+#print(base.summary(r_df))
 
 #Invoking the R function and getting the result
 df_result_r = generate_param_table_function_r(df_r, SLICES, outdir, PARAM_Table)
 # Converting it back to a pandas dataframe.
-# df_result = pandas2ri.py2ri(df_result_r)
+# df_result = pandas2ri.ri2py(df_result_r)
+
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_result = robjects.conversion.rpy2py(df_result_r) # in later rpy2 versions use rpy2py
-df_result
+  df_result = robjects.conversion.ri2py(df_result_r) #For rpy2 versions >=2.9 use .rpy2py
+#df_result
 
 if(df_result):
     print('Successfully generated parameter table for sensitivity analysis.')
