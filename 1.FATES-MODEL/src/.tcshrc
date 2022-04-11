@@ -1,10 +1,17 @@
 #!/bin/sh
 ## 1. set environmental variables
-setenv VEGHOME /usr/projects/cimmid/users/$user
+setenv USERDIR /usr/projects/cimmid/users/$user
 setenv ACCOUNT w21_climatedisease
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
-module load e3smenv/1.1.0
+#module load e3smenv/2.0.0
+
+setenv E3SM_ROOT  $USERDIR/E3SM
+setenv ELM_ROOT $USERDIR/E3SM/components/elm/src
+setenv FATES_ROOT $USERDIR/E3SM/components/elm/src/external_models/fates
+setenv CASE_ROOT  $USERDIR/E3SM_cases
+setenv RUN_ROOT   /lustre/scratch4/turquoise/$user/E3SM/scratch
+setenv ARCHIVE_ROOT /lustre/scratch4/turquoise/$user/E3SM/archive
  
 setenv http_proxy "http://proxyout.lanl.gov:8080"
 setenv https_proxy "http://proxyout.lanl.gov:8080"
