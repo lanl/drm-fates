@@ -1,7 +1,7 @@
 #!/bin/sh
 ## 1. set environmental variables
-setenv USERDIR /usr/projects/cimmid/users/$user
-setenv ACCOUNT w21_climatedisease
+setenv USERDIR /usr/projects/higrad/$user
+setenv ACCOUNT w22_fire
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
 #module load e3smenv/2.0.0

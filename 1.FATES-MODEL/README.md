@@ -11,7 +11,7 @@ ssh user@wtrw.lanl.gov
 
 ssh ba-fe
 
-cd /usr/projects/cimmid/users/$user
+cd /usr/projects/higrad/$user
 
 mkdir -p E3SM_cases
 
@@ -24,9 +24,9 @@ mkdir -p proj1
 
 cd proj1
 
-git clone git@github.com:lanl/cimmid-e3sm.git .
+git clone git@github.com:rutujact/ELM_Workflow.git .
 
-git checkout main
+git checkout fordrm
 
 !vim README.md
 
