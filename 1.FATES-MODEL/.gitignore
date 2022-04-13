@@ -1,0 +1,26 @@
+# https://jasonstitt.com/gitignore-whitelisting-patterns
+# Ignore everything
+*
+# But descend into directories
+!*/
+# Un-ignore specific files under subtree
+!src/**
+!OutputExtract/*.R
+!tools/*.sh
+!data/HPU.Table.csv
+!data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v4_pio2.zip
+!data/bci_0.1x0.1_v4.0i/bci_0.1x0.1_met.v5.1.zip
+!params/*.nc
+## but not these files
+!.gitignore
+!*.py
+!*.R
+!*.yaml
+!**/*.sh
+!*.csh
+!*.md
+!*.yml
+# Ignore these directories
+**/elm_env/
+**/CASE_DIR/
+params/clm_params_c180301.nc

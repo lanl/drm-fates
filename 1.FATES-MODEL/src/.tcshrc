@@ -1,0 +1,33 @@
+#!/bin/sh
+## 1. set environmental variables
+setenv USERDIR /usr/projects/higrad/$user
+setenv ACCOUNT w22_fire
+module purge
+module use /usr/projects/cesm/software/local/modulefiles/all
+#module load e3smenv/2.0.0
+
+setenv E3SM_ROOT  $USERDIR/E3SM
+setenv ELM_ROOT $USERDIR/E3SM/components/elm/src
+setenv FATES_ROOT $USERDIR/E3SM/components/elm/src/external_models/fates
+setenv CASE_ROOT  $USERDIR/E3SM_cases
+setenv RUN_ROOT   /lustre/scratch4/turquoise/$user/E3SM/scratch
+setenv ARCHIVE_ROOT /lustre/scratch4/turquoise/$user/E3SM/archive
+ 
+setenv http_proxy "http://proxyout.lanl.gov:8080"
+setenv https_proxy "http://proxyout.lanl.gov:8080"
+setenv ftp_proxy "http://proxyout.lanl.gov:8080"
+setenv HTTP_PROXY "http://proxyout.lanl.gov:8080"
+setenv HTTPS_PROXY "http://proxyout.lanl.gov:8080"
+setenv FTP_PROXY "http://proxyout.lanl.gov:8080"
+
+## 2. Add conda path.
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+if ( -f "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/etc/profile.d/conda.csh" ) then
+    source "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/etc/profile.d/conda.csh"
+else
+    setenv PATH "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/bin:$PATH"
+endif
+# <<< conda initialize <<<
+

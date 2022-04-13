@@ -1,0 +1,75 @@
+#-----------------------------------------------------
+#ELM Model Configuration # (add more specific info in this later)
+#------------------------------------------#
+
+#----ELM-FATES code. User may change these----
+ELM_BRANCH: E3SM_v2.0_fates_with_var_soil_thick
+ELM_REMOTE: git@github.com:rutujact/E3SM.git
+
+#----Directories under PROJECT ROOT; user need not change----
+LOG_DIR: log
+OUTPUT_DIR: output
+PARAM_DIR: params
+DATA_DIR: data
+CASE_DIR: CASE_DIR
+ELM_RUN_PY: src/parallel.run.py
+
+#----ELM-FATES base case set-up attributes----
+TAG: E3SMv2
+COMPSET: IELM
+STOP_N: 1 # years to run
+REST_N: 1 # frequency of yrs to write restart file
+RUN_STARTDATE: 2010-01-01
+DATM_CLMNCEP_YR_START: 2010
+DATM_CLMNCEP_YR_END: 2011
+PARAM_FILE: # Files in PARAM_DIR
+  DOMAIN: domain_bci_panama_v1_c171113.nc
+  SURF: surfdata_bci_panama_v1_c171113.3563.nc
+  ELM: elm_parameter_file_name.3563.nc
+CLONE_BASE:
+  SURF: surfdata_bci_panama_v1_c171113. # base file to clone
+CLONE_TYPE:
+  - SURF # parameter file type to change
+CLIM_DATA_DIR: bci_0.1x0.1_v4.0i # Under DATA_DIR
+CLIM_DATA: bci_0.1x0.1_met.v4_pio2 # Under CLIM_DATA_DIR
+
+#----Is this a multi-site analysis, or a single-site sensitivity analysis?----
+SENSITIVITY: TRUE # TRUE => single-site sensitivity; FALSE => multi-site runs. # For a single site run w/o sensitivity, keep SENSITIVITY: TRUE and set MUTATE: FALSE & SIM_ID_END: 1 below
+
+#----Parameter table if this is a multi-site analysis; else ignore----
+SITES_PARAM_TABLE_PATH: data/HPU.Table.csv # Used if SENSITIVITY: FALSE
+
+#----Parameter table if this is a sensitivity analysis; else ignore----
+BUILD_PARAM_TABLE: TRUE # If TRUE, parameter table is to be built in the next section, if FALSE must be provided by the user:
+GIVEN_PARAM_TABLE_PATH: data/Param.Table.csv # Relative path to the parameter table, if BUILD_PARAM_TABLE: FALSE
+
+#----Generating Parameter table with Latin Hypercube sampling if SENSITIVITY: TRUE and BUILD_PARAM_TABLE: TRUE, else ignore----
+BUILT_PARAM_TABLE_PATH: output/Param.Table.csv # Where to build the parameter table?
+RANGE:
+    PARAMETERS: 
+      - aveDTB
+      - FMAX
+    MINPARAM:
+      - 0
+      - 0.01
+    MAXPARAM:
+      - 18
+      - 0.80
+SLICES: 10
+PARAM_KEY:
+  SURF:
+    - aveDTB
+    - FMAX
+
+#----Create simulations with cloned or mutated parameter files?----
+MUTATE: TRUE # TRUE for sensitivity or multi-site analysis. FALSE for debugging. TRUE will make cloned parameter files from basefiles and mutate parameter values according to the multi-site or sensitivity Parameter Table. FALSE will make cloned parameter files to have the same parameter values as in the base parameter files.
+
+#----Ensemble IDs to run---- 
+SIM_ID_START: 1
+SIM_ID_END: 2 
+
+#----Attributes for parallel simulations on HPC----
+N_NODE: 1 # Make sure that N_NODE*N_CPU_PER_NODE >= (HPU_ID_END-HPU_ID_START)+1
+N_CPU_PER_NODE: 36
+WALL_TIME: 1:00:00
+OUTPUT_TYPE: csv
