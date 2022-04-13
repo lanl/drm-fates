@@ -23,7 +23,7 @@
 #!1.LLM-HSM-MODEL/data/*.txt
 # Do not ignore these files
 !.gitignore
-**/README
+!README
 # Ignore these files
 .DS_Store
 __pycache__
