@@ -35,6 +35,7 @@ __pycache__
 *.txt
 *.out
 *log
+*.pyc
 !1.LLM-HSM-MODEL/data/*.txt
 # Ignore these directories
 2.Tree_code/**
