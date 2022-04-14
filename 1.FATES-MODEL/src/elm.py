@@ -47,7 +47,7 @@ file.close()
 cc = open(PROJECT_ROOT+"/mpi_command.txt", "r")
 stored_command=cc.read()
 
-print('SUCCESS.\nCommand in "mpi_command.txt" is '+ stored_command)
+print('Command in "mpi_command.txt" is '+ stored_command)
 exit(0)
 
 # The following option could be used if this file needs to be passed onto src/run_elm.sh via run_elm.py
