@@ -24,6 +24,7 @@
 # Do not ignore these files
 !.gitignore
 !README*
+!DRM_framework_coupling.py
 # Ignore these files
 .DS_Store
 __pycache__
