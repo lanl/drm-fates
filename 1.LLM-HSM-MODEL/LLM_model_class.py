@@ -18,8 +18,6 @@ LP: imports trees (pickle) from a previous LLM run, model stabilization: after ~
 This model was originally calibrated for two longleaf pine research sites:
 Ichauway (Newton, GA) & Ordway Swisher Biological Station (Melrose, FL) '''
 
-import matplotlib
-from matplotlib import pylab
 from pylab import *
 import LLM_display # script for visually graphing (displaying) LLM outputs
 #import LLM_print_shell1 # script for printing out some model details

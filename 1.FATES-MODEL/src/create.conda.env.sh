@@ -42,7 +42,7 @@ conda activate elm_env
 # Add any other modules that were not found by the default conda channels
 conda install -c conda-forge tzlocal scipy netcdf4 hdf5
 
-conda install --no-channel-priority rpy2 r-slhd
+conda install --no-channel-priority rpy2 r-slhd matplotlib
 # ---------------------------------
 # Useful commands
 # -----------------------------------
