@@ -5,6 +5,7 @@ setenv ACCOUNT w22_fire
 module purge
 module use /usr/projects/cesm/software/local/modulefiles/all
 #module load e3smenv/2.0.0
+module load python/anaconda-2.7-climate # required to load conda for the first instance for a new user
 
 setenv E3SM_ROOT  $USERDIR/E3SM
 setenv ELM_ROOT $USERDIR/E3SM/components/elm/src
