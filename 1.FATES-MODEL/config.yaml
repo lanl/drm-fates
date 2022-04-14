@@ -17,6 +17,7 @@ ELM_RUN_PY: src/parallel.run.py
 #----ELM-FATES base case set-up attributes----
 TAG: E3SMv2
 COMPSET: IELM
+MACHINE: badger # badger or grizzly. Choice depends on the charging account/ICP proposal project space
 STOP_N: 1 # years to run
 REST_N: 1 # frequency of yrs to write restart file
 RUN_STARTDATE: 2010-01-01
