@@ -3,6 +3,15 @@ About
 
 This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
 
+Pre-requisites
+--------------------------------------------------------------------------------
+New Users:
+
+1. To be able to access this repo, ask github-register@lanl.gov to add you to https://github.com/lanl
+2. Ask Rutuja Chitra-Tarak (rutuja@lanl.gov) to add you to git@github.com:lanl/DRM team.
+3. Ask Chonggang Xu (cxu@lanl.gov) to add you to the CESM project space on HPC. (After adding, takes a day for activation)
+4. Ask Eunmo Koo (koo_e@lanl.gov) to add you to the HIGRAD project space on HPC.
+
 Workflow
 --------------------------------------------------------------------------------
 
