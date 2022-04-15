@@ -114,7 +114,8 @@ def savelittersLLMQF(p,i):
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
     src='LLM2FT/'
-    dst='5.TREES-QUICFIRE/'
+    dst='../5.TREES-QUICFIRE/'
+    print(os.getcwd())
     copyfile(src+'LLM_litter_WG.dat',dst+'LLM_litter_WG.dat')
     copyfile(src+'treelist_LLM.dat',dst+'treelist_LLM.dat')
     copyfile(src+'LLM_litter_trees.dat',dst+'LLM_litter_trees.dat')
@@ -128,18 +129,19 @@ def runTreeQF():
     if status==0:
         print('Tree program run successfully!')
         ### Copying Tree Files to Fire Affects Assessment
-        copyfile('TreeTracker.txt','8.CROWN-SCORCH/TreeTracker.txt')
-        copyfile('treelist_LLM.dat','8.CROWN-SCORCH/treelist_LLM.dat')
-        copyfile('LLM_litter_WG.dat','8.CROWN-SCORCH/LLM_litter_WG.dat')
-        copyfile('LLM_litter_trees.dat','8.CROWN-SCORCH/LLM_litter_trees.dat')
+        copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
+        copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
+        copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
+        copyfile('LLM_litter_trees.dat','../8.CROWN-SCORCH/LLM_litter_trees.dat')
 
     return
 
 def runQF(i): 
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
+    print(os.getcwd())
     src=''
-    dst='7.QUICFIRE-MODEL/projects/ftFiles/'
+    dst='../7.QUICFIRE-MODEL/projects/ftFiles/'
     copyfile(src+'treesfueldepth.dat',dst+'treesfueldepth.dat')
     copyfile(src+'treesmoist.dat',dst+'treesmoist.dat')
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
@@ -159,8 +161,8 @@ def runQF(i):
     #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
     #that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
-    pff.main(2200) #ASK ADAM!
-
+    pff.main(200) #ASK ADAM! # 2200 seconds for a normal run, 200 sec for a quick-test
+    # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
     direc = "Plots"
     dd = direc + str(i)
     print (os.getcwd())
@@ -172,18 +174,17 @@ def runQF(i):
     return
 
 def runCrownScorch():
-    os.chdir("../../8.CROWN-SCORCH")
-    copyfile('7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','8.CROWN-SCORCH/PercentFuelChange.txt')
-    
+    os.chdir("../../../8.CROWN-SCORCH")
+    copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
                   'treelist_LLM.dat',
                   'LLM_litter_WG.dat', 
                   'LLM_litter_trees.dat', 
-                  '1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
-                  '1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
-                  '1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
+                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
+                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
+                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
 
     for i in range(len(file_names)-3):
         # check if all input files exist
@@ -194,7 +195,7 @@ def runCrownScorch():
     return LiveDead
     
 def runLLMcyclical(p,nyears):
-    os.chdir("1.LLM-HSM-MODEL")
+    os.chdir("../1.LLM-HSM-MODEL")
     flitter='FT2LLM/AfterFireLitter.txt'
     fwg='FT2LLM/AfterFireWG.txt'
     ftlist='FT2LLM/AfterFireTrees.txt'
@@ -217,7 +218,7 @@ def updateTreelist(p,ii):
     df=df.append(df_hw)
     df.plot(subplots=True, layout=(4,2),figsize=(12, 10));
     df.to_csv('treelist_LLM.dat', sep=' ',header=False,index=False)
-
+    print(os.getcwd())
     file_in='treelist_LLM.dat'
     file_out='LLM2FT/treelist_LLM.dat'
     llmft.save_FT_treelist(file_in,file_out,0)
@@ -243,8 +244,8 @@ def updateTreelist(p,ii):
 
 #-----main------
 #
-nyears=5      # number of years for spinup and transient runs
-ncycyear=5    # number of cyclical year run
+nyears=3      # number of years for spinup and transient runs
+ncycyear=2    # number of cyclical year run
 ncycle=2      # number of loops
 
 #Build Trees
