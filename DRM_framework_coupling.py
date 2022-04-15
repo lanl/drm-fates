@@ -23,6 +23,8 @@ sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
 import Buffer as buff
 
+VDM = "FATES" # "LLM" or "FATES"
+
 def LLMspinup(nyears):
     # --spinup run ---
     p = llm.LLM()     # assign p to the llm class
@@ -92,13 +94,13 @@ def dbh_cr(p):
     return p
 
 def savelittersLLMQF(p,i):
-    filename='LLM2FT/LLM_litter_WG.dat'
+    filename='VDM2FM/LLM_litter_WG.dat'
     ftitle='WG litter [kg/4m2]'
     llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot','grass')
     newname = 'litter_WG.' + str(i) + '.png'
     os.rename('litter.png', newname)
 
-    filename='LLM2FT/LLM_litter_trees.dat'
+    filename='VDM2FM/LLM_litter_trees.dat'
     ftitle='LLP + HW litter [kg/4m2]'
     tree_litter=p.litterHW+p.litter
     llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'plot','litter')
@@ -113,7 +115,7 @@ def savelittersLLMQF(p,i):
 
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
-    src='LLM2FT/'
+    src='VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
     print(os.getcwd())
     copyfile(src+'LLM_litter_WG.dat',dst+'LLM_litter_WG.dat')
@@ -139,7 +141,6 @@ def runTreeQF():
 def runQF(i): 
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
-    print(os.getcwd())
     src=''
     dst='../7.QUICFIRE-MODEL/projects/ftFiles/'
     copyfile(src+'treesfueldepth.dat',dst+'treesfueldepth.dat')
@@ -165,7 +166,6 @@ def runQF(i):
     # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
     direc = "Plots"
     dd = direc + str(i)
-    print (os.getcwd())
     if os.path.exists(dd):
        shutil.rmtree(dd)
     os.rename('Plots', dd)
@@ -182,9 +182,9 @@ def runCrownScorch():
                   'treelist_LLM.dat',
                   'LLM_litter_WG.dat', 
                   'LLM_litter_trees.dat', 
-                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireTrees.txt', 
-                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireWG.txt',
-                  '../1.LLM-HSM-MODEL/FT2LLM/AfterFireLitter.txt']
+                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireTrees.txt', 
+                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireWG.txt',
+                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireLitter.txt']
 
     for i in range(len(file_names)-3):
         # check if all input files exist
@@ -196,9 +196,9 @@ def runCrownScorch():
     
 def runLLMcyclical(p,nyears):
     os.chdir("../1.LLM-HSM-MODEL")
-    flitter='FT2LLM/AfterFireLitter.txt'
-    fwg='FT2LLM/AfterFireWG.txt'
-    ftlist='FT2LLM/AfterFireTrees.txt'
+    flitter='FM2VDM/AfterFireLitter.txt'
+    fwg='FM2VDM/AfterFireWG.txt'
+    ftlist='FM2VDM/AfterFireTrees.txt'
     p=llmft.read_FT_2_LLM(flitter,fwg,ftlist,p)
 
     #run the LLM-HSI for nyears years
@@ -210,7 +210,7 @@ def runLLMcyclical(p,nyears):
     return p
 
 def updateTreelist(p,ii):
-    ftlist='FT2LLM/AfterFireTrees.txt'
+    ftlist='FM2VDM/AfterFireTrees.txt'
     [lp_list,hw_list]=llmft.update_tree_info_per_location(p,ftlist,0)
 
     df_hw = pd.DataFrame(hw_list)
@@ -218,12 +218,11 @@ def updateTreelist(p,ii):
     df=df.append(df_hw)
     df.plot(subplots=True, layout=(4,2),figsize=(12, 10));
     df.to_csv('treelist_LLM.dat', sep=' ',header=False,index=False)
-    print(os.getcwd())
     file_in='treelist_LLM.dat'
-    file_out='LLM2FT/treelist_LLM.dat'
+    file_out='VDM2FM/treelist_LLM.dat'
     llmft.save_FT_treelist(file_in,file_out,0)
     
-    df = pd.read_csv('LLM2FT/treelist_LLM.dat',sep=' ',
+    df = pd.read_csv('VDM2FM/treelist_LLM.dat',sep=' ',
                 names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
                       "htlc [m]","CRDiameter [m]","hmaxcr [m]",
                       "canopydensity  [kg/m3]", "CR fuel moist [frac]",
@@ -251,37 +250,40 @@ ncycle=2      # number of loops
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
 ierr = call('make', shell=True)
-os.chdir('../1.LLM-HSM-MODEL')
+if VDM == "LLM":
+    os.chdir('../1.LLM-HSM-MODEL')
+    LLMspinup(nyears)          # temporary llm class
+    llm=LLMtransient(nyears)   # permanent llm class
+    llm=dbh_cr(llm)            # calculates dbh and crown radius 
+    savelittersLLMQF(llm,0)
+    llmft.create_treelist(llm,'VDM2FM/treelist_LLM.dat')
 
-LLMspinup(nyears)          # temporary llm class
-llm=LLMtransient(nyears)   # permanent llm class
-llm=dbh_cr(llm)            # calculates dbh and crown radius 
-savelittersLLMQF(llm,0)
-llmft.create_treelist(llm,'LLM2FT/treelist_LLM.dat')
+    #### MAKE INTO FUNCTION
+    df = pd.read_csv('VDM2FM/treelist_LLM.dat',sep=' ',
+                          names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
+                              "htlc [m]","CRDiameter [m]","hmaxcr [m]",
+                              "canopydensity  [kg/m3]", "CR fuel moist [frac]",
+                              "CR fuel size scale [m]" ])
+    df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
+    plt.tight_layout()
+    plt.savefig('TreeInfo.png')
 
-#### MAKE INTO FUNCTION
-df = pd.read_csv('LLM2FT/treelist_LLM.dat',sep=' ',
-                    names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
-                        "htlc [m]","CRDiameter [m]","hmaxcr [m]",
-                        "canopydensity  [kg/m3]", "CR fuel moist [frac]",
-                        "CR fuel size scale [m]" ])
-df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
-plt.tight_layout()
-plt.savefig('TreeInfo.png')
+    plt.figure(figsize=(8, 6)) 
+    plt.plot(df["x coord [m]"].values,df["y coord [m]"].values,'.')
+    plt.title('Tree distribution in the FT domain');
+    print("Total number of trees: ",df["x coord [m]"].size )
+    plt.savefig('TreePlot.0.png')
 
-plt.figure(figsize=(8, 6))
-plt.plot(df["x coord [m]"].values,df["y coord [m]"].values,'.')
-plt.title('Tree distribution in the FT domain');
-print("Total number of trees: ",df["x coord [m]"].size )
-plt.savefig('TreePlot.0.png')
-
-hsi_plt.plot_species_scores(llm)
-plt.savefig('HVI.0.png')
+    hsi_plt.plot_species_scores(llm)
+    plt.savefig('HVI.0.png')
+elif VDM == "FATES":
+    os.chdir('../1.FATES-MODEL')
+    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
+    subprocess.call(['sh', './src/run_elm_parallel.sh'])
 #### MAKE ABOVE INTO FUNTION
 
 ## Change Coordinates for QUICFIRE HERE ###
-#buff.add_sat()
-#buff.add_tree_buff()
+
 #buff.add_surf_buff()
 
 LiveDead=[]
@@ -296,19 +298,23 @@ for i in range(ncycle):
     #buff.remove_tree_buff()
     #buff.remove_surf_buff()
     print('Loop Number: ',i)
-    llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
-    hsi_plt.plot_species_scores(llm)  # Plotting HVI
-    plt.savefig('HVI.png')
-    sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
-    savelittersLLMQF(llm,ii)
-    updateTreelist(llm,ii)               # this also updates dbh and cr 
-    ## Change Coordinates for QUICFIRE HERE ###
-    #buff.add_tree_buff()
-    #buff.add_surf_buff()    
-    dd = 'HVI.' + str(i) + '.png'
-    print (dd)
-    #plt.savefig('HVI.png') 
-    os.rename('HVI.png', dd)
+    if VDM == "LLM":
+        llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
+        hsi_plt.plot_species_scores(llm)  # Plotting HVI
+        plt.savefig('HVI.png')
+        sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
+        savelittersLLMQF(llm,ii)
+        updateTreelist(llm,ii)               # this also updates dbh and cr 
+        ## Change Coordinates for QUICFIRE HERE ###
+        #buff.add_tree_buff()
+        #buff.add_surf_buff()    
+        dd = 'HVI.' + str(i) + '.png'
+        print (dd)
+        #plt.savefig('HVI.png') 
+        os.rename('HVI.png', dd)
+    elif VDM == "FATES":
+        os.chdir('../1.FATES-MODEL')
+        subprocess.call(['sh', './src/run_elm_parallel.sh'])
 
 LiveDead=np.array(LiveDead)
 np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
