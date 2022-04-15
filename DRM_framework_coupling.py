@@ -13,6 +13,7 @@ import subprocess
 from shutil import copyfile
 from subprocess import call
 import shutil
+import yaml
 sys.path.insert(0, '1.LLM-HSM-MODEL/')
 import LLM_model_class as llm
 import LLM_FT_utils as llmft
@@ -23,7 +24,7 @@ sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
 import Buffer as buff
 
-VDM = "FATES" # "LLM" or "FATES"
+VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
 def LLMspinup(nyears):
     # --spinup run ---
@@ -115,7 +116,7 @@ def savelittersLLMQF(p,i):
 
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
-    src='VDM2FM/'
+    src='../1.LLM-HSM-MODEL/VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
     print(os.getcwd())
     copyfile(src+'LLM_litter_WG.dat',dst+'LLM_litter_WG.dat')
@@ -278,7 +279,12 @@ if VDM == "LLM":
     plt.savefig('HVI.0.png')
 elif VDM == "FATES":
     os.chdir('../1.FATES-MODEL')
-    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
+    with open("config.yaml") as f:
+        y = yaml.safe_load(f)
+        y['DATM_CLMNCEP_YR_END']=y['DATM_CLMNCEP_YR_START'] + nyears + ncycyear*ncycle
+        y['STOP_N'] = nyears
+        print(yaml.dump(y, default_flow_style=False, sort_keys=False))
+#    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh'])
 #### MAKE ABOVE INTO FUNTION
 
@@ -312,13 +318,18 @@ for i in range(ncycle):
         print (dd)
         #plt.savefig('HVI.png') 
         os.rename('HVI.png', dd)
+        print ('ADAM SQ', llm.sq_sc)
+        print ('ADAM GT', llm.gt_sc)
+        print ('ADAM RCW',sc_rcw)
+        np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')
+
     elif VDM == "FATES":
         os.chdir('../1.FATES-MODEL')
-        subprocess.call(['sh', './src/run_elm_parallel.sh'])
+        with open("config.yaml") as f:
+            y = yaml.safe_load(f)
+            y['STOP_N'] = ncycyear*(1 + (ncycle - 1))
+            print(yaml.dump(y, default_flow_style=False, sort_keys=False))
+        subprocess.call(['sh', './src/run_elm_parallel.sh', str(ii)])
 
 LiveDead=np.array(LiveDead)
 np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
-print ('ADAM SQ', llm.sq_sc)
-print ('ADAM GT', llm.gt_sc)
-print ('ADAM RCW',sc_rcw)
-np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')        
