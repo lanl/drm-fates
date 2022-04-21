@@ -63,7 +63,7 @@ conda install --no-channel-priority rpy2 r-slhd matplotlib
 # Activate the environment
 # conda activate elm_env
 # Export your active environment to a new file:
-# conda env export > environment.yml
+# conda env export > tools/environment.yml
 
 # Viewing a list of the packages in an environment
 # If the environment is not activated
