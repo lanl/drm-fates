@@ -301,4 +301,4 @@ dependencies:
   - zlib=1.2.11=h7f8727e_4
   - zstd=1.4.9=haebb681_0
 
-prefix: /turquoise/usr/projects/higrad/rutuja/DRM/1.FATES-MODEL/elm_env
+prefix: /turquoise/usr/projects/higrad/rutuja/DRM/elm_env
