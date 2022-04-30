@@ -40,7 +40,7 @@ conda create --name elm_env python=3.7 r-base r-essentials pandas r-ncdf4 mpi4py
 conda activate elm_env
 
 # Add any other modules that were not found by the default conda channels
-conda install -c conda-forge tzlocal scipy netcdf4 hdf5
+conda install -c conda-forge tzlocal scipy netcdf4 hdf5 pyevtk
 
 conda install --no-channel-priority rpy2 r-slhd matplotlib
 # ---------------------------------
