@@ -12,7 +12,7 @@ import argparse
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default=SCRIPT_DIR+'/../config.yaml')
+                    default=SCRIPT_DIR+'/../../config.yaml')
 args = parser.parse_args()
 
 # generate parameter data input
@@ -43,16 +43,15 @@ runroot = os.environ["RUN_ROOT"]
 MUTATE = str(config_dict['MUTATE'])
 
 # Set the parameter basefile to clone
-CLONE_TYPE = config_dict['CLONE_TYPE']
+CLONE_TYPE = config_dict['FILE_TYPE_TO_CLONE']['LIST']
 
 clone_type = []
 file_to_clone = []
 clone_base = []
 for i in range(0,len(CLONE_TYPE)):
-   clone_type.append(config_dict['CLONE_TYPE'][i])
-   file_to_clone.append(config_dict['PARAM_FILE'][config_dict['CLONE_TYPE'][i]])
-   clone_base.append(config_dict['CLONE_BASE'][config_dict['CLONE_TYPE'][i]])
-
+   clone_type.append(CLONE_TYPE[i])
+   file_to_clone.append(config_dict['PARAM_FILE'][CLONE_TYPE[i]])
+   clone_base.append(config_dict['CLONE_BASE'][CLONE_TYPE[i]])
 clone_b = ' '.join(str(n) for n in clone_base)
 clone_t = ' '.join(str(n) for n in clone_type)
 file_t_c = ' '.join(str(n) for n in file_to_clone)

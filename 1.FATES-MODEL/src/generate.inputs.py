@@ -15,7 +15,7 @@ import yaml
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default=SCRIPT_DIR+'/../config.yaml')
+                    default=SCRIPT_DIR+'/../../config.yaml')
 args = parser.parse_args()
 
 with open(args.config_file, 'r') as in_file:
@@ -23,16 +23,16 @@ with open(args.config_file, 'r') as in_file:
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 PARAM_DIR = config_dict['PARAM_DIR']
 PARAM_PATH = PROJECT_ROOT +'/' + PARAM_DIR
-CLONE_TYPE = config_dict['CLONE_TYPE']
+CLONE_TYPE = config_dict['FILE_TYPE_TO_CLONE']['LIST']
 PARAM_KEY = config_dict['PARAM_KEY']
 
 clone_type = []
 file_to_clone = []
 clone_base = []
 for i in range(0,len(CLONE_TYPE)):
-   clone_type.append(config_dict['CLONE_TYPE'][i])
-   file_to_clone.append(config_dict['PARAM_FILE'][config_dict['CLONE_TYPE'][i]])
-   clone_base.append(config_dict['CLONE_BASE'][config_dict['CLONE_TYPE'][i]])
+   clone_type.append(CLONE_TYPE[i])
+   file_to_clone.append(config_dict['PARAM_FILE'][CLONE_TYPE[i]])
+   clone_base.append(config_dict['CLONE_BASE'][CLONE_TYPE[i]])
 
 clone_pd_df = pd.DataFrame({'clone_type': clone_type,
 		            'file_to_clone': file_to_clone,

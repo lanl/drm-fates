@@ -20,7 +20,7 @@ print('rpy2 version is', rpy2.__version__)
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default=SCRIPT_DIR+'/../config.yaml')
+                    default=SCRIPT_DIR+'/../../config.yaml')
 args = parser.parse_args()
 
 with open(args.config_file, 'r') as in_file:

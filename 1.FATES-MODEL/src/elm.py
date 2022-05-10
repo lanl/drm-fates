@@ -10,7 +10,7 @@ import argparse
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--config_file', action='store',
-                    default=SCRIPT_DIR+'/../config.yaml')
+                    default=SCRIPT_DIR+'/../../config.yaml')
 args = parser.parse_args()
 
 # generate surface data input
