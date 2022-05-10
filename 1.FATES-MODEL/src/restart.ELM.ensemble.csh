@@ -1,0 +1,24 @@
+#!/bin/tcsh
+
+#-----------------------------------------------------------------------------------------------
+
+# Python script will pass the CLONE ROOT Directory and BASE_CASE
+set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+
+set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
+##======================================
+
+## Now loop through and create each case
+echo "============In total, restarting $#arr_case cases============"
+
+foreach case_i (`seq 1 $#arr_case`)
+  # Go to CASE scripts directory
+  cd $E3SM_ROOT/cime/scripts
+  # Name the case
+  set E3SM_CASE_CLONE = $BASE_CASE.$case_i
+  # Go to CLONE case directory
+  cd $CLONE_ROOT/$ACME_CASE_CLONE
+  sed -i /CONTINUE_RUN/s/TRUE/FALSE/ env_run.xml 
+end
