@@ -6,7 +6,7 @@
 set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
-
+set STOP_N=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
 
@@ -19,6 +19,7 @@ foreach case_i (`seq 1 $#arr_case`)
   # Name the case
   set E3SM_CASE_CLONE = $BASE_CASE.$case_i
   # Go to CLONE case directory
-  cd $CLONE_ROOT/$ACME_CASE_CLONE
-  sed -i /CONTINUE_RUN/s/TRUE/FALSE/ env_run.xml 
+  cd $CLONE_ROOT/$E3SM_CASE_CLONE
+  ./xmlchange -file env_run.xml -id CONTINUE_RUN -val TRUE
+  ./xmlchange -file env_run.xml -id STOP_N -val $STOP_N 
 end

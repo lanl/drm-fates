@@ -8,21 +8,28 @@
 # =======================================================================================
 # 1. READ YAML VARIABLES
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" #Locate the directory of this script no matter where it is called from
-source `realpath "$SCRIPT_DIR/../tools/yaml.sh"`
-create_variables "$SCRIPT_DIR/../config.yaml"
+source `realpath "$SCRIPT_DIR/../../tools/yaml.sh"`
+create_variables "$SCRIPT_DIR/../../config.yaml"
 
-# 7. To prepare the parallel simulation command as per elm.py, run the following command:
+# 2. Read python subprocess variables
+export RESTART=$1
+
+# 3. To prepare the parallel simulation command as per elm.py, run the following command:
 python src/elm.py
 MPICOMMAND=`cat $SCRIPT_DIR/../mpi_command.txt`
 CASEDIR=`realpath $SCRIPT_DIR/../${CASE_DIR}`
 
-sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" src/run_elm.sh
-sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" src/run_elm.sh
-sed -i "s/^#SBATCH -A.*/#SBATCH -A ${ACCOUNT}/g" src/run_elm.sh
 sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
 sed -i '/^mpi/d' src/run_elm.sh
-sed -i "/jobid*/a $MPICOMMAND" src/run_elm.sh
+sed -i "/location*/a $MPICOMMAND" src/run_elm.sh
 
-# 8. To run parallel simulations on the back node, run sbatch:
-rm slurm*
-sbatch src/run_elm.sh
+# 4. If this is a restart simulation run, modify cases to set CONTINUE_RUN variable to TRUE & update STOP_N:
+if [ $RESTART == TRUE ]; then
+	echo "Preparing FATES for a restart run"
+        python src/restart.ELM.ensemble.py
+else
+        echo "Preparing FATES for an initial run"
+fi
+
+# 5. To run parallel simulations on the back node, run sbatch:
+sh src/run_elm.sh
