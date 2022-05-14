@@ -27,6 +27,7 @@
 !README*
 !DRM_framework_coupling.py
 !config.yaml
+!environment.yml
 # Ignore these files
 .DS_Store
 __pycache__
