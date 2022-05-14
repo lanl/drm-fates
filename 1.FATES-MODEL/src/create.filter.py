@@ -47,7 +47,7 @@ nsam = sam_stop - sam_start + 1
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 filebase = base_case.strip()
-finalyear = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
+finalyear = int(config_dict['FINAL_TAG_YEAR'])
 finaltag = "elm.h0."+ str(finalyear) +"-12.nc"
 print('finaltag check is ' + finaltag)
 

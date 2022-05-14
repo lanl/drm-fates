@@ -284,7 +284,7 @@ elif VDM == "FATES":
         y = yaml.safe_load(file)
         y['DATM_CLMNCEP_YR_END']=y['DATM_CLMNCEP_YR_START'] + nyears + ncycyear*ncycle
         y['STOP_N'] = nyears
-        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears
+        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears - 1
     with open('../config.yaml', 'w') as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
