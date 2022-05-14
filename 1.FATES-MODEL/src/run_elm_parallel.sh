@@ -33,3 +33,7 @@ fi
 
 # 5. To run parallel simulations on the back node, run sbatch:
 sh src/run_elm.sh
+
+#6. To find out if all simulations (cases) finished successfully, run this. It will also save which cases are complete (output/Filter.txt) and which are not (output/Missing.txt):
+
+python src/create.filter.py
