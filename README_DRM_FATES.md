@@ -35,5 +35,5 @@ sh tools/run_once.sh
 conda activate elm_env
 
 5. Then to run DRM:
-sh mod_run_drm.sh
+sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
 sbatch run_drm.sh
