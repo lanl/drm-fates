@@ -37,3 +37,7 @@ sh src/run_elm.sh
 #6. To find out if all simulations (cases) finished successfully, run this. It will also save which cases are complete (output/Filter.txt) and which are not (output/Missing.txt):
 
 python src/create.filter.py
+
+# 7. To extract FATES ensemble restart outputs (output/restart_var_outputs.txt)
+
+python src/extract.treelist.py
