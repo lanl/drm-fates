@@ -3,7 +3,8 @@
 # (c) Elchin Jafarov 03/30/2021
 
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib
+from matplotlib import pyplot as plt
 import time
 import pandas as pd
 import random
@@ -245,7 +246,7 @@ def updateTreelist(p,ii):
 #-----main------
 #
 nyears=3      # number of years for spinup and transient runs
-ncycyear=2    # number of cyclical year run
+ncycyear=1    # number of cyclical year run
 ncycle=2      # number of loops
 
 #Build Trees
@@ -269,8 +270,7 @@ if VDM == "LLM":
     plt.tight_layout()
     plt.savefig('TreeInfo.png')
 
-    plt.figure(figsize=(8, 6)) 
-    plt.plot(df["x coord [m]"].values,df["y coord [m]"].values,'.')
+
     plt.title('Tree distribution in the FT domain');
     print("Total number of trees: ",df["x coord [m]"].size )
     plt.savefig('TreePlot.0.png')
@@ -278,14 +278,17 @@ if VDM == "LLM":
     hsi_plt.plot_species_scores(llm)
     plt.savefig('HVI.0.png')
 elif VDM == "FATES":
+    RESTART="FALSE"
     os.chdir('../1.FATES-MODEL')
-    with open("config.yaml") as f:
-        y = yaml.safe_load(f)
+    with open('../config.yaml', 'r') as file:
+        y = yaml.safe_load(file)
         y['DATM_CLMNCEP_YR_END']=y['DATM_CLMNCEP_YR_START'] + nyears + ncycyear*ncycle
         y['STOP_N'] = nyears
-        print(yaml.dump(y, default_flow_style=False, sort_keys=False))
-#    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
-    subprocess.call(['sh', './src/run_elm_parallel.sh'])
+        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears
+    with open('../config.yaml', 'w') as file:
+        yaml.dump(y, file, default_flow_style=False, sort_keys=False)
+    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
+    subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 #### MAKE ABOVE INTO FUNTION
 
 ## Change Coordinates for QUICFIRE HERE ###
@@ -303,7 +306,7 @@ for i in range(ncycle):
     ## Change Coordinates Back to Eco system model HERE ###
     #buff.remove_tree_buff()
     #buff.remove_surf_buff()
-    print('Loop Number: ',i)
+    print('Loop Number: ',ii)
     if VDM == "LLM":
         llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
         hsi_plt.plot_species_scores(llm)  # Plotting HVI
@@ -324,12 +327,15 @@ for i in range(ncycle):
         np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')
 
     elif VDM == "FATES":
+        RESTART="TRUE"
         os.chdir('../1.FATES-MODEL')
-        with open("config.yaml") as f:
-            y = yaml.safe_load(f)
-            y['STOP_N'] = ncycyear*(1 + (ncycle - 1))
-            print(yaml.dump(y, default_flow_style=False, sort_keys=False))
-        subprocess.call(['sh', './src/run_elm_parallel.sh', str(ii)])
+        with open('../config.yaml', 'r') as file:
+            y = yaml.safe_load(file)
+            y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
+            y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear
+        with open('../config.yaml', 'w') as file:
+            yaml.dump(y, file, default_flow_style=False, sort_keys=False)
+        subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
 LiveDead=np.array(LiveDead)
 np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
