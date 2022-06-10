@@ -7,11 +7,12 @@ Pre-requisites
 --------------------------------------------------------------------------------
 New Users:
 
-1. To be able to access this repo, ask github-register@lanl.gov to add you to https://github.com/lanl
-2. Ask Rutuja Chitra-Tarak (rutuja@lanl.gov) to add you to git@github.com:lanl/DRM team.
-3. Ask Chonggang Xu (cxu@lanl.gov) to add you to the CESM project space on HPC. (After adding, takes a day for activation)
-4. Ask Eunmo Koo (koo_e@lanl.gov) to add you to the HIGRAD project space on HPC.
-
+1. To be able to access this repo, ask github-register@lanl.gov with your Github username to add you to https://github.com/lanl
+2. First time users of HPC need to create a UNIX group in their name (e.g. LANL moniker) to be able to be added to other UNIX groups.
+3. Ask Rutuja Chitra-Tarak (rutuja@lanl.gov) with your Z# to add you to git@github.com:lanl/DRM team.
+4. Ask Chonggang Xu (cxu@lanl.gov) with your Z# to add you to the CESM project space on HPC. (After adding, takes a day for activation)
+5. Ask Eunmo Koo (koo_e@lanl.gov) with your Z# to add you to the HIGRAD project space on HPC.
+6. Ask Adam Atchley to add you to w22_fire HPC charging account.
 Workflow
 --------------------------------------------------------------------------------
 
