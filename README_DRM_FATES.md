@@ -20,8 +20,6 @@ Workflow
 
 2. Set environmental variables. Also, re-run this if you get disconnected from HPC at any point in the workflow:
 
-salloc -N 1 -t 00:20:00 --qos=interactive
-
 source tools/.tcshrc
 
 3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Also, re-run this if you get disconnected from HPC at any point in the workflow after #2:
@@ -37,4 +35,5 @@ conda activate elm_env
 
 5. Then to run DRM:
 sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
-sbatch run_drm.sh
+sbatch run_drm.sh 
+! On an interactive mode, salloc -N 1 -t 00:20:00 --qos=interactive, then re-run source tools/.tcshrc and conda activate elm_env. Then sh run_drm.sh. (ssh does not work so, cant run run_once.sh)
