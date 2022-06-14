@@ -151,10 +151,11 @@ echo `pwd`
 
 cat >> user_nl_elm <<EOF
 fsurdat = '${CLM_SURFDAT_DIR}/${ELM_USRDAT_SURDAT}'
-!fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
+fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
 paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
 !fates_spitfire_mode = 0
-!use_fates_planthydro = .false.
+use_fates_planthydro = .false.
+!use_fates_sp = .true.
 !use_fates_ed_st3 = .false.
 !use_var_soil_thick = .true.
 !hist_empty_htapes = .true.

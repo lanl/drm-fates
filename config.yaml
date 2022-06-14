@@ -1,7 +1,7 @@
 ELM_BRANCH: E3SM_v2.0_fates_with_var_soil_thick
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_BRANCH: xuchongang/38708294-hydro
-FATES_REMOTE: git@github.com:xuchongang/fates-1.git
+FATES_BRANCH: rutujact/cxu_38708294-hydro_DRM
+FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
 PARAM_DIR: params
@@ -11,16 +11,17 @@ ELM_RUN_PY: src/parallel.run.py
 TAG: drm.test.1.E3SMv2
 COMPSET: IELMFATES
 MACHINE: badger
-STOP_N: 1
+STOP_N: 3
 REST_N: 1
 RUN_STARTDATE: 2010-01-01
 DATM_CLMNCEP_YR_START: 2010
-DATM_CLMNCEP_YR_END: 2015
-FINAL_TAG_YEAR: 2014
+DATM_CLMNCEP_YR_END: 2014
+FINAL_TAG_YEAR: 2012
 PARAM_FILE:
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
   ELM: elm_parameter_file_name.3563.nc
+  FATES: fates_params_default.nc
 CLONE_BASE:
   SURF: surfdata_bci_panama_v1_c171113.
 FILE_TYPE_TO_CLONE:
