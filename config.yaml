@@ -44,14 +44,15 @@ RANGE:
   MAXPARAM:
   - 18
   - 0.8
-SLICES: 10
+SLICES: 25
 PARAM_KEY:
   SURF:
   - aveDTB
   - FMAX
 MUTATE: true
+CELL_SIDE: 200 # FATES point simulation spatial resolution # For 16 ha total FIRE sim = 400mx400m area for No. of simulations nsim = 400/nsim
 SIM_ID_START: 1
-SIM_ID_END: 2
+SIM_ID_END: 4 # Total sim need to represent area of 400mx400m, so nsim = (400/CELL_SIDE)^2
 ACCOUNT: w22_fire
 N_NODE: 1
 N_CPU_PER_NODE: 36
