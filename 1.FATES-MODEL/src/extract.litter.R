@@ -76,18 +76,10 @@ extract_litter <-
       ymin = rep(cell.side*c(1:nsam_side-1) + 1, each = nsam_side)) %>%
       mutate(xmax = xmin + cell.side - 0.1, ymax = ymin + cell.side - 0.01)
     litter <- litter %>%
-    left_join(cell.xy, by = "nsam") %>%
-    rowwise() %>%
-    mutate(x = runif(1, min = xmin, max = xmax),
-           y = runif(1, min = ymin, max = ymax)) %>%
-    select(-xmin, -xmax, -ymin, -ymax)
+    left_join(cell.xy, by = "nsam")
 
     litter.moisture <- all.sam.var.moisture %>% 
-    left_join(cell.xy, by = "nsam") %>%
-    rowwise() %>%
-    mutate(x = runif(1, min = xmin, max = xmax),
-           y = runif(1, min = ymin, max = ymax)) %>%
-    select(-xmin, -xmax, -ymin, -ymax)
+    left_join(cell.xy, by = "nsam")
 
     write.table(
       litter,
