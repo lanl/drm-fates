@@ -96,13 +96,13 @@ def dbh_cr(p):
     return p
 
 def savelittersLLMQF(p,i):
-    filename='VDM2FM/LLM_litter_WG.dat'
+    filename='VDM2FM/VDM_litter_WG.dat'
     ftitle='WG litter [kg/4m2]'
     llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot','grass')
     newname = 'litter_WG.' + str(i) + '.png'
     os.rename('litter.png', newname)
 
-    filename='VDM2FM/LLM_litter_trees.dat'
+    filename='VDM2FM/VDM_litter_trees.dat'
     ftitle='LLP + HW litter [kg/4m2]'
     tree_litter=p.litterHW+p.litter
     llmft.save_litter_LLM_FT(filename,ftitle,tree_litter,'plot','litter')
@@ -117,12 +117,16 @@ def savelittersLLMQF(p,i):
 
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
-    src='../1.LLM-HSM-MODEL/VDM2FM/'
+    if VDM == "LLM":
+       VDM_folder = "1.LLM-HSM-MODEL"
+    elif VDM == "FATES":
+       VDM_folder = "1.FATES-MODEL"
+    src='../'+VDM_folder+'/VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
     print(os.getcwd())
-    copyfile(src+'LLM_litter_WG.dat',dst+'LLM_litter_WG.dat')
-    copyfile(src+'treelist_LLM.dat',dst+'treelist_LLM.dat')
-    copyfile(src+'LLM_litter_trees.dat',dst+'LLM_litter_trees.dat')
+    copyfile(src+'VDM_litter_WG.dat',dst+'VDM_litter_WG.dat')
+    copyfile(src+'treelist_VDM.dat',dst+'treelist_VDM.dat')
+    copyfile(src+'VDM_litter_trees.dat',dst+'VDM_litter_trees.dat')
 
     os.chdir(dst)
     status=subprocess.call(["./trees"])
@@ -134,9 +138,9 @@ def runTreeQF():
         print('Tree program run successfully!')
         ### Copying Tree Files to Fire Affects Assessment
         copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
-        copyfile('treelist_LLM.dat','../8.CROWN-SCORCH/treelist_LLM.dat')
-        copyfile('LLM_litter_WG.dat','../8.CROWN-SCORCH/LLM_litter_WG.dat')
-        copyfile('LLM_litter_trees.dat','../8.CROWN-SCORCH/LLM_litter_trees.dat')
+        copyfile('treelist_VDM.dat','../8.CROWN-SCORCH/treelist_VDM.dat')
+        copyfile('VDM_litter_WG.dat','../8.CROWN-SCORCH/VDM_litter_WG.dat')
+        copyfile('VDM_litter_trees.dat','../8.CROWN-SCORCH/VDM_litter_trees.dat')
 
     return
 
@@ -179,14 +183,18 @@ def runCrownScorch():
     os.chdir("../../../8.CROWN-SCORCH")
     copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
+    if VDM == "LLM":
+       VDM_folder = "1.LLM-HSM-MODEL"
+    elif VDM == "FATES":
+       VDM_folder = "1.FATES-MODEL" 
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
-                  'treelist_LLM.dat',
-                  'LLM_litter_WG.dat', 
-                  'LLM_litter_trees.dat', 
-                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireTrees.txt', 
-                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireWG.txt',
-                  '../1.LLM-HSM-MODEL/FM2VDM/AfterFireLitter.txt']
+                  'treelist_VDM.dat',
+                  'VDM_litter_WG.dat', 
+                  'VDM_litter_trees.dat', 
+                  '../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt', 
+                  '../'+VDM_folder+'/FM2VDM/AfterFireWG.txt',
+                  '../'+VDM_folder+'/FM2VDM/AfterFireLitter.txt']
 
     for i in range(len(file_names)-3):
         # check if all input files exist
@@ -219,12 +227,12 @@ def updateTreelist(p,ii):
     df = pd.DataFrame(lp_list)
     df=df.append(df_hw)
     df.plot(subplots=True, layout=(4,2),figsize=(12, 10));
-    df.to_csv('treelist_LLM.dat', sep=' ',header=False,index=False)
-    file_in='treelist_LLM.dat'
-    file_out='VDM2FM/treelist_LLM.dat'
+    df.to_csv('treelist_VDM.dat', sep=' ',header=False,index=False)
+    file_in='treelist_VDM.dat'
+    file_out='VDM2FM/treelist_VDM.dat'
     llmft.save_FT_treelist(file_in,file_out,0)
     
-    df = pd.read_csv('VDM2FM/treelist_LLM.dat',sep=' ',
+    df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                 names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
                       "htlc [m]","CRDiameter [m]","hmaxcr [m]",
                       "canopydensity  [kg/m3]", "CR fuel moist [frac]",
@@ -247,7 +255,7 @@ def updateTreelist(p,ii):
 #
 nyears=3      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
-ncycle=2      # number of loops
+ncycle=1      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -258,10 +266,10 @@ if VDM == "LLM":
     llm=LLMtransient(nyears)   # permanent llm class
     llm=dbh_cr(llm)            # calculates dbh and crown radius 
     savelittersLLMQF(llm,0)
-    llmft.create_treelist(llm,'VDM2FM/treelist_LLM.dat')
+    llmft.create_treelist(llm,'VDM2FM/treelist_VDM.dat')
 
     #### MAKE INTO FUNCTION
-    df = pd.read_csv('VDM2FM/treelist_LLM.dat',sep=' ',
+    df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
                               "htlc [m]","CRDiameter [m]","hmaxcr [m]",
                               "canopydensity  [kg/m3]", "CR fuel moist [frac]",
