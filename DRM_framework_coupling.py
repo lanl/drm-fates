@@ -257,6 +257,10 @@ nyears=3      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
 ncycle=1      # number of loops
 
+#Build Trees
+os.chdir('5.TREES-QUICFIRE')
+ierr = call('make', shell=True)
+
 # SPINUP
 if VDM == "LLM":
     os.chdir('../1.LLM-HSM-MODEL')
@@ -265,24 +269,6 @@ if VDM == "LLM":
     llm=dbh_cr(llm)            # calculates dbh and crown radius 
     savelittersLLMQF(llm,0)
     llmft.create_treelist(llm,'VDM2FM/treelist_VDM.dat')
-
-    #### MAKE INTO FUNCTION
-    df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
-                          names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
-                              "htlc [m]","CRDiameter [m]","hmaxcr [m]",
-                              "canopydensity  [kg/m3]", "CR fuel moist [frac]",
-                              "CR fuel size scale [m]" ])
-    df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
-    plt.tight_layout()
-    plt.savefig('TreeInfo.png')
-
-
-    plt.title('Tree distribution in the FT domain');
-    print("Total number of trees: ",df["x coord [m]"].size )
-    plt.savefig('TreePlot.0.png')
-
-    hsi_plt.plot_species_scores(llm)
-    plt.savefig('HVI.0.png')
 elif VDM == "FATES":
     RESTART="FALSE"
     os.chdir('../1.FATES-MODEL')
@@ -295,14 +281,29 @@ elif VDM == "FATES":
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
+
+    #### MAKE INTO FUNCTION
+df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
+                          names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
+                              "htlc [m]","CRDiameter [m]","hmaxcr [m]",
+                              "canopydensity  [kg/m3]", "CR fuel moist [frac]",
+                              "CR fuel size scale [m]" ])
+df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
+plt.tight_layout()
+plt.savefig('TreeInfo.png')
+
+plt.title('Tree distribution in the FT domain');
+print("Total number of trees: ",df["x coord [m]"].size )
+plt.savefig('TreePlot.0.png')
+
+if VDM == "LLM":
+    hsi_plt.plot_species_scores(llm)
+    plt.savefig('HVI.0.png')
 #### MAKE ABOVE INTO FUNTION
 
 ## Change Coordinates for QUICFIRE HERE ###
 
 #buff.add_surf_buff()
-#Build Trees
-os.chdir('5.TREES-QUICFIRE')
-ierr = call('make', shell=True)
 
 LiveDead=[]
 for i in range(ncycle):
