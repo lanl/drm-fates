@@ -26,6 +26,7 @@ with open(args.config_file, 'r') as in_file:
 R_file = SCRIPT_DIR+'/extract.treelist.R'
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
+VDM2FM = PROJECT_ROOT+'/'+config_dict['VDM2FM_DIR']
 runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
@@ -38,7 +39,8 @@ extract_treelist_r = robjects.globalenv['extract_treelist']
 sam_start = int(config_dict['SIM_ID_START'])
 sam_end = int(config_dict['SIM_ID_END'])
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-cell_side = int(config_dict['CELL_SIDE'])
+fire_res = int(config_dict['FIRE_RES'])
+fates_res = int(config_dict['FATES_RES'])
 
 # FATES parameters
 fates_CWD_frac_twig = 0.045
@@ -50,6 +52,9 @@ leafdensity = -2.3231*(0.00662+0.0189200006425381)/2/2 + 781.899 # kg/m3
 # 0.615 g/cm3 = 615 kg/m3
 wooddensity = (0.58 + 0.65)/2 # kg/m3
 
+# Fire parameter; a verso of fuel surface area to volume ratio
+sizescale_pd_df = pd.DataFrame({'fates_pft': [1,2], # 1 = pine, 2 = braodleaf
+                            'sizescale': [0.2,0.6]})
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
@@ -72,10 +77,14 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
   var_vec_re_r = robjects.vectors.StrVector(var_vec_re)
 var_vec_re_r
 
+with localconverter(robjects.default_converter + pandas2ri.converter):
+  sizescale_pd_df_r = robjects.conversion.py2ri(sizescale_pd_df) # For rpy2 versions >2.9 use py2rpy
+sizescale_pd_df_r
+
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-treelist_result = extract_treelist_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_re_r, filterFile, finalyear, cell_side, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity)
+treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r)
 if (treelist_result):
-    print('Treelist extracted successfully at', outdir + "/treelist.txt")
+    print('Treelist extracted successfully at', VDM2FM + "/treelist.txt")
     exit(0)
 else:
    print("Treelist not extracted")
