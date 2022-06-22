@@ -257,9 +257,7 @@ nyears=3      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
 ncycle=1      # number of loops
 
-#Build Trees
-os.chdir('5.TREES-QUICFIRE')
-ierr = call('make', shell=True)
+# SPINUP
 if VDM == "LLM":
     os.chdir('../1.LLM-HSM-MODEL')
     LLMspinup(nyears)          # temporary llm class
@@ -302,6 +300,9 @@ elif VDM == "FATES":
 ## Change Coordinates for QUICFIRE HERE ###
 
 #buff.add_surf_buff()
+#Build Trees
+os.chdir('5.TREES-QUICFIRE')
+ierr = call('make', shell=True)
 
 LiveDead=[]
 for i in range(ncycle):
