@@ -4,6 +4,7 @@ FATES_BRANCH: rutujact/cxu_38708294-hydro_DRM
 FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
+VDM2FM_DIR: VDM2FM
 PARAM_DIR: params
 DATA_DIR: data
 CASE_DIR: CASE_DIR
@@ -16,7 +17,7 @@ REST_N: 1
 RUN_STARTDATE: 2010-01-01
 DATM_CLMNCEP_YR_START: 2010
 DATM_CLMNCEP_YR_END: 2014
-FINAL_TAG_YEAR: 2011
+FINAL_TAG_YEAR: 2012
 PARAM_FILE:
   DOMAIN: domain_bci_panama_v1_c171113.nc
   SURF: surfdata_bci_panama_v1_c171113.3563.nc
@@ -50,9 +51,10 @@ PARAM_KEY:
   - aveDTB
   - FMAX
 MUTATE: true
-CELL_SIDE: 200 # FATES point simulation spatial resolution # For 16 ha total FIRE sim = 400mx400m area for No. of simulations nsim = 400/nsim
+FIRE_RES: 400 #m QuickFire/FireTEC Simulation area = 16 ha (= 400mx400m)
+FATES_RES: 200 #m FATES point simulation spatial resolution
 SIM_ID_START: 1
-SIM_ID_END: 4 # Total sim need to represent area of 400mx400m, so nsim = (400/CELL_SIDE)^2
+SIM_ID_END: 4 # No. of simulations need to represent area of 400mx400m, so nsim = (FIRE_RES/FATES_RES)^2
 ACCOUNT: w22_fire
 N_NODE: 1
 N_CPU_PER_NODE: 36
