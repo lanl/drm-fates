@@ -26,6 +26,7 @@ with open(args.config_file, 'r') as in_file:
 R_file = SCRIPT_DIR+'/extract.litter.R'
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
+VDM2FM = PROJECT_ROOT+'/'+config_dict['VDM2FM_DIR']
 runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
@@ -38,7 +39,8 @@ extract_litter_r = robjects.globalenv['extract_litter']
 sam_start = int(config_dict['SIM_ID_START'])
 sam_end = int(config_dict['SIM_ID_END'])
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-cell_side = int(config_dict['CELL_SIDE'])
+fire_res = int(config_dict['FIRE_RES'])
+fates_res = int(config_dict['FATES_RES'])
 fates_c2b = 2 # Carbon to biomass 
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
@@ -47,9 +49,7 @@ base_case=ff.read()
 filebase=base_case.strip()
 
 filterFile = "Filter.txt"
-var_vec_re = ["fates_leaf_fines_vec_001","fates_livegrass","fates_ag_cwd_vec_001"]
-
-var_vec_re_2 = ["fates_litter_moisture_pa_nfsc"]
+var_vec_re = ["fates_leaf_fines_vec_001", "fates_ag_cwd_vec_001", "fates_livegrass"]
 
 # Converting python objects into r objects for passing into r function
 
@@ -57,15 +57,12 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
   var_vec_re_r = robjects.vectors.StrVector(var_vec_re)
 var_vec_re_r
 
-with localconverter(robjects.default_converter + pandas2ri.converter):
-  var_vec_re_r_2 = robjects.vectors.StrVector(var_vec_re_2)
-var_vec_re_r_2
-
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-litter_result = extract_litter_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_re_r, var_vec_re_r_2, filterFile, finalyear, cell_side, fates_c2b)
+litter_result = extract_litter_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_c2b)
 
 if (litter_result):
-    print('Litter extracted successfully at', outdir + "/litter.txt", 'and', outdir + "/litter.moisture.txt")
+    print('FATES tree litter extracted successfully at', VDM2FM + "/VDM_litter_trees.dat")
+    print('FATES livegrass extracted successfully at', VDM2FM + "/VDM_litter_WG.dat")
     exit(0)
 else:
-   print("Litter not extracted")
+   print("FATES Litter not extracted")
