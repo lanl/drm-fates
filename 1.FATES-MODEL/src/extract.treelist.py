@@ -84,7 +84,7 @@ sizescale_pd_df_r
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
 treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r)
 if (treelist_result):
-    print('Treelist extracted successfully at', VDM2FM + "/treelist.txt")
+    print('Treelist extracted successfully at', VDM2FM + "/treelist_VDM.txt")
     exit(0)
 else:
    print("Treelist not extracted")
