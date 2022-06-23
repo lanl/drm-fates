@@ -39,6 +39,6 @@ sh src/run_elm.sh
 python src/create.filter.py
 
 # 7. To extract FATES ensemble restart outputs (output/treelist.txt, output/litter.txt, output/litter.moisture.txt)
-python extract.moisture.py
+python src/extract.moisture.py
 python src/extract.treelist.py
 python src/extract.litter.py

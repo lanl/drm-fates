@@ -111,9 +111,10 @@ extract_treelist <-
       left_join(sizescale_pd_df_r, by = "fates_pft") %>%
       select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia, 
            height_to_widest_crown, sizescale, fuel_moisture_content,
-           leaf_twig_bulkdi, treeid))
-
-    if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
+           leaf_twig_bulkd, treeid))
+    treelist <- sapply(treelist, as.numeric)
+ 
+   if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
     write.table(
       treelist,
       file = file.path(VDM2FM, paste0("treelist_VDM.dat")),
