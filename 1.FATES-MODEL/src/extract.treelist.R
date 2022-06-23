@@ -100,25 +100,45 @@ extract_treelist <-
       ymin = rep(fates_res*c(1:nsam_side-1) + 1, each = nsam_side)) %>% 
       mutate(xmax = xmin - 1 + fates_res, ymax = ymin - 1 + fates_res)
 
-    treelist <- trees.whole %>%
-      left_join(cell.xy, by = "nsam") %>%
-      rowwise() %>%  
-      mutate(x = runif(1, min = xmin, max = xmax),
-           y = runif(1, min = ymin, max = ymax)) %>%
-      ## Adding more derived variables
+    trees.whole <- trees.whole %>%
+      left_join(cell.xy, by = "nsam")
+    treelist.ls <- split(trees.whole, f=list(trees.whole$nsam), drop = TRUE)
+    ## Removing coordinate duplicates within each FATES sim, since min max differ for each sim
+    treelist.ls <- lapply(treelist.ls, function(df) {
+        df$x <- runif(nrow(df), min = df$xmin[1], max = df$xmax[1]) # sample function needs size < vector of values to choose from
+        df$y <- runif(nrow(df), min = df$ymin[1], max = df$ymax[1])
+        # Removing duplicates, but also reducing overlap by rounding numbers to 0.1 m (1m produces too many overlaps)
+        coord <- paste0(round(df$x, 1),"-", round(df$y, 1))
+        dupes <- which(duplicated(coord))
+        if(length(dupes) > 0) {
+          # Replacing duplicates with x non-overlapping with exisiting x
+          nonoverlapping.set <- setdiff(seq(df$xmin[1], df$xmax[1], by = 0.1), round(df$x, 1)) 
+          df$x[dupes] <- sample(nonoverlapping.set, length(dupes), rep = FALSE)
+        }
+        return(df)
+       }
+      )
+
+    treelist <- dplyr::bind_rows(treelist.ls)
+    
+    coord <- paste0(round(treelist$x, 1),"-", round(treelist$y, 1))
+    dupes <- which(duplicated(coord))
+    print(paste0("Remaining coordinate duplicates = ", length(dupes)))
+
+    treelist <- treelist %>%
       mutate(height_to_widest_crown = fates_height_to_crown_base, # not ideal for non-pines
            bulk_density_fine_fuel = leaf_twig_bulkd) %>%
       left_join(sizescale_pd_df_r, by = "fates_pft") %>%
-      select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia, 
+      select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia,
            height_to_widest_crown, sizescale, fuel_moisture_content,
-           leaf_twig_bulkd, treeid))
+           bulk_density_fine_fuel, treeid))
     treelist <- sapply(treelist, as.numeric)
- 
-   if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
+
+    if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
     write.table(
       treelist,
       file = file.path(VDM2FM, paste0("treelist_VDM.dat")),
-      row.names = FALSE
+      row.names = FALSE, col.names = FALSE
     )
     return(TRUE)
   }
