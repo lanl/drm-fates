@@ -15,7 +15,8 @@ extract_treelist <-
            fates_c2b,
            leafdensity,
            wooddensity,
-           sizescale_pd_df_r) {
+           sizescale_pd_df_r,
+           HYDRO) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -45,7 +46,7 @@ extract_treelist <-
         file = file.path(outdir, "allvar.vec.txt"),
         row.names = FALSE
       ) 
-      res.arr <- vector("list", length = length(var.vec.re) + 1)  
+      res.arr <- vector("list", length = length(var.vec.re))  
       for (v in 1:length(var.vec.re)) {
         var.name <- var.vec.re[v]
         names(res.arr)[v] <- var.name
@@ -76,12 +77,16 @@ extract_treelist <-
       mutate(leaf_twig_bulkd = c(leafdensity*fates_bleaf + wooddensity*fates_bagw_twig)/c(fates_bleaf + fates_bagw_twig))
 
     # Biomass weighted moisture content
-    moisture <- read.table(file = file.path(outdir, "livefuel.moisture.txt"), header = TRUE)
+    if (HYDRO == TRUE) {
+      moisture <- read.table(file = file.path(outdir, "livefuel.moisture.txt"), header = TRUE)
     all.sam.var <- all.sam.var %>%
       left_join(moisture, by = c("nsam", "fates_pft")) %>%
       mutate(fuel_moisture_content = c(FATES_LTH_SCPF*fates_bleaf + FATES_STH_SCPF*fates_bagw_twig)/c(fates_bleaf + fates_bagw_twig)) %>%
       select(-FATES_LTH_SCPF, -FATES_STH_SCPF)
-
+    } else {
+    all.sam.var <- all.sam.var %>%
+      mutate(fuel_moisture_content = 0.5)
+    }
     ## From nplants per size-pft to individual plants
     trees.whole <- all.sam.var %>%  
       # Selecting only whole trees to present to the Fire model 
@@ -130,7 +135,7 @@ extract_treelist <-
       left_join(sizescale_pd_df_r, by = "fates_pft") %>%
       select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia,
            height_to_widest_crown, sizescale, fuel_moisture_content,
-           bulk_density_fine_fuel, treeid, nsam, fates_nplant))
+           bulk_density_fine_fuel, treeid, nsam, fates_nplant, cohort.rowid))
     treelist <- sapply(treelist, as.numeric)
 
     write.table(
