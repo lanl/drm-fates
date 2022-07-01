@@ -9,26 +9,27 @@ PARAM_DIR: params
 DATA_DIR: data
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
-TAG: drm.test.1.E3SMv2
+TAG: drm.test.2.E3SMv2
 COMPSET: IELMFATES
+HYDRO: true 
 MACHINE: badger
-STOP_N: 1
+STOP_N: 2
 REST_N: 1
 RUN_STARTDATE: 2010-01-01
 DATM_CLMNCEP_YR_START: 2010
 DATM_CLMNCEP_YR_END: 2013
-FINAL_TAG_YEAR: 2012
+FINAL_TAG_YEAR: 2011
 PARAM_FILE:
-  DOMAIN: domain_bci_panama_v1_c171113.nc
-  SURF: surfdata_bci_panama_v1_c171113.3563.nc
+  DOMAIN: domain_eglin_c210813.nc
+  SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_trop_evg_deci.nc
+  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass.nc
 CLONE_BASE:
-  SURF: surfdata_bci_panama_v1_c171113.
+  SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
   LIST:
   - SURF
-CLIM_DATA_DIR: bci_0.1x0.1_v4.0i
+CLIM_DATA_DIR: eglin_0.1x0.1_v4.0i #Also the directory for inevntory file
 CLIM_DATA: bci_0.1x0.1_met.v4_pio2
 SENSITIVITY: true
 SITES_PARAM_TABLE_PATH: data/HPU.Table.csv
@@ -37,24 +38,20 @@ GIVEN_PARAM_TABLE_PATH: data/Param.Table.csv
 BUILT_PARAM_TABLE_PATH: output/Param.Table.csv
 RANGE:
   PARAMETERS:
-  - aveDTB
   - FMAX
   MINPARAM:
-  - 0
   - 0.01
   MAXPARAM:
-  - 18
   - 0.8
 SLICES: 25
 PARAM_KEY:
   SURF:
-  - aveDTB
   - FMAX
-MUTATE: true
-FIRE_RES: 400 #m QuickFire/FireTEC Simulation area = 16 ha (= 400mx400m)
-FATES_RES: 200 #m FATES point simulation spatial resolution
+MUTATE: false
+FIRE_RES: 400
+FATES_RES: 200
 SIM_ID_START: 1
-SIM_ID_END: 4 # No. of simulations need to represent area of 400mx400m, so nsim = (FIRE_RES/FATES_RES)^2
+SIM_ID_END: 4
 ACCOUNT: w22_fire
 N_NODE: 1
 N_CPU_PER_NODE: 36

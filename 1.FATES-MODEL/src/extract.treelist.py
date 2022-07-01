@@ -42,6 +42,8 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fire_res = int(config_dict['FIRE_RES'])
 fates_res = int(config_dict['FATES_RES'])
 
+# HYDRO ON/OFF? If OFF (e.g. currently HYDRO doesn't work iwth grasses), moisture is set to 1.
+HYDRO = int(config_dict['HYDRO'])
 # FATES parameters
 fates_CWD_frac_twig = 0.045
 fates_c2b = 2
@@ -52,9 +54,9 @@ leafdensity = -2.3231*(0.00662+0.0189200006425381)/2/2 + 781.899 # kg/m3
 # 0.615 g/cm3 = 615 kg/m3
 wooddensity = (0.58 + 0.65)/2 # kg/m3
 
-# Fire parameter; a verso of fuel surface area to volume ratio
-sizescale_pd_df = pd.DataFrame({'fates_pft': [1,2], # 1 = pine, 2 = braodleaf
-                            'sizescale': [0.2,0.6]})
+# Fire parameter; a version of fuel surface area to volume ratio
+sizescale_pd_df = pd.DataFrame({'fates_pft': [1,2,3], # 1 = pine, 2 = braodleaf
+                            'sizescale': [0.2,0.6,1]})
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
@@ -82,7 +84,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 sizescale_pd_df_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r)
+treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r, HYDRO)
 if (treelist_result):
     print('Treelist extracted successfully at', VDM2FM + "/treelist_VDM.dat")
     exit(0)
