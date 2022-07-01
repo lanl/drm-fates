@@ -254,9 +254,9 @@ def updateTreelist(p,ii):
 
 #-----main------
 #
-nyears=2      # number of years for spinup and transient runs
+nyears=5      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
-ncycle=1      # number of loops
+ncycle=3      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
