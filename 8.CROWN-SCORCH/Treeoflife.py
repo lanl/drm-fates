@@ -7,7 +7,7 @@ import itertools
 
 fnameIn1   = 'PercentFuelChange.txt'
 fnameIn2   = 'TreeTracker.txt'
-fnameIn3   = 'treelist_LLM-400x400.txt'
+fnameIn3   = 'treelist_VDM.dat'
 fnameIn4   = 'LLM_litter_WG.txt'
 fnameIn5   = 'LLM_litter_trees.txt'
 fnameOut   = 'AfterFireTrees.txt'
@@ -17,7 +17,7 @@ fnameOut3  = 'AfterFireLitter.txt'
 # DEFINE DOMAIN
 Nx = 200
 Ny = 200
-Nz = 16
+Nz = 38
 s = (200,200)
 cellnum = 0
 cellptr = 0
@@ -96,11 +96,11 @@ smallturk = 1
 smallllp = 1 
 tf = open(fnameIn2, 'r')
 td = open(fnameIn3, 'r')
-aft = open(fnameOut, 'wb')
+aft = open(fnameOut, 'w')
 for e_tf, e_td in zip(tf, td):
   line_tf = e_tf.split()
   line_td = e_td.split()
-  #print (line_td)
+  #print ("Tree ID", line_tf[0])
   #print (line_tf)
   cellnum = int(line_tf[1])
   #print (type(line_tf[1]), type(cellnum), cellnum)

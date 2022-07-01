@@ -187,6 +187,7 @@ def runCrownScorch():
        VDM_folder = "1.LLM-HSM-MODEL"
     elif VDM == "FATES":
        VDM_folder = "1.FATES-MODEL" 
+    os.makedirs(VDM_folder+'/FM2VDM', exist_ok=True)
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
                   'treelist_VDM.dat',
@@ -253,7 +254,7 @@ def updateTreelist(p,ii):
 
 #-----main------
 #
-nyears=3      # number of years for spinup and transient runs
+nyears=2      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
 ncycle=1      # number of loops
 
@@ -287,18 +288,20 @@ df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
                               "htlc [m]","CRDiameter [m]","hmaxcr [m]",
                               "canopydensity  [kg/m3]", "CR fuel moist [frac]",
-                              "CR fuel size scale [m]" ])
+                              "CR fuel size scale [m]", "treeid" ])
+df.drop("treeid", inplace=True, axis = 1)
 df.plot(subplots=True, layout=(5,2),figsize=(12, 10));
 plt.tight_layout()
-plt.savefig('TreeInfo.png')
+os.makedirs('figures', exist_ok=True)
+plt.savefig('figures/TreeInfo.png')
 
 plt.title('Tree distribution in the FT domain');
 print("Total number of trees: ",df["x coord [m]"].size )
-plt.savefig('TreePlot.0.png')
+plt.savefig('figures/TreePlot.0.png')
 
 if VDM == "LLM":
     hsi_plt.plot_species_scores(llm)
-    plt.savefig('HVI.0.png')
+    plt.savefig('figures/HVI.0.png')
 #### MAKE ABOVE INTO FUNTION
 
 ## Change Coordinates for QUICFIRE HERE ###
@@ -320,7 +323,7 @@ for i in range(ncycle):
     if VDM == "LLM":
         llm=runLLMcyclical(llm,ncycyear)  # runs LLM-HSM with no fire 
         hsi_plt.plot_species_scores(llm)  # Plotting HVI
-        plt.savefig('HVI.png')
+        plt.savefig('figures/HVI.png')
         sc_rcw=np.asarray(llm.age_sc)+np.asarray(llm.hw_sc)+np.asarray(llm.ageHW_sc)+np.asarray(llm.hwHW_sc)
         savelittersLLMQF(llm,ii)
         updateTreelist(llm,ii)               # this also updates dbh and cr 
@@ -337,8 +340,9 @@ for i in range(ncycle):
         np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')
 
     elif VDM == "FATES":
-        RESTART="TRUE"
         os.chdir('../1.FATES-MODEL')
+        subprocess.call(['sh', './src/update.restart.treelist.sh']) 
+        RESTART="TRUE"
         with open('../config.yaml', 'r') as file:
             y = yaml.safe_load(file)
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
@@ -348,4 +352,5 @@ for i in range(ncycle):
         subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
 LiveDead=np.array(LiveDead)
+os.makedirs('output', exist_ok=True)
 np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')

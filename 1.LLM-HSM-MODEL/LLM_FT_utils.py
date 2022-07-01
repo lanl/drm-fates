@@ -560,7 +560,6 @@ def Treeoflife(file_names):
     td = open(file_in_tl, 'r')
     aft = open(file_out_aft, 'w')
     for e_tf, e_td in zip(tf, td):
-        #print (e_td)
         line_tf = e_tf.split()
         line_td = e_td.split()
         #print ('line_tf',line_tf)
