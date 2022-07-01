@@ -45,7 +45,7 @@ extract_treelist <-
         file = file.path(outdir, "allvar.vec.txt"),
         row.names = FALSE
       ) 
-      res.arr <- vector("list", length = length(var.vec.re))  
+      res.arr <- vector("list", length = length(var.vec.re) + 1)  
       for (v in 1:length(var.vec.re)) {
         var.name <- var.vec.re[v]
         names(res.arr)[v] <- var.name
@@ -54,10 +54,10 @@ extract_treelist <-
       nc_close(nc)
       res.all.df <- do.call(cbind.data.frame, res.arr)
       res.all.df$nsam <- i
+      res.all.df$cohort.rowid <- 1:nrow(res.all.df)
       all.sam.list[[i]] <- res.all.df
     }
     all.sam.var <- do.call(rbind, all.sam.list)
-
     all.sam.var <- all.sam.var %>%
       mutate(
       # Crown dia per plant
@@ -84,13 +84,12 @@ extract_treelist <-
 
     ## From nplants per size-pft to individual plants
     trees.whole <- all.sam.var %>%  
-      # Selecting only whole trees 
+      # Selecting only whole trees to present to the Fire model 
       # This could be made complex by grouping trees into size class bins and checkign if the size class makes it to a whole tree (nplant.400 = 1)
       mutate(fates_nplant.cell = as.integer(round(fates_nplant.cell, 0))) %>% 
       subset(fates_nplant.cell >= 1) %>% 
     # repeat each plant number of plants 
-      uncount(fates_nplant.cell) %>%
-      select(-fates_nplant)
+      uncount(fates_nplant.cell)
     trees.whole$treeid <- 1:nrow(trees.whole)
 
     ## Assign x-y location. Assume simulation index, nsam, increases from East to West, then increases northwards.
@@ -120,7 +119,7 @@ extract_treelist <-
       )
 
     treelist <- dplyr::bind_rows(treelist.ls)
-    
+
     coord <- paste0(round(treelist$x, 1),"-", round(treelist$y, 1))
     dupes <- which(duplicated(coord))
     print(paste0("Remaining coordinate duplicates = ", length(dupes)))
@@ -131,12 +130,18 @@ extract_treelist <-
       left_join(sizescale_pd_df_r, by = "fates_pft") %>%
       select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia,
            height_to_widest_crown, sizescale, fuel_moisture_content,
-           bulk_density_fine_fuel, treeid))
+           bulk_density_fine_fuel, treeid, nsam, fates_nplant))
     treelist <- sapply(treelist, as.numeric)
 
-    if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
     write.table(
       treelist,
+      file = file.path(outdir, paste0("treelist_VDM_n.plant.dat")),
+      row.names = FALSE
+    )
+    
+    if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
+    write.table(
+      subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid)),
       file = file.path(VDM2FM, paste0("treelist_VDM.dat")),
       row.names = FALSE, col.names = FALSE
     )
