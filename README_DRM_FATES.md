@@ -34,6 +34,9 @@ sh tools/run_once.sh
 conda activate elm_env
 
 5. Then to run DRM:
+
 sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
+
 sbatch run_drm.sh 
+
 ! On an interactive mode, salloc -N 1 -t 00:20:00 --qos=interactive, then re-run source tools/.tcshrc and conda activate elm_env. Then sh run_drm.sh. (ssh does not work so, cant run run_once.sh)
