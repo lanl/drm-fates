@@ -9,21 +9,22 @@ PARAM_DIR: params
 DATA_DIR: data
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
-TAG: drm.HYD.wograss.E3SMv2
+STOP_N: 1
+REST_N: 1
+CYCLE_INDEX: 0
+TAG: drm.HYDRO.grass.E3SMv2
 COMPSET: IELMFATES
 HYDRO: true
 MACHINE: badger
-STOP_N: 1
-REST_N: 1
-RUN_STARTDATE: 2010-01-01
-DATM_CLMNCEP_YR_START: 2010
-DATM_CLMNCEP_YR_END: 2013
-FINAL_TAG_YEAR: 2012
+RUN_STARTDATE: 2004-01-01
+DATM_CLMNCEP_YR_START: 2004
+DATM_CLMNCEP_YR_END: 2006
+FINAL_TAG_YEAR: 2004
 PARAM_FILE:
   DOMAIN: domain_eglin_c210813.nc
   SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci.nc
+  FATES: fates_params_default_c4grass.nc
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
