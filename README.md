@@ -1,81 +1,75 @@
-Disturbance and Response Model (DRM)
+About
+--------------------------------------------------------------------------------
 
-WORKFLOW INSTRUCTIONS:
----------------------
+This project will create and run point (e.g. each HPU) simulations of ELM-FATES in parallel and extract outputs.
 
- * Run LLM
- * Postprocess LLM resutls
- * Run VegMap-ParFlow (optional)
- * Run Parflow (optional)
- * Run Tree code
- * Run CanopyEnergyBalance code 
- * Run FIRETEC or QUICFIRE
- * Run Fuel Density code
+Pre-requisites
+--------------------------------------------------------------------------------
+New Users:
 
+1. To be able to access this repo, ask github-register@lanl.gov with your Github username to add you to https://github.com/lanl
+2. First time users of HPC need to create a UNIX group in their name (e.g. LANL moniker) to be able to be added to other UNIX groups.
+3. Ask Rutuja Chitra-Tarak (rutuja@lanl.gov) with your Z# to add you to git@github.com:lanl/DRM team.
+4. Ask Chonggang Xu (cxu@lanl.gov) with your Z# to add you to the CESM project space on HPC. (After adding, takes a day for activation)
+5. Ask Eunmo Koo (koo_e@lanl.gov) with your Z# to add you to the HIGRAD project space on HPC.
+6. Ask Adam Atchley to add you to w22_fire HPC charging account.
+Workflow
+--------------------------------------------------------------------------------
+0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
 
-Run LLM
-------------
+ssh user@wtrw.lanl.gov
 
-Go to LLM-HSM-MODEL and follow the instructions in the `Coupling_script_LLM-HSM.ipynb` script. 
+ssh ba-fe
 
-Postprocess LLM resutls
-------------
+! If you get disconnected from HPC, you wont loose the screen; and wont have load the environment if you use screen utility.
+! While on screen, you could go up and down the screen with ctrl+A esc; and then esc to go back to writing mode.
+! To detach and attach to a screen, start with:
 
-Run Elchins' LLM postprocessing to get trees code, and hydrology input.
-Produces 3 files:
-1) `treelist.txt` Containg  tree species and location<br/>
-   Format in colums:<br/>
-   <em> spp	x	y	Ht	HTLC	CanDiameter	HttoMaxCrDi	CanDensity	Canmoisture	sizescale </em>
-2) `LLM_litter_trees.txt` Array in the domeintions of the domain containg litter from trees density
-3) `LLM_litter_WG.txt` Array in the domeintions of the domain containg grass density  
+screen -d -r
 
-Run VegMap-ParFlow (optional)
-------------
+cd /turquoise/usr/projects/higrad/$user
 
-Running this code will map trees for Parflow. Requires running `MakeTreeMap_LLM.cpp` first to make `CellTreeMap.txt`, a long column of species number <br/>
-   <em>1 = LLP, 2 = Turkey Oak, 0 = grass</em><br/>
-   \*NOTE: that number FIRETEC and PARFLOW domain cells are hard coded in `MakeTreeMap_LLM.cpp`\*<br/>
-   <em>  L64         int nx = 200, ny = 200;</em><br/>
-   Then run `makeslope.cpp` to produce the `drv_vegm.dat` file need by ParFlow-CLM<br/> 
-   This Also makes slope files for ParFlow in topography as needed<br/>
-   \*NOTE that number FIRETEC and PARFLOW domain cells are hard coded `makeslope.cpp`\*<br/>
-   <em>  L62         int nx=200, ny=200,....</em>
+mkdir -p E3SM_cases
 
-Run Parflow (optional)
-------------
+cd E3SM_cases
 
-This run will simulate for subsurface moisture conditons. Produced `Saturation.txt` that contains all the subsurface moistures. Alex's runs Spin-up runs are in /scratch/wildfire1/ajonko/Eglin-Parflow-OneSoil. Adam's runs are in es38:/lclscratch/aatchley/Eglin-Parflow/CLIMATE-RUNS
+! Before cloning repo, you may need to ssh auntheticate, if you havent done that already: 
+! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
-Run Tree code
-------------
+mkdir -p proj1
 
-Run Trees_EJ code aka 'trees' using the files `LLM_litter_trees.txt`, `LLM_litter_WG.txt` and the `treelist.txt`  and `Saturation.txt` as input. Produces `treesmoist.dat`  `treesss.dat` `treesfueldepth.dat` `treesrhof.dat`. \*Note that input file are in parent directory while, fuellest (genral input) is in subdirectory 'Input' -- Weird\*. \* 'Trees_EJ_working-9-14-WORKING' for FIRETECH \* 'TREES-QUICFIRE' For QUICFire
+cd proj1
 
-Run CanopyEnergyBalance code 
-------------
+git clone git@github.com:lanl/drm-fates.git .
 
-Use `treesrhof.dat` to run CanopyEnergyBalance code to calculate canopy & Dead Fuel moisture. Also uses `treesmoist.dat` and rewrites `treesmoist.dat` with added dead fuel moisture.
+git checkout main
 
-Run FIRETEC or QUICFIRE
-------------
+!vim README.md
 
-A) \* QUICFIRE run notes \* <br/>
-    Remember to manually set the datafile path on L19 in QUIC_fire.inp.
-    This file is found at /7.QUICFIRE-MODEL/projects/Tester/
+1. First set variables in config.yaml (Pre-configured for a toy model run). For example, you could change experiment name (TAG), WALL_TIME & N_NODE to reserve on HPC back-end, area of each FATES simulation or grid-cell size (FATES_RES), No. of FATES grid cells (SIM_END), FATES parameter files to use, turn on sensitivity analysis etc. 
 
-QUICFIRE Diretory Tree <br/>
-mac_compile  projects  source_code<br/>
-                        ``/`` ``\``<br/>
-                      ``/``     `` \``<br/>
-             ftFiles          Tester<br/>
+2. Set environmental variables. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2:
 
-Put fuel data (all the trees*.dat) to run QUICFIRE in the ftFiles directory along with the ignite.dat 
-The input decks are in the Tester directory, the main input deck is `QUIC_fire.inp`. To run the model exicute `./compile_and_run.sh 0` in the mac_compile directory. That .sh file has flag for whether or not you want to recompile source and also lets you point the executable to a project folder.That's the testcase variable at the top, which points quicfire to your .inp files in the project/Tester folder defined by testcase
+source tools/.tcshrc
 
-B) \* FIRETEC NOTES \* <br/>
-FIRETEC postprocess file is `VTK.NEW.MATK.firetec.py`.  In addition to the `PercentFuelChange.txt` file it produces all kinds of other goodies.
+3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2 & # 3:
 
- Run Fuel Density code
-------------
+sh tools/run_once.sh
 
-This code kills trees and convert inout to LLM. See directory CROWN_SCORCH for description of `Treeoflife.py`. Once complete go back to step 1 (Run LLM). 
+4. Activate conda environment
+
+! sh tools/activate_env.sh 
+! Somehow the conda activate command throws an error (needs fixing), so run it outside:
+
+conda activate elm_env
+
+5. Then to run DRM:
+
+sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
+
+! Next sbatch command calls DRM_framework_coupling.py on the back-end.
+! Edit DRM_framework_coupling.py. Under ---main--- set VDM (FATES/LLM); VDM spin-up years (nyears), no of fires/loops (ncycle), and VDM run duration i.e. fire-interval (ncycyear)
+
+sbatch run_drm.sh 
+
+! On an interactive mode, salloc -N 1 -t 00:20:00 --qos=interactive, then re-run source tools/.tcshrc and conda activate elm_env. Then sh run_drm.sh. (ssh does not work so, cant run run_once.sh)
