@@ -15,14 +15,44 @@ New Users:
 6. Ask Adam Atchley to add you to w22_fire HPC charging account.
 Workflow
 --------------------------------------------------------------------------------
+0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
 
-1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required, but if you are running the same simulations again, to avoid overwriting existing simulations you will need be prompted for inputs. To avoid, change the case (simulation) name by changing the TAG name in config.yaml)
+ssh user@wtrw.lanl.gov
 
-2. Set environmental variables. Also, re-run this if you get disconnected from HPC at any point in the workflow:
+ssh ba-fe
+
+! If you get disconnected from HPC, you wont loose the screen; and wont have load the environment if you use screen utility.
+! While on screen, you could go up and down the screen with ctrl+A esc; and then esc to go back to writing mode.
+! To detach and attach to a screen, start with:
+
+screen -d -r
+
+cd /turquoise/usr/projects/higrad/$user
+
+mkdir -p E3SM_cases
+
+cd E3SM_cases
+
+! Before cloning repo, you may need to ssh auntheticate, if you havent done that already: 
+! Follow instructions at: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
+mkdir -p proj1
+
+cd proj1
+
+git clone git@github.com:lanl/drm-fates.git .
+
+git checkout main
+
+!vim README.md
+
+1. First set variables in config.yaml (Pre-configured for a toy model run). For example, you could change experiment name (TAG), WALL_TIME & N_NODE to reserve on HPC back-end, area of each FATES simulation or grid-cell size (FATES_RES), No. of FATES grid cells (SIM_END), FATES parameter files to use, turn on sensitivity analysis etc. 
+
+2. Set environmental variables. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2:
 
 source tools/.tcshrc
 
-3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Also, re-run this if you get disconnected from HPC at any point in the workflow after #2:
+3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2 & # 3:
 
 sh tools/run_once.sh
 
@@ -36,6 +66,9 @@ conda activate elm_env
 5. Then to run DRM:
 
 sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
+
+! Next sbatch command calls DRM_framework_coupling.py on the back-end.
+! Edit DRM_framework_coupling.py. Under ---main--- set VDM (FATES/LLM); VDM spin-up years (nyears), no of fires/loops (ncycle), and VDM run duration i.e. fire-interval (ncycyear)
 
 sbatch run_drm.sh 
 
