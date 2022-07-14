@@ -1,6 +1,6 @@
 ELM_BRANCH: E3SM_v2.0_fates_with_var_soil_thick
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_BRANCH: rutujact/cxu_38708294-hydro_DRM
+FATES_BRANCH: rutujact-IO-DRM
 FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
@@ -9,22 +9,22 @@ PARAM_DIR: params
 DATA_DIR: data
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
-STOP_N: 1
-REST_N: 1
-CYCLE_INDEX: 0
-TAG: drm.HYDRO.grass.E3SMv2
+STOP_N: 10
+REST_N: 10
+CYCLE_INDEX: 3
+TAG: drm.NOHYDRO.grass.E3SMv2
 COMPSET: IELMFATES
-HYDRO: true
+HYDRO: false
 MACHINE: badger
 RUN_STARTDATE: 1990-01-01
 DATM_CLMNCEP_YR_START: 1990
 DATM_CLMNCEP_YR_END: 2021
-FINAL_TAG_YEAR: 1990
+FINAL_TAG_YEAR: 2020
 PARAM_FILE:
   DOMAIN: domain_eglin_c210813.nc
   SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass.nc 
+  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass.nc
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
