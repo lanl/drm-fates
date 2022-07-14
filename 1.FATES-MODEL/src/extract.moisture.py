@@ -39,6 +39,8 @@ sam_start = int(config_dict['SIM_ID_START'])
 sam_end = int(config_dict['SIM_ID_END'])
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fates_res = int(config_dict['FATES_RES'])
+cycle_index = int(config_dict['CYCLE_INDEX'])
+
 fates_c2b = 2 # Carbon to biomass 
 fates_levscls = 13 # No. of FATES size classes in h0.cdl history output
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
@@ -56,7 +58,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 var_vec_re_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-moisture_result = extract_moisture_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls)
+moisture_result = extract_moisture_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls, cycle_index)
 
 if (moisture_result):
     print('Live fuel moisture extracted successfully at', outdir + "/livefuel.moisture.txt")

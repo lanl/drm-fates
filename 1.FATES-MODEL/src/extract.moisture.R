@@ -10,7 +10,8 @@ extract_moisture <-
            finalyear,
            fates_res,
            fates_c2b,
-           fates_levscls) {
+           fates_levscls,
+           cycle_index) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -48,7 +49,7 @@ extract_moisture <-
     all.sam.var <- do.call(rbind, all.sam.list)
     write.table(
       all.sam.var,
-      file = file.path(outdir, paste0("livefuel.moisturei.raw.txt")),
+      file = file.path(outdir, paste0("livefuel.moisture.raw.txt")),
       row.names = FALSE
     )
     nzmean <- function(x) {
@@ -67,6 +68,11 @@ extract_moisture <-
     write.table(
       moisture,
       file = file.path(outdir, paste0("livefuel.moisture.txt")),
+      row.names = FALSE
+    )
+    write.table(
+      moisture,
+      file = file.path(outdir, paste0("livefuel.moisture.", cycle_index, ".txt")),
       row.names = FALSE
     )
     return(TRUE)

@@ -11,7 +11,8 @@ extract_litter <-
            finalyear,
            fire_res,
            fates_res,
-           fates_c2b) {
+           fates_c2b,
+           cycle_index) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -102,6 +103,16 @@ extract_litter <-
     write.table(
       grass.m,
       file = file.path(VDM2FM, "VDM_litter_WG.dat"),
+      row.names = FALSE, col.names = FALSE
+    )
+    write.table(
+      litter.m,
+      file = file.path(VDM2FM, paste0("VDM_litter_trees.", cycle_index,".dat")),
+      row.names = FALSE, col.names = FALSE
+    )
+    write.table(
+      grass.m,
+      file = file.path(VDM2FM, paste0("VDM_litter_WG.", cycle_index,".dat")),
       row.names = FALSE, col.names = FALSE
     )
     return(TRUE)

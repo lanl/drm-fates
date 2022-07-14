@@ -16,7 +16,8 @@ extract_treelist <-
            leafdensity,
            wooddensity,
            sizescale_pd_df_r,
-           HYDRO) {
+           HYDRO,
+           cycle_index) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -148,6 +149,11 @@ extract_treelist <-
     write.table(
       subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid)),
       file = file.path(VDM2FM, paste0("treelist_VDM.dat")),
+      row.names = FALSE, col.names = FALSE
+    )
+    write.table(
+      subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid)),
+      file = file.path(VDM2FM, paste0("treelist_VDM.", cycle_index, ".dat")),
       row.names = FALSE, col.names = FALSE
     )
     return(TRUE)
