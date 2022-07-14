@@ -24,7 +24,7 @@ sed -i '/^mpi/d' src/run_elm.sh
 sed -i "/location*/a $MPICOMMAND" src/run_elm.sh
 
 # 4. If this is a restart simulation run, modify cases to set CONTINUE_RUN variable to TRUE & update STOP_N:
-if [ "$RESTART" == TRUE ]; then
+if [ "$RESTART" == TRUE ] || [ "$RESTART" == true ]; then
 	echo "Preparing FATES for a restart run"
         python src/restart.ELM.ensemble.py
 else
@@ -39,7 +39,7 @@ sh src/run_elm.sh
 python src/create.filter.py
 
 # 7. To extract FATES ensemble restart outputs (output/treelist.txt, output/litter.txt, output/litter.moisture.txt)
-if [ "$HYDRO" == TRUE ]; then
+if [ "$HYDRO" == TRUE ] || [ "$HYDRO" == true ]; then
         python src/extract.moisture.py
 fi
 python src/extract.treelist.py
