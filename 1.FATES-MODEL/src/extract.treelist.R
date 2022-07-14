@@ -16,6 +16,7 @@ extract_treelist <-
            leafdensity,
            wooddensity,
            sizescale_pd_df_r,
+           grass_pft_index,
            HYDRO,
            cycle_index) {
     library(ncdf4)
@@ -98,37 +99,46 @@ extract_treelist <-
       uncount(fates_nplant.cell)
     trees.whole$treeid <- 1:nrow(trees.whole)
 
-    ## Assign x-y location. Assume simulation index, nsam, increases from East to West, then increases northwards.
+    ## Assign x-y location for each FATES simulation (aka patch). Assume simulation index, nsam, increases from East to West, then increases northwards.
     nsam_side = sam.end^0.5
     cell.xy <- data.frame(nsam = c(1:sam.end), 
       xmin = rep(fates_res*c(1:nsam_side-1) + 1, times = nsam_side), 
       ymin = rep(fates_res*c(1:nsam_side-1) + 1, each = nsam_side)) %>% 
       mutate(xmax = xmin - 1 + fates_res, ymax = ymin - 1 + fates_res)
-
+    
+    #------------------------------------
+    # Assign tree locations for new trees
+    #------------------------------------
     trees.whole <- trees.whole %>%
       left_join(cell.xy, by = "nsam")
     treelist.ls <- split(trees.whole, f=list(trees.whole$nsam), drop = TRUE)
+    # ----
     ## Removing coordinate duplicates within each FATES sim, since min max differ for each sim
+    # ----
     treelist.ls <- lapply(treelist.ls, function(df) {
         df$x <- runif(nrow(df), min = df$xmin[1], max = df$xmax[1]) # sample function needs size < vector of values to choose from
         df$y <- runif(nrow(df), min = df$ymin[1], max = df$ymax[1])
-        # Removing duplicates, but also reducing overlap by rounding numbers to 0.1 m (1m produces too many overlaps)
-        coord <- paste0(round(df$x, 1),"-", round(df$y, 1))
+        # Removing grasses during duplicate location check
+        df.trees <- df[df$fates_pft != grass_pft_index,]
+         # Removing duplicates, but also reducing overlap by rounding numbers to 0.1 m (1m produces too many overlaps)
+        coord <- paste0(round(df.trees$x, 1),"-", round(df.trees$y, 1))
         dupes <- which(duplicated(coord))
         if(length(dupes) > 0) {
           # Replacing duplicates with x non-overlapping with exisiting x
-          nonoverlapping.set <- setdiff(seq(df$xmin[1], df$xmax[1], by = 0.1), round(df$x, 1)) 
-          df$x[dupes] <- sample(nonoverlapping.set, length(dupes), rep = FALSE)
+          nonoverlapping.set <- setdiff(seq(df.trees$xmin[1], df.trees$xmax[1], by = 0.1), round(df.trees$x, 1)) 
+          df.trees$x[dupes] <- sample(nonoverlapping.set, length(dupes), rep = FALSE)
         }
-        return(df)
+        # Adding grasses back 
+        df.all <- rbind(df.trees, df[df$fates_pft == grass_pft_index,])
+        return(df.all)
        }
       )
-
+    # Checking if any tree location duplicates remain
     treelist <- dplyr::bind_rows(treelist.ls)
-
-    coord <- paste0(round(treelist$x, 1),"-", round(treelist$y, 1))
+    treelist.no.grass <- treelist[treelist$fates_pft != grass_pft_index,]
+    coord <- paste0(round(treelist.no.grass$x, 1),"-", round(treelist.no.grass$y, 1))
     dupes <- which(duplicated(coord))
-    print(paste0("Remaining coordinate duplicates = ", length(dupes)))
+    print(paste0("Remaining coordinate duplicates within 1m distance = ", length(dupes)))
 
     treelist <- treelist %>%
       mutate(height_to_widest_crown = fates_height_to_crown_base, # not ideal for non-pines
@@ -138,21 +148,22 @@ extract_treelist <-
            height_to_widest_crown, sizescale, fuel_moisture_content,
            bulk_density_fine_fuel, treeid, nsam, fates_nplant, cohort.rowid))
     treelist <- sapply(treelist, as.numeric)
+    treelist.no.grass <- treelist[treelist$fates_pft != grass_pft_index,]
 
     write.table(
       treelist,
-      file = file.path(outdir, paste0("treelist_VDM_n.plant.dat")),
+      file = file.path(outdir, paste0("treelist_VDM_n.plant.", cycle_index, ".dat")),
       row.names = FALSE
     )
     
     if(!dir.exists(VDM2FM)) {dir.create(VDM2FM)}
     write.table(
-      subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid)),
+      subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid)),
       file = file.path(VDM2FM, paste0("treelist_VDM.dat")),
       row.names = FALSE, col.names = FALSE
     )
     write.table(
-      subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid)),
+      subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid)),
       file = file.path(VDM2FM, paste0("treelist_VDM.", cycle_index, ".dat")),
       row.names = FALSE, col.names = FALSE
     )
