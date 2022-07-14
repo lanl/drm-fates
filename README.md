@@ -65,7 +65,9 @@ conda activate elm_env
 
 5. Then to run DRM:
 
-sh tools/mod_run_drm.sh # modifies sbatch commands based on config.yaml
+! Next command modifies sbatch commands based on config.yaml
+
+sh tools/mod_run_drm.sh 
 
 ! Next sbatch command calls DRM_framework_coupling.py on the back-end.
 ! Edit DRM_framework_coupling.py. Under ---main--- set VDM (FATES/LLM); VDM spin-up years (nyears), no of fires/loops (ncycle), and VDM run duration i.e. fire-interval (ncycyear)

@@ -61,11 +61,11 @@ df = pd.read_csv(PARAM_Table)
 # Converting it into r object for passing into r function
 # df_r = pandas2ri.py2ri(df)
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_r = robjects.conversion.py2rpy(df) # For rpy2 versions >2.9 use py2rpy
+  df_r = robjects.conversion.py2ri(df) # For rpy2 versions >2.9 use py2rpy
 df_r
 
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  clone_pd_df_r = robjects.conversion.py2rpy(clone_pd_df) # For rpy2 versions >2.9 use py2rpy
+  clone_pd_df_r = robjects.conversion.py2ri(clone_pd_df) # For rpy2 versions >2.9 use py2rpy
 clone_pd_df_r
 
 PARAM_KEY_r = rpy2.robjects.ListVector(PARAM_KEY)
@@ -75,7 +75,7 @@ df_result_r = generate_parameter_files_function_r(df_r, PARAM_PATH, clone_pd_df_
 # Converting it back to a pandas dataframe.
 # df_result = pandas2ri.ri2py(df_result_r)
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_result = robjects.conversion.rpy2py(df_result_r) # For rpy2 versions >2.9 use rpy2py
+  df_result = robjects.conversion.ri2py(df_result_r) # For rpy2 versions >2.9 use rpy2py
 df_result
 
 print ("Parameter Table used for mutating parameter files is  "+PARAM_Table)
