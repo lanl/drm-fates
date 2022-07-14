@@ -16,22 +16,22 @@ TAG: drm.HYDRO.grass.E3SMv2
 COMPSET: IELMFATES
 HYDRO: true
 MACHINE: badger
-RUN_STARTDATE: 2004-01-01
-DATM_CLMNCEP_YR_START: 2004
-DATM_CLMNCEP_YR_END: 2006
-FINAL_TAG_YEAR: 2004
+RUN_STARTDATE: 1990-01-01
+DATM_CLMNCEP_YR_START: 1990
+DATM_CLMNCEP_YR_END: 2021
+FINAL_TAG_YEAR: 1990
 PARAM_FILE:
   DOMAIN: domain_eglin_c210813.nc
   SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_c4grass.nc
+  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass.nc 
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
   LIST:
   - SURF
 CLIM_DATA_DIR: eglin_0.1x0.1_v4.0i
-CLIM_DATA: bci_0.1x0.1_met.v4_pio2
+CLIM_DATA: eglin_0.1x0.1_met.v2pio
 SENSITIVITY: true
 SITES_PARAM_TABLE_PATH: data/HPU.Table.csv
 BUILD_PARAM_TABLE: true
