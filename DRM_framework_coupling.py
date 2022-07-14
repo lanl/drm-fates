@@ -25,7 +25,7 @@ sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff
 import Buffer as buff
 
-VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
+#VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
 def LLMspinup(nyears):
     # --spinup run ---
@@ -253,10 +253,12 @@ def updateTreelist(p,ii):
     return
 
 #-----main------
-#
+
+VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
+
 nyears=1      # number of years for spinup and transient runs
-ncycyear=1    # number of cyclical year run
-ncycle=1      # number of loops
+ncycyear=10    # number of cyclical year run
+ncycle=3      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
