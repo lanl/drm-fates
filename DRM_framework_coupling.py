@@ -187,7 +187,7 @@ def runCrownScorch():
        VDM_folder = "1.LLM-HSM-MODEL"
     elif VDM == "FATES":
        VDM_folder = "1.FATES-MODEL" 
-    os.makedirs(VDM_folder+'/FM2VDM', exist_ok=True)
+    os.makedirs('../'+VDM_folder+'/FM2VDM', exist_ok=True)
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
                   'treelist_VDM.dat',
@@ -254,9 +254,9 @@ def updateTreelist(p,ii):
 
 #-----main------
 #
-nyears=5      # number of years for spinup and transient runs
+nyears=1      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
-ncycle=3      # number of loops
+ncycle=1      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -277,7 +277,9 @@ elif VDM == "FATES":
         y = yaml.safe_load(file)
         y['DATM_CLMNCEP_YR_END']=y['DATM_CLMNCEP_YR_START'] + nyears + ncycyear*ncycle
         y['STOP_N'] = nyears
+        y['REST_N'] = nyears
         y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears - 1
+        y['CYCLE_INDEX'] = 0
     with open('../config.yaml', 'w') as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
@@ -346,7 +348,9 @@ for i in range(ncycle):
         with open('../config.yaml', 'r') as file:
             y = yaml.safe_load(file)
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
+            y['REST_N'] = ncycyear 
             y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear
+            y['CYCLE_INDEX'] = ii
         with open('../config.yaml', 'w') as file:
             yaml.dump(y, file, default_flow_style=False, sort_keys=False)
         subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
