@@ -9,7 +9,8 @@ update_restart_treelist <-
            filterFile,
            finalyear,
            fire_res,
-           fates_res) {
+           fates_res,
+           grass_pft_index) {
     library(ncdf4)
     library(tidyverse)
 
@@ -22,14 +23,20 @@ update_restart_treelist <-
     colnames(aft) <- c("fates_pft", "x", "y", "fates_height", "fates_height_to_crown_base", "fates_crown_dia",
        "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel", "treeid")
 
-    # bft has grasses, but aft does not, so the difference, fire.dead.treelist, contains grasses which are also removed
-    fire.dead.treelist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),]
-    print(paste0("No. of trees that died in fire = ", nrow(fire.dead.treelist), "; that is ", round(nrow(fire.dead.treelist)*100/length(bft$treeid), 0), "% of trees present before fire."))
+    # bft has grasses, but aft does not, so the difference, fire.dead.plantlist, contains grasses which are also removed
+    fire.dead.plantlist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),]
 
-    while(nrow(fire.dead.treelist) > 0) {
+    print(paste0("No. of plants that died in fire = ", nrow(fire.dead.plantlist), "; that is ", round(nrow(fire.dead.plantlist)*100/length(bft$treeid), 0), "% of plants present before fire."))
+
+    bft.trees <- bft[bft$fates_pft != as.numeric(grass_pft_index),]
+    fire.dead.treelist <- fire.dead.plantlist[fire.dead.plantlist$fates_pft != as.numeric(grass_pft_index),]
+
+    print(paste0("No. of trees that died in fire = ", nrow(fire.dead.treelist), "; that is ", round(nrow(fire.dead.treelist)*100/length(bft.trees$treeid), 0), "% of trees present before fire."))
+
+    while(nrow(fire.dead.plantlist) > 0) {
     # Converting each dead tree equivalent to no of trees per ha
-    fire.dead.treelist$remove_nplant = 1*10000/fates_res^2      # Converting each dead tree equivalent to no of trees per ha
-    fire.dead.ls <- split(fire.dead.treelist, fire.dead.treelist$nsam)
+    fire.dead.plantlist$remove_nplant = 1*10000/fates_res^2      # Converting each dead tree equivalent to no of trees per ha
+    fire.dead.ls <- split(fire.dead.plantlist, fire.dead.plantlist$nsam)
     # for each nsam in names(fire.dead.ls), go and remove n.plant in nc
     filter.arr <-
       read.table(file.path(outdir, filterFile), header = F) # on server
