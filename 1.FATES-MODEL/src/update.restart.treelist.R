@@ -22,6 +22,7 @@ update_restart_treelist <-
     colnames(aft) <- c("fates_pft", "x", "y", "fates_height", "fates_height_to_crown_base", "fates_crown_dia",
        "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel", "treeid")
 
+    # bft has grasses, but aft does not, so the difference, fire.dead.treelist, contains grasses which are also removed
     fire.dead.treelist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),]
     print(paste0("No. of trees that died in fire = ", nrow(fire.dead.treelist), "; that is ", round(nrow(fire.dead.treelist)*100/length(bft$treeid), 0), "% of trees present before fire."))
 
