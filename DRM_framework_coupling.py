@@ -284,6 +284,9 @@ elif VDM == "FATES":
         y['CYCLE_INDEX'] = 0
     with open('../config.yaml', 'w') as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
+    dir = '../1.FATES-MODEL/VDM2FM'
+    shutil.rmtree(dir, ignore_errors=True)
+    os.makedirs(dir)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
