@@ -257,8 +257,8 @@ def updateTreelist(p,ii):
 VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
 nyears=1      # number of years for spinup and transient runs
-ncycyear=10    # number of cyclical year run
-ncycle=3      # number of loops
+ncycyear=1    # number of cyclical year run
+ncycle=2      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -277,7 +277,6 @@ elif VDM == "FATES":
     os.chdir('../1.FATES-MODEL')
     with open('../config.yaml', 'r') as file:
         y = yaml.safe_load(file)
-        y['DATM_CLMNCEP_YR_END']=y['DATM_CLMNCEP_YR_START'] + nyears + ncycyear*ncycle
         y['STOP_N'] = nyears
         y['REST_N'] = nyears
         y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears - 1
