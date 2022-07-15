@@ -34,12 +34,18 @@ extract_litter <-
                casename,
                ".",
                filetag)
-      nc <- nc_open(filename, write = F)
+      nc <- nc_open(filename, write = TRUE)
       res.arr <- vector("list", length = length(var.vec.re))  
       for (v in 1:length(var.vec.re)) {
         var.name <- var.vec.re[v]
         names(res.arr)[v] <- var.name
         res.arr[[v]] <- ncvar_get(nc, var.name)
+
+        #--------------
+        # Reset litter to 0: Satisfies current full fire events, but when fire spread is partial through the area
+        # this may be modified in post-fire src/restart.update.treelist.py script
+        #--------------
+        ncdf4::ncvar_put(nc, var.name, 0)
       }
       res.all.df <- do.call(cbind.data.frame, res.arr)
       res.all.df$nsam <- i
