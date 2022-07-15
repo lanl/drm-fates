@@ -15,7 +15,7 @@ New Users:
 6. Ask Adam Atchley to add you to w22_fire HPC charging account.
 Workflow
 --------------------------------------------------------------------------------
-0. To set-up this project on LANL HPC, do this and follow instructions in README.md:
+1. To set-up this project on LANL HPC, do this and follow instructions in README.md:
 
 ssh user@wtrw.lanl.gov
 
@@ -46,24 +46,33 @@ git checkout dev
 
 !vim README.md
 
-1. First set variables in config.yaml (Pre-configured for a toy model run). For example, you could change experiment name (TAG), WALL_TIME & N_NODE to reserve on HPC back-end, area of each FATES simulation or grid-cell size (FATES_RES), No. of FATES grid cells (SIM_END), FATES parameter files to use, turn on sensitivity analysis etc. 
+2. Copy LANL internal software at root
 
-2. Set environmental variables. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2:
+cp SOURCE/5.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/
+
+cp SOURCE/7.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/
+
+unzip 5.QUICFIRE-MODEL.zip
+unzip 7.QUICFIRE-MODEL.zip
+   
+3. First set variables in config.yaml (Pre-configured for a toy model run). For example, you could change experiment name (TAG), WALL_TIME & N_NODE to reserve on HPC back-end, area of each FATES simulation or grid-cell size (FATES_RES), No. of FATES grid cells (SIM_END), FATES parameter files to use, turn on sensitivity analysis etc. 
+
+4. Set environmental variables. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2:
 
 source tools/.tcshrc
 
-3. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2 & # 3:
+5. Run once to create and activate a conda environment (takes ~10-15 min) and load ELM (and FATES) branches. Note: If you did not use screen utility, if you get disconnected from HPC at any point in the workflow, re-run #2 & # 3:
 
 sh tools/run_once.sh
 
-4. Activate conda environment
+6. Activate conda environment
 
 ! sh tools/activate_env.sh 
 ! Somehow the conda activate command throws an error (needs fixing), so run it outside:
 
 conda activate elm_env
 
-5. Then to run DRM:
+7. Then to run DRM:
 
 ! Next command modifies sbatch commands based on config.yaml
 
