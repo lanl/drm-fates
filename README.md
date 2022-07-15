@@ -42,7 +42,7 @@ cd proj1
 
 git clone git@github.com:lanl/drm-fates.git .
 
-git checkout main
+git checkout dev
 
 !vim README.md
 
