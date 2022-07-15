@@ -17,7 +17,7 @@ unzip -u data/ConvertMetCSVtoCLM/NCOut/eglin_0.1x0.1_met.v2pio.zip -d data/eglin
 
 # 3. To generate parameter table, if sensitivity analysis:
 
-if [ ${SENSITIVITY} == TRUE ] || [ {SENSITIVITY} == true ]; then
+if [ ${SENSITIVITY} == TRUE ] || [ ${SENSITIVITY} == true ]; then
         if [ ${BUILD_PARAM_TABLE} == TRUE ] || if [ ${BUILD_PARAM_TABLE} == true ]; then
                 echo "Building Parameter Sensitivity Table"
 		python src/generate.param.table.py
