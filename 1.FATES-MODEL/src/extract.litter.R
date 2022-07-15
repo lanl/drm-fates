@@ -84,13 +84,17 @@ extract_litter <-
     litter <- coord_for_TREES %>%
       left_join(litter_by_nsam %>% select(litter, xmax, ymax), by = c("xmax", "ymax")) %>%
       select(-xmax, -ymax) %>%
-      arrange(desc(y), x)
+      arrange(desc(y), x) %>%
+      # Make sure litter doen't have zeroes
+      mutate(litter = ifelse(litter == 0, 0.001, litter))
 
     grass <- coord_for_TREES %>%
       left_join(grass_by_nsam %>% select(grass, xmax, ymax), by = c("xmax", "ymax"))  %>%
       select(-xmax, -ymax) %>%
-      arrange(desc(y), x)
-    
+      arrange(desc(y), x)  %>%
+      # Make sure litter doen't have zeroes
+      mutate(grass = ifelse(grass == 0, 0.001, grass))
+          
     litter.m <- matrix(litter$litter, nrow = length(trees_seq), byrow = TRUE)
     grass.m <- matrix(grass$grass, nrow = length(trees_seq), byrow = TRUE)
 
