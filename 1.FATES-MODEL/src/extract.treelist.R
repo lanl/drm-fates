@@ -216,6 +216,12 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
 
   write.table(
     treelist,
+    file = file.path(VDM2FM, paste0("treelist_VDM_n.plant.dat")),
+    row.names = FALSE
+  )
+
+  write.table(
+    treelist,
     file = file.path(VDM2FM, paste0("treelist_VDM_n.plant.", cycle_index, ".dat")),
     row.names = FALSE
   )
