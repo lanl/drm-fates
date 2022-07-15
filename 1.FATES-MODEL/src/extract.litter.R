@@ -45,7 +45,7 @@ extract_litter <-
         # Reset litter to 0: Satisfies current full fire events, but when fire spread is partial through the area
         # this may be modified in post-fire src/restart.update.treelist.py script
         #--------------
-        ncdf4::ncvar_put(nc, var.name, 0)
+        ncdf4::ncvar_put(nc, var.name, rep(0, length(res.arr[[v]])))
       }
       res.all.df <- do.call(cbind.data.frame, res.arr)
       res.all.df$nsam <- i
