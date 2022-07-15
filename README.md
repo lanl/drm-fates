@@ -72,7 +72,9 @@ sh tools/mod_run_drm.sh
 ! Next sbatch command calls DRM_framework_coupling.py on the back-end.
 ! Edit DRM_framework_coupling.py. Under ---main--- set VDM (FATES/LLM); VDM spin-up years (nyears), no of fires/loops (ncycle), and VDM run duration i.e. fire-interval (ncycyear)
 
-!To view progress during short runs, just run: python DRM_framework_coupling.py
+!To view progress during short runs, run (will need to continue Quickfire run): 
+
+python DRM_framework_coupling.py
 
 sbatch run_drm.sh 
 
