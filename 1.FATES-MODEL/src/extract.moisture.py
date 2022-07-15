@@ -26,6 +26,7 @@ with open(args.config_file, 'r') as in_file:
 R_file = SCRIPT_DIR+'/extract.moisture.R'
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
+VDM2FM = PROJECT_ROOT+'/'+config_dict['VDM2FM_DIR']
 runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
@@ -58,10 +59,10 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 var_vec_re_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-moisture_result = extract_moisture_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls, cycle_index)
+moisture_result = extract_moisture_r(sam_start, sam_end, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls, cycle_index)
 
 if (moisture_result):
-    print('Live fuel moisture extracted successfully at', outdir + "/livefuel.moisture.txt")
+    print('Live fuel moisture extracted successfully at', VDM2FM + "/livefuel.moisture.txt")
     exit(0)
 else:
    print("Live fuel moisture not extracted")

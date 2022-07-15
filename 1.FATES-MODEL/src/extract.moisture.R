@@ -3,6 +3,7 @@ extract_moisture <-
   function(sam.start,
            sam.end,
            outdir,
+           VDM2FM,
            runroot,
            filebase,
            var.vec.re,
@@ -49,7 +50,7 @@ extract_moisture <-
     all.sam.var <- do.call(rbind, all.sam.list)
     write.table(
       all.sam.var,
-      file = file.path(outdir, paste0("livefuel.moisture.raw.txt")),
+      file = file.path(VDM2FM, paste0("livefuel.moisture.raw.txt")),
       row.names = FALSE
     )
     nzmean <- function(x) {
@@ -67,12 +68,12 @@ extract_moisture <-
     # this is the average across SCPF. Could have been weighted by biomass of stem and leaves
     write.table(
       moisture,
-      file = file.path(outdir, paste0("livefuel.moisture.txt")),
+      file = file.path(VDM2FM, paste0("livefuel.moisture.txt")),
       row.names = FALSE
     )
     write.table(
       moisture,
-      file = file.path(outdir, paste0("livefuel.moisture.", cycle_index, ".txt")),
+      file = file.path(VDM2FM, paste0("livefuel.moisture.", cycle_index, ".txt")),
       row.names = FALSE
     )
     return(TRUE)
