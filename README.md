@@ -48,9 +48,9 @@ git checkout dev
 
 2. Copy LANL internal software at root
 
-cp SOURCE/5.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/
+cp SOURCE/5.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/proj1
 
-cp SOURCE/7.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/
+cp SOURCE/7.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/proj1
 
 unzip 5.QUICFIRE-MODEL.zip
 unzip 7.QUICFIRE-MODEL.zip
