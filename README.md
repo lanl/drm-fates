@@ -53,6 +53,7 @@ cp SOURCE/5.TREES-QUICFIRE.zip /turquoise/usr/projects/higrad/$user/proj1
 cp SOURCE/7.QUICFIRE-MODEL.zip /turquoise/usr/projects/higrad/$user/proj1
 
 unzip 5.TREES-QUICFIRE.zip
+
 unzip 7.QUICFIRE-MODEL.zip
    
 3. First set variables in config.yaml (Pre-configured for a toy model run). For example, you could change experiment name (TAG), WALL_TIME & N_NODE to reserve on HPC back-end, area of each FATES simulation or grid-cell size (FATES_RES), No. of FATES grid cells (SIM_END), FATES parameter files to use, turn on sensitivity analysis etc. 
