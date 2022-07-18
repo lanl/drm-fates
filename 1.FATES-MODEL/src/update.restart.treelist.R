@@ -15,7 +15,7 @@ update_restart_treelist <-
     library(tidyverse)
 
     bft <- read.table(
-      file = file.path(outdir, paste0("treelist_VDM_n.plant.dat")), header = TRUE
+      file = file.path(paste0("VDM2FM/treelist_VDM_n.plant.dat")), header = TRUE
     )
     aft <- read.table(
       file = file.path(paste0("FM2VDM/AfterFireTrees.txt")), header = FALSE
