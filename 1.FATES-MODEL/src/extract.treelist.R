@@ -189,6 +189,16 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     update.treeid.df <- dplyr::bind_rows(update.treeid.ls)
     # because new treeids were created within nsam loop, there may be duplicates
     trees.whole$treeid <- update.treeid.df$treeid
+    
+    ## Find out No. of 'new' trees that were assigned new treeids 
+
+    old.treelist.no.grass <- old.treelist[which(old.treelist$fates_pft != as.numeric(grass_pft_index)),]
+    trees.whole.no.grass <- trees.whole[which(trees.whole$fates_pft != as.numeric(grass_pft_index)),]
+
+    tot.new.treeids <- length(intersect(trees.whole.no.grass$treeid, old.treelist.no.grass$treeid))
+
+    print(paste0("No. of 'new' trees that were assigned new treeids = ", tot.new.treeids, "; that is ", round(tot.new.treeids*100/nrow(old.treelist.no.grass), 0), "% of trees present before fire."))
+
   }
   
   # ----
