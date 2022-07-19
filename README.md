@@ -75,17 +75,18 @@ conda activate elm_env
 
 7. Then to run DRM:
 
-! Next command modifies sbatch commands based on config.yaml
-
-sh tools/mod_run_drm.sh 
-
 ! Next sbatch command calls DRM_framework_coupling.py on the back-end.
 ! Edit DRM_framework_coupling.py. Under ---main--- set VDM (FATES/LLM); VDM spin-up years (nyears), no of fires/loops (ncycle), and VDM run duration i.e. fire-interval (ncycyear)
 
-!To view progress during short runs, run (will need to continue Quickfire run): 
+!To view progress during short runs on the front-end, run (will need to continue Quickfire run): 
 
 python DRM_framework_coupling.py
 
+! If running on back-end, next command modifies sbatch commands based on config.yaml
+
+sh tools/mod_run_drm.sh
+
+! Next sbatch command calls DRM_framework_coupling.py on the back-end.
 sbatch run_drm.sh 
 
 ! On an interactive mode, salloc -N 1 -t 00:20:00 --qos=interactive, then re-run source tools/.tcshrc and conda activate elm_env. Then sh run_drm.sh. (ssh does not work so, cant run run_once.sh)

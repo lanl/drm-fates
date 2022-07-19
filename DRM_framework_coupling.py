@@ -159,7 +159,7 @@ def runQF(i):
     # is pointing to the gridlist file in the projects/ftFiles directory.
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
     import subprocess
-    status=subprocess.call(["./compile_and_run.sh"])
+    status=subprocess.call(["./adv_compile_and_run.sh"])
     if status==0:
         print('QF run successfully!')
     else:
@@ -176,7 +176,10 @@ def runQF(i):
        shutil.rmtree(dd)
     os.rename('Plots', dd)
     os.mkdir('Plots')
-    
+    dd = "fuels-dens-00000." + str(i) + ".vin"
+    os.rename('fuels-dens-00000.bin', dd)
+    dd = "fire_indexes." + str(i) + ".vin"
+    os.rename('fire_indexes.bin', dd)    
     return
 
 def runCrownScorch():
@@ -258,7 +261,7 @@ VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
 nyears=1      # number of years for spinup and transient runs
 ncycyear=1    # number of cyclical year run
-ncycle=2      # number of loops
+ncycle=1      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
