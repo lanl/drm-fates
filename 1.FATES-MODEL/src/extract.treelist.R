@@ -16,30 +16,31 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     exact.old.ids <- old.df$treeid[match(new.df$fates_dbh, old.df$fates_dbh)]
     new.df$treeid <- exact.old.ids  
     new.done <- new.df[!is.na(new.df$treeid),]
-    
-    # Left-over dataframe
-    old.left <- old.df[!old.df$treeid %in% exact.old.ids,]
-    new.left <- new.df[is.na(new.df$treeid),]
-    
-    # Because trees grow in dbh, nearest dbh, rather than exact dbh, may be the next-best predictor
-    # Assuming a tree with ordered dbh as closest predictors
-    # (this could be improved to find a tree with nearest dbh in the new dataset; if not already assigned a treeid.
-    # Ordering both by dbh
-    new.left <- new.left[order(new.left$fates_dbh),]
-    old.left <- old.left[order(old.left$fates_dbh),]
-    
-    if (nrow(new.left) > nrow(old.left)) {
-      # Trees with likely matches in the old list
-      new.left$treeid[1:nrow(old.left)] <- old.left$treeid
-      # New trees: Assign treeids that are not already present in the past
-      remaining.rows <- c(nrow(old.left)+1):nrow(new.left)
-      max.treeid <- max(old.treelist$treeid, na.rm = TRUE)
-      new.df$treeid[remaining.rows] <-  max.treeid + 1:length(remaining.rows)
+    if(length(which(is.na(new.df$treeid))) > 0) {
+      # Left-over dataframe
+      old.left <- old.df[!old.df$treeid %in% exact.old.ids,]
+      new.left <- new.df[is.na(new.df$treeid),]
+      # Because trees grow in dbh, nearest dbh, rather than exact dbh, may be the next-best predictor
+      # Assuming a tree with ordered dbh as closest predictors
+      # (this could be improved to find a tree with nearest dbh in the new dataset; if not already assigned a treeid.
+      # Ordering both by dbh
+      new.left <- new.left[order(new.left$fates_dbh),]
+      old.left <- old.left[order(old.left$fates_dbh),]
+      if (nrow(new.left) > nrow(old.left)) {
+        # Trees with likely matches in the old list
+        new.left$treeid[1:nrow(old.left)] <- old.left$treeid
+        # New trees: Assign treeids that are not already present in the past
+        remaining.rows <- c(nrow(old.left)+1):nrow(new.left)
+        max.treeid <- max(old.treelist$treeid, na.rm = TRUE)
+        new.df$treeid[remaining.rows] <-  max.treeid + 1:length(remaining.rows)
+      } else {
+        # Trees present in the old list
+        new.left$treeid <- old.left$treeid[1:nrow(new.left)]
+      }
+      new.update.treeid <- rbind(new.done, new.left)
     } else {
-      # Trees present in the old list
-      new.left$treeid <- old.left$treeid[1:nrow(new.left)]
+      new.update.treeid <- new.done
     }
-    new.update.treeid <- rbind(new.done, new.left)
     return(new.update.treeid)
   }
   
@@ -107,7 +108,6 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     all.sam.list[[i]] <- res.all.df 
   }
   all.sam.var <- do.call(rbind, all.sam.list)
-  
   #--------------
   # Make new variables
   #--------------
@@ -127,7 +127,6 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   # Biomass weighted bulk density   
   all.sam.var <- all.sam.var %>%
     mutate(leaf_twig_bulkd = c(leafdensity*fates_bleaf + wooddensity*fates_bagw_twig)/c(fates_bleaf + fates_bagw_twig))
-  
   # Biomass weighted moisture content
   if (HYDRO == TRUE) {
     moisture <- read.table(file = file.path(VDM2FM, "livefuel.moisture.txt"), header = TRUE)
@@ -151,7 +150,6 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     # repeat each plant number of plants
     uncount(fates_nplant.cell)
   trees.whole$treeid <- 1:nrow(trees.whole)
-  
   #--------------
   ## Assign x-y location for each FATES simulation (aka patch). Assume simulation index, nsam, increases from East to West, then increases northwards.
   #--------------
@@ -164,7 +162,6 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   
   trees.whole <- trees.whole %>%
     left_join(cell.xy, by = "nsam") 
-  
   #------------------------------------
   # Assign tree locations for new trees
   #------------------------------------
@@ -178,19 +175,14 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     old.id.df <- old.treelist[, c("nsam", "treeid", "fates_pft", "fates_dbh")]
     new.id.df$cycle <- "new"; old.id.df$cycle <- "old"
     id.df <- rbind(new.id.df, old.id.df)
-    new.id.df$rownum <- 1:nrow(new.id.df)
-    
     id.df.ls <- split(id.df, f=list(id.df$nsam, id.df$fates_pft), drop = TRUE)
-    
     # Within each nsam by pft dataframe, update treeid for new treelist
     
     update.treeid.ls <- lapply(id.df.ls, update.treeid.fun)
-    
     update.treeid.df <- dplyr::bind_rows(update.treeid.ls)
     # because new treeids were created within nsam loop, there may be duplicates
     trees.whole$treeid <- update.treeid.df$treeid
   }
-  
   # ----
   ## Removing coordinate duplicates within each FATES sim, since min max differ for each sim
   # ---
