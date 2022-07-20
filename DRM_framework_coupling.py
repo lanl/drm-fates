@@ -168,7 +168,6 @@ def runQF(i):
     #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
     #that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
-    pff.main(200) #ASK ADAM! # 2200 seconds for a normal run, 200 sec for a quick-test
     # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
     direc = "Plots"
     dd = direc + str(i)
@@ -182,7 +181,7 @@ def runQF(i):
     os.rename('fire_indexes.bin', dd)    
     return
 
-def runCrownScorch():
+def runCrownScorch(ii):
     os.chdir("../../../8.CROWN-SCORCH")
     copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
@@ -205,7 +204,11 @@ def runCrownScorch():
         llmft.check_file_exists(file_names[i])
 
     LiveDead = llmft.Treeoflife(file_names)
-    
+    # saving output files with loop index
+    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt','../'+VDM_folder+'/FM2VDM/AfterFireTrees.'+ str(ii) +'.txt')
+    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireWG.txt','../'+VDM_folder+'/FM2VDM/AfterFireWG.'+ str(ii) +'.txt')
+    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireLitter.txt','../'+VDM_folder+'/FM2VDM/AfterFireLitter.'+ str(ii) +'.txt')
+ 
     return LiveDead
     
 def runLLMcyclical(p,nyears):
@@ -259,9 +262,9 @@ def updateTreelist(p,ii):
 
 VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
-nyears=1      # number of years for spinup and transient runs
-ncycyear=1    # number of cyclical year run
-ncycle=1      # number of loops
+nyears=10      # number of years for spinup and transient runs
+ncycyear=5    # number of cyclical year run
+ncycle=20      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -322,7 +325,7 @@ for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
     runQF(i)                           # runs QuickFire
-    L=np.array(runCrownScorch())                  # runs the tree program to create LLM inputs
+    L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
     ## Change Coordinates Back to Eco system model HERE ###
