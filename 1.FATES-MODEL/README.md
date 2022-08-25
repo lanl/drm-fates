@@ -17,7 +17,7 @@ Workflow
 
 1. First set variables in config.yaml (Pre-configured for a toy model run, so no changes required, but if you are running the same simulations again, to avoid overwriting existing simulations you will need be prompted for inputs. To avoid, change the case (simulation) name by changing the TAG name in config.yaml)
 
-2. Set environmental variables. Also, re-run this if you get disconnected from HPC at any point in the workflow:
+2. Set environmental variables. Also, re-run this if you get disconnected from HPC at any point in the workflow (If you are not already on the tcsh shell (check with echo $SHELL), you will need to change to tcsh by typing command tcsh):
 
 source src/.tcshrc
 
