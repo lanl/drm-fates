@@ -143,7 +143,7 @@ echo `pwd`
 
 # SPECIFY INPUT DATA (USERS WILL CHANGE THESE)
 # =================================================================================
-./xmlchange  DIN_LOC_ROOT=/usr/projects/cesm/input_data
+./xmlchange  DIN_LOC_ROOT=/usr/projects/higrad/e3sm_input_data/input_data
 
 # ========
 # MODIFY THE CLM NAMELIST (USERS MODIFY AS NEEDED)
