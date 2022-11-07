@@ -13,8 +13,10 @@ New Users:
 4. Ask Chonggang Xu (cxu@lanl.gov) with your Z# to add you to the CESM project space on HPC. (After adding, takes a day for activation)
 5. Ask Eunmo Koo (koo_e@lanl.gov) with your Z# to add you to the HIGRAD project space on HPC.
 6. Ask Adam Atchley to add you to w22_fire HPC charging account.
+
 Workflow
 --------------------------------------------------------------------------------
+
 1. To set-up this project on LANL HPC, do this and follow instructions in README.md:
 
 ssh user@wtrw.lanl.gov
