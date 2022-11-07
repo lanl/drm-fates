@@ -42,7 +42,7 @@ mkdir -p proj1
 
 cd proj1
 
-git clone git@github.com:lanl/drm-fates.git .
+git clone git@github.com:rutujact/drm-fates-1.git .
 
 git checkout dev
 
