@@ -15,10 +15,12 @@
 !*/
 # Un-ignore specific files under subtree
 !1.LLM-HSM-MODEL/**
+!1.LANDIS-MODEL/**
 !3.VegMap-ParFlow/**
 !4.PARFLOW-MODEL/**
 !6.CANOPYENERGYBALANCE-MODEL/**
 !8.CROWN-SCORCH/**
+!9.FIA/**
 !DOCS/**
 !tools/**
 # Do not ignore these files
@@ -40,6 +42,7 @@ __pycache__
 *log
 *.pyc
 # Ignore these directories
+1.LANDIS-MODEL/FIA_raw/**
 2.Tree_code/**
 5.TREES-FIRETEC/**
 5.TREES-QUICFIRE/**
@@ -47,4 +50,7 @@ __pycache__
 7.QUICFIRE-MODEL/**
 7.QUICFIRE-MODEL/mac_compile/**
 7.QUICFIRE-MODEL/source_code/**
+9.FIA/RF_models/**
+9.FIA/FIA_raw/**
 elm_env/**
+.Rproj.user
