@@ -2,12 +2,12 @@
 """
 Created on Thu Oct 20 15:14:55 2022
 
-@author: FireScience
+@author: Niko Tutland
 """
 import pandas as pd
 import os
 
-def main():
+def toLandis():
     ## User Inputs ##############
     # Run info
     aoi = "Klamath" #study area name
@@ -57,4 +57,4 @@ def treelist_to_cohorts(x,L2_res):
     return community_input_file
 
 if __name__=="__main__":
-    main()
+    toLandis()
