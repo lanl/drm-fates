@@ -118,9 +118,11 @@ def savelittersLLMQF(p,i):
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
     if VDM == "LLM":
-       VDM_folder = "1.LLM-HSM-MODEL"
+        VDM_folder = "1.LLM-HSM-MODEL"
     elif VDM == "FATES":
-       VDM_folder = "1.FATES-MODEL"
+        VDM_folder = "1.FATES-MODEL"
+    elif VDM == "LANDIS":
+        VDM_folder = "1.LANDIS-MODEL"
     src='../'+VDM_folder+'/VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
     print(os.getcwd())
@@ -186,9 +188,11 @@ def runCrownScorch(ii):
     copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
     if VDM == "LLM":
-       VDM_folder = "1.LLM-HSM-MODEL"
+        VDM_folder = "1.LLM-HSM-MODEL"
     elif VDM == "FATES":
-       VDM_folder = "1.FATES-MODEL" 
+        VDM_folder = "1.FATES-MODEL" 
+    elif VDM == "LANDIS":
+        VDM_folder = "1.LANDIS-MODEL"
     os.makedirs('../'+VDM_folder+'/FM2VDM', exist_ok=True)
     file_names = ['PercentFuelChange.txt', 
                   'TreeTracker.txt', 
@@ -260,7 +264,7 @@ def updateTreelist(p,ii):
 
 #-----main------
 
-VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
+VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
 
 nyears=10      # number of years for spinup and transient runs
 ncycyear=5    # number of cyclical year run
@@ -294,7 +298,14 @@ elif VDM == "FATES":
     os.makedirs(dir)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
-
+#---- START NIKO ADDITIONS ----#
+elif VDM == "LANDIS":
+    os.chdir('../1.LANDIS-MODEL')
+    #Below is what I would like to do, ie make a module with all the scipts for running the landis connection,
+    #then just do a single call using the above parameters
+    import landis_module.Run_LANDIS as landis
+    landis.LandisParams(nyears, ncycyear, ncycle)
+#----- END NIKO ADDITIONS -----#
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
@@ -364,6 +375,8 @@ for i in range(ncycle):
         with open('../config.yaml', 'w') as file:
             yaml.dump(y, file, default_flow_style=False, sort_keys=False)
         subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
+    elif VDM == "LANDIS":
+        os.chdir("../1.LANDIS-MODEL")
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)
