@@ -2,7 +2,7 @@
 """
 Created on Tue Aug 23 14:03:17 2022
 
-@author: ntutland
+@author: Niko Tutland
 """
 
 from osgeo import gdal
@@ -16,7 +16,7 @@ import rasterio as rio
 from rasterio.warp import calculate_default_transform, reproject, Resampling
 import time
 
-def main():
+def toTreelist():
     start_time = time.time()
     ## Variables to update #####################
     # Run info
@@ -102,7 +102,7 @@ def main():
     
     ## Import, interpolate, and export LANDIS fuels
     print("Interpolating surface fuels...")
-    get_fuels(landis_path, run_path, L2_res, run, year)
+    fuels = get_fuels(landis_path, run_path, L2_res, run, year)
     
     ## Write intermediate files
     print("Writing files...")
@@ -117,9 +117,12 @@ def main():
     file_dict = dict(zip(file_names,file_list))
     write_files(file_dict, path=run_path)
     
-    # Write final treelist
-    treelist_name = "Treelist_"+run+".csv"
-    Treelist.to_csv(path_or_buf = os.path.join(run_path,treelist_name), header=False, index=False)
+    # Write final treelist and surface fuels
+    os.mkdir("VDM2FM")
+    treelist_name = "treelist_VDM.dat"
+    Treelist.to_csv(path_or_buf = os.path.join("VDM2FM",treelist_name), header=False, index=False, sep=" ")
+    fuels_name = "VDM_litter_trees.dat"
+    np.savetxt(os.path.join("VDM2FM",fuels_name),fuels,delimiter=" ")
     
     #Calculate domain parameterss to build treelist text file (used in trees script)
     dom_params = get_params(Treelist,landis_path,L2_res,QF_res,year,treelist_name)
@@ -545,7 +548,8 @@ def get_fuels(in_path, out_path, L2_res, run, year):
     #fuels = fuels/0.05 #assume 5cm fuel depth? now in g/m3
     QF_fact = int(L2_res/2)
     fuels_interp = spline_interp(fuels,QF_fact)
-    np.savetxt(os.path.join(out_path,"Fuels_"+run+".csv"),fuels_interp,delimiter=",") 
+    return fuels_interp
+     
     
 def spline_interp(fuels, QF_fact):
     x_L2 = np.linspace(0, fuels.shape[1], fuels.shape[1])
@@ -636,4 +640,6 @@ def print_fuellist(tp,path):
         input_file.write("/\n")
 
 if __name__=="__main__":
-    main()
+    toTreelist()
+
+
