@@ -37,6 +37,8 @@ possible we should try to run it in parallel
 """
 
 import os
+import sys
+import subprocess
 import numpy as np
 import pandas as pd
 import Treelist_to_LANDIS as Treelist
@@ -45,7 +47,9 @@ import LANDIS_to_Treelist as Landis
 def main():
     OG_PATH = os.getcwd()
     landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL")
+    run_folder = "Klamath_BAU_Clipped"
     scenario_file = "Scenario1.txt"
+    batch_file = "RunIt.BAT"
     
     nyears=10      # number of years for spinup and transient runs
     ncycyear=5     # number of cyclical year run
@@ -53,7 +57,19 @@ def main():
     
     spinup = True
     L2_params = LandisParams(nyears, ncycyear, ncycle)
+    
     replace_duration(spinup,landis_path,scenario_file,L2_params)
+    
+    batch_cmd = os.path.join(landis_path,run_folder,batch_file)
+    try:
+        subprocess.run([batch_cmd])
+    except FileNotFoundError as exc:
+        print(f"Batchfile not found.\n{exc}")
+    except subprocess.CalledProcessError as exc:
+        print(
+            f"LANDIS run failed with return code {exc.returncode}\n{exc}"
+        )
+        
     
     Landis.toTreelist() # runs script to create a treelist from a landis run
     Treelist.toLandis() # runs script to create a landis input file from a treelist
