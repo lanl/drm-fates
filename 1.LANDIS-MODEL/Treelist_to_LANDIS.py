@@ -32,8 +32,11 @@ def toLandis():
     ## Group back into cohorts and sum the biomass
     community_input_file = treelist_to_cohorts(postfire,L2_res)
     
-    ## Write LANDIS community input file
-    community_input_file.to_csv(os.path.join(landis_path,"community-input-file"+str(year)+".csv"), index = False)
+    ## Write new LANDIS community input file CSV (NOT USEFUL FOR LANDIS!)
+    community_input_file.to_csv(os.path.join(landis_path,"community-input-file-"+str(year)+".csv"), index = False)
+    
+    ## Create new Initial Communities file
+    write_IC(community_input_file,landis_path,year)
     
     ## End main function ##
 
@@ -56,5 +59,21 @@ def treelist_to_cohorts(x,L2_res):
     community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
     return community_input_file
 
-if __name__=="__main__":
-    toLandis()
+def write_IC(IC,path,year):
+    with open(os.path.join(path,'postfireIC-'+str(year)+".txt"), 'w') as file:
+        file.write('LandisData "Initial Communities"\n')
+        file.write("\n")
+        for i in IC["MapCode"].unique():
+            file.write("MapCode {}\n".format(i))
+            IC_mc = IC[IC["MapCode"]==i]
+            for j in IC_mc["SpeciesName"].unique():
+                file.write("{} ".format(j))
+                IC_mc_sp = IC_mc[IC_mc["SpeciesName"]==j].reset_index()
+                for k in range(0,IC_mc_sp.shape[0]):
+                    file.write("{} ({}) ".format(IC_mc_sp.loc[k,"CohortAge"], IC_mc_sp.loc[k,"CohortBiomass"]))
+                file.write("\n")
+            file.write("\n")
+        file.write("\n")
+
+# if __name__=="__main__":
+#     toLandis()
