@@ -45,10 +45,12 @@ import Treelist_to_LANDIS as Treelist
 import LANDIS_to_Treelist as Landis
 
 def main():
-    OG_PATH = os.getcwd()
+    # OG_PATH = os.getcwd()
+    OG_PATH = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/drm-fates-1")
     landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL")
     run_folder = "Klamath_BAU_Clipped"
     scenario_file = "Scenario1.txt"
+    necn_file = "NECN_Succession.txt"
     batch_file = "RunIt.BAT"
     
     nyears=10      # number of years for spinup and transient runs
@@ -66,13 +68,13 @@ def main():
     except FileNotFoundError as exc:
         print(f"Batchfile not found.\n{exc}")
     except subprocess.CalledProcessError as exc:
-        print(
-            f"LANDIS run failed with return code {exc.returncode}\n{exc}"
-        )
+        print(f"LANDIS run failed with return code {exc.returncode}\n{exc}")
         
     
     Landis.toTreelist() # runs script to create a treelist from a landis run
     Treelist.toLandis() # runs script to create a landis input file from a treelist
+    
+    replace_IC(landis_path,necn_file,L2_params,1)
 
 class LandisParams:
     """
@@ -106,6 +108,32 @@ def replace_duration(spinup,path,scenario,lp):
     filelist[durationline] = "Duration {}\n".format(runlen)
   
     with open(os.path.join(path,scenario), 'w', encoding='utf-8') as file:
+        file.writelines(filelist)
+
+def replace_IC(path,necn,lp,cycle):
+    year = lp.nyears + lp.ncycyear*(cycle-1)
+    
+    with open(os.path.join(path,necn), 'r', encoding='utf-8') as file:
+        filelist = file.readlines()
+    
+    matches = [match for match in filelist if "InitialCommunities" in match]
+    matched_indexes = []
+    print(matches)
+    for j in range(0,len(matches)):
+        i = 0
+        length = len(filelist)
+        while i < length:
+            if matches[j] == filelist[i]:
+                matched_indexes.append(i)
+            i += 1
+    print(matched_indexes)
+    IC_txt = matched_indexes[0]
+    IC_map = matched_indexes[1]
+    
+    filelist[IC_txt] = "InitialCommunities postfireIC-{}.txt\n".format(str(year))
+    filelist[IC_map] = "InitialCommunities output-community-{}.img\n".format(str(year))
+    
+    with open(os.path.join(path,necn), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
 # if __name__=="__main__":
