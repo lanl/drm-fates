@@ -39,12 +39,23 @@ possible we should try to run it in parallel
 import os
 import sys
 import subprocess
+import glob
+import re
 import numpy as np
 import pandas as pd
 import Treelist_to_LANDIS as Treelist
 import LANDIS_to_Treelist as Landis
 
 def main():
+    """
+    1. Build LandisParams from DRM inputs and LANDIS files
+    2. Run LANDIS "spinup"
+    3. Landis_to_Treelist
+    4. Fire modeling steps
+    5. Treelist_to_Landis
+    6. Alter LANDIS files
+    7. Loop steps 3-6
+    """
     # OG_PATH = os.getcwd()
     OG_PATH = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/drm-fates-1")
     landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL")
@@ -56,11 +67,12 @@ def main():
     nyears=10      # number of years for spinup and transient runs
     ncycyear=5     # number of cyclical year run
     ncycle=20      # number of loops
+    cycle = 1      # current iteration (will be looped through range(0,ncycle))
     
     spinup = True
-    L2_params = LandisParams(nyears, ncycyear, ncycle)
+    L2_params = LandisParams(nyears, ncycyear, ncycle, scenario_file, necn_file, batch_file)
     
-    replace_duration(spinup,landis_path,scenario_file,L2_params)
+    replace_duration(spinup,landis_path,L2_params)
     
     batch_cmd = os.path.join(landis_path,run_folder,batch_file)
     try:
@@ -74,26 +86,56 @@ def main():
     Landis.toTreelist() # runs script to create a treelist from a landis run
     Treelist.toLandis() # runs script to create a landis input file from a treelist
     
-    replace_IC(landis_path,necn_file,L2_params,1)
+    replace_IC(landis_path,L2_params)
 
 class LandisParams:
     """
     Class containing parameters for controlling the LANDIS runs/loops
     """
-    def __init__(self, nyears, ncycyear, ncycle):    
+    def __init__(self, nyears, ncycyear, ncycle, cycle, scenario_file, necn_file, batch_file):    
         self.nyears = int(nyears)            #number of years for spinup and transient runs
         self.ncycyear = int(ncycyear)        #number of cyclical year run
         self.ncycle = int(ncycle)            #number of loops
+        self.cycle = int(cycle)              #current iteration
+        self.scenario = str(scenario_file)   #name of LANDIS scenario input file
+        self.necn = str(necn_file)           #name of NECN input file
+        self.batchfile = str(batch_file)     #name of LANDIS batchfile 
 
-def replace_duration(spinup,path,scenario,lp):
+def get_filenames():
+    os.chdir("LANDIS_run")
+    # Find batchfile and make sure it's the only one
+    batchfile_list = glob.glob("*.bat") #case insensitive for windows, which should be what we want
+    if len(batchfile_list) == 0:
+        print("No batch file found.")
+        return
+    if len(batchfile_list) > 1:
+        print("Multiple batch files in LANDIS directory. Please make sure there is only one.")
+        return
+    batch_file = batchfile_list[0]
+    # Identify scenario file name from batchfile
+    scenario_file = read_filename(batch_file,"call")
+    # Identify NECN file name from scenario file
+    necn_file = read_filename(scenario_file, '"NECN Succession"')
+    # Identify Species file from scenario file
+    species_file = read_filename(scenario_file, "Species")
+
+def read_filename(file,line_id):
+    with open(file, 'r', encoding='utf-8') as file:
+        filelist = file.readlines()
+    lines = [match for match in filelist if line_id in match]
+    line = lines[0]
+    file_name = re.split(" |\t", line)[-1].strip()
+    return file_name
+    
+def replace_duration(spinup,path,lp):
     if spinup == True:
         runlen = lp.nyears
     else:
         runlen = lp.ncycyear
     
-    with open(os.path.join(path,scenario), 'r', encoding='utf-8') as file:
+    with open(os.path.join(path,lp.scenario), 'r', encoding='utf-8') as file:
         filelist = file.readlines()
-    
+
     matches = [match for match in filelist if "Duration" in match]
     s = matches[0]
     matched_indexes = []
@@ -107,13 +149,13 @@ def replace_duration(spinup,path,scenario,lp):
     
     filelist[durationline] = "Duration {}\n".format(runlen)
   
-    with open(os.path.join(path,scenario), 'w', encoding='utf-8') as file:
+    with open(os.path.join(path,lp.scenario), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
-def replace_IC(path,necn,lp,cycle):
-    year = lp.nyears + lp.ncycyear*(cycle-1)
+def replace_IC(path,lp):
+    year = lp.nyears + lp.ncycyear*(lp.cycle-1)
     
-    with open(os.path.join(path,necn), 'r', encoding='utf-8') as file:
+    with open(os.path.join(path,lp.necn), 'r', encoding='utf-8') as file:
         filelist = file.readlines()
     
     matches = [match for match in filelist if "InitialCommunities" in match]
@@ -130,10 +172,10 @@ def replace_IC(path,necn,lp,cycle):
     IC_txt = matched_indexes[0]
     IC_map = matched_indexes[1]
     
-    filelist[IC_txt] = "InitialCommunities postfireIC-{}.txt\n".format(str(year))
-    filelist[IC_map] = "InitialCommunities output-community-{}.img\n".format(str(year))
+    filelist[IC_txt] = "InitialCommunities\t postfireIC-{}.txt\n".format(str(year))
+    filelist[IC_map] = "InitialCommunities\t output-community-{}.img\n".format(str(year))
     
-    with open(os.path.join(path,necn), 'w', encoding='utf-8') as file:
+    with open(os.path.join(path,lp.necn), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
 # if __name__=="__main__":
