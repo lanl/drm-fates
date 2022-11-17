@@ -22,10 +22,10 @@ import hsiscore_class as HSI
 import hsi_plot_utils as hsi_plt
 import LLM_display
 sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
-import postfuelfire_new as pff
+#import postfuelfire_new as pff # doesn't exist, but it's also never used
 import Buffer as buff
 
-#VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
+#VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
 
 def LLMspinup(nyears):
     # --spinup run ---
@@ -131,10 +131,10 @@ def runTreeQF():
     copyfile(src+'VDM_litter_trees.dat',dst+'VDM_litter_trees.dat')
 
     os.chdir(dst)
-    status=subprocess.call(["./trees"])
+    status=subprocess.call(["wsl","./trees"])
     while status != 0:
        print('Tree program failed to execute...')
-       status=subprocess.call(["./trees"])
+       status=subprocess.call(["wsl","./trees"])
 
     if status==0:
         print('Tree program run successfully!')
@@ -150,7 +150,7 @@ def runQF(i):
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
-    dst='../7.QUICFIRE-MODEL/projects/ftFiles/'
+    dst='../7.QUICFIRE-MODEL/projects/Tester/'
     copyfile(src+'treesfueldepth.dat',dst+'treesfueldepth.dat')
     copyfile(src+'treesmoist.dat',dst+'treesmoist.dat')
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
@@ -161,7 +161,7 @@ def runQF(i):
     # is pointing to the gridlist file in the projects/ftFiles directory.
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
     import subprocess
-    status=subprocess.call(["./adv_compile_and_run.sh"])
+    status=subprocess.call(["wsl","./adv_compile_and_run.sh"])
     if status==0:
         print('QF run successfully!')
     else:
@@ -264,11 +264,11 @@ def updateTreelist(p,ii):
 
 #-----main------
 
-VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
+VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
 
-nyears=10      # number of years for spinup and transient runs
+nyears=4      # number of years for spinup and transient runs
 ncycyear=5    # number of cyclical year run
-ncycle=20      # number of loops
+ncycle=4      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -280,6 +280,7 @@ if VDM == "LLM":
     LLMspinup(nyears)          # temporary llm class
     llm=LLMtransient(nyears)   # permanent llm class
     llm=dbh_cr(llm)            # calculates dbh and crown radius 
+    os.makedirs('VDM2FM', exist_ok=True)
     savelittersLLMQF(llm,0)
     llmft.create_treelist(llm,'VDM2FM/treelist_VDM.dat')
 elif VDM == "FATES":
@@ -355,7 +356,7 @@ for i in range(ncycle):
         #buff.add_surf_buff()    
         dd = 'HVI.' + str(i) + '.png'
         print (dd)
-        #plt.savefig('HVI.png') 
+        plt.savefig('HVI.png') 
         os.rename('HVI.png', dd)
         print ('ADAM SQ', llm.sq_sc)
         print ('ADAM GT', llm.gt_sc)
