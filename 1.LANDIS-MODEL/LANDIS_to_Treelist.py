@@ -16,63 +16,45 @@ import rasterio as rio
 from rasterio.warp import calculate_default_transform, reproject, Resampling
 import time
 
-def toTreelist():
+def toTreelist(lp):
     start_time = time.time()
-    ## Variables to update #####################
-    # Run info
-    aoi = "Klamath" #study area name
-    year = 30 #year of landis run
-    trt = "BAUnoharvest" #name of treatment. If no treatment, use None
-    states = ["CA","OR","WA","ID","NV"] #states containing and bordering study area
-    age_bin = 10 #desired age cohort bin size
-    fia_spec = ["PSME","PILA","QUCH2","PIPO","ARME","CADE27","PICO",
-                "QUKE","LIDE3","ACMA3","ABGR","PIMO3","TABR2","ALRU2"] #fia species symbols for tree species in study area
-    landis_spec = ["PseuMenz","PinuLamb","QuerChry","PinuPond","ArbuMenz","CaloDecu","PinuCont", #landis designation for tree species in study area
-                   "QuerKell","LithDens","AcerMacr","AbieGran","PinuMont","TaxuBrev","AlnuRubr"] #(input in same order as fia_spec)
-    region_flag = 1 # where is the AOI? 1 = California, 2 = other western state, 3 = midwest, eastern, or southern state
-    AOI_elev = 4000 #elevation of the study area in feet [should we calculate this in the code?]
-    # Spatial info
-    L2_res = 150 #landis resolution in m
-    QF_res = 2 # quic-fire resolution in m
-    # Fuels
-    bulk_density = 0.7 #constant canopy bulk density (kg/m^3)
-    cl_factor = 0.8 #percent of crown above point of maximum crown diameter (m)
-    moisture = 1 #constant canopy moisture content
-    sizescale = 0.0005 #canopy fuel radius (nominal fuel size - solids) (m)
-    # File paths
-    fia_path = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/landis_quicfire/Landis_to_Treelist/FIA_raw") #where are the raw FIA data located?
-    RF_path = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/landis_quicfire/Landis_to_Treelist/RF_models") #where are RF age regression objects located?
-    landis_path = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/landis_quicfire/Klamath_BAU_Clipped") #where are the landis files located?
-    out_path = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/landis_quicfire/Landis_to_Treelist") #where do you want a folder with the output files?
-    # File names
-    IC_name = "klamath_IC.tif" #filename of initial communities map from the landis run
-    ## End variables to update#####################
     
-    ## Name the run
-    if trt is None:
-        run = "-".join([aoi,str(year)])
-    else:
-        run = "-".join([aoi,trt,str(year)])
+    ## Filepaths
+    OG_PATH = lp.OG_PATH
+    landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL/LANDIS_run")
     
     ## Create species renaming dict
-    spec_rename = dict(zip(landis_spec,fia_spec))
+    spec_rename = dict(zip(lp.landis_spec,lp.fia_spec))
     
-    ## Read in and process FIA data
-    print("Processing FIA data...")
-    FIA_all = process_fia(path=fia_path, states=states)
+    if lp.spinup == True:
+        ## Read in and process FIA data
+        print("Processing FIA data...")
+        raw_path = os.path.join(OG_PATH, "9.FIA/FIA_raw")
+        proc_path = os.path.join(OG_PATH, "1.LANDIS-MODEL/FIA_proc")
+        RF_path = os.path.join(OG_PATH, "9.FIA/RF_models")
+        
+        FIA_all = process_fia(path=raw_path, states=lp.states)
+        
+        ## Only include tree species in study area
+        FIA_all = aoi_spec(FIA_all,raw_path,lp.fia_spec)
+        
+        ## Use random forest models to predict age
+        print("Predicting tree age...")
+        FIA_all = age_calc(FIA_all,RF_path,lp.age_bin)
     
-    ## Only include tree species in study area
-    FIA_all = aoi_spec(FIA_all,fia_path,fia_spec)
-    
-    ## Use random forest models to predict age
-    print("Predicting tree age...")
-    FIA_all = age_calc(FIA_all,RF_path,age_bin)
-
-    ## Create cohorts from FIA
-    FIA_cohorts = fia_cohorts(FIA_all)
+        ## Create cohorts from FIA
+        FIA_cohorts = fia_cohorts(FIA_all)
+        
+        ## Write to file
+        os.makedirs(proc_path)
+        FIA_cohorts.to_csv(os.path.join(proc_path,"FIA_cohorts"), index = False)
+        FIA_all.to_csv(os.path.join(proc_path,"FIA_all"), index = False)
+    else:
+        FIA_cohorts = pd.read_csv(os.path.join(proc_path,"FIA_cohorts"))
+        FIA_all = pd.read_csv(os.path.join(proc_path,"FIA_all"))
     
     ## Read in and process LANDIS outputs
-    LANDIS_cohorts = process_landis(landis_path,year,age_bin,landis_spec,spec_rename)
+    LANDIS_cohorts = process_landis(landis_path,lp.IC_file,lp.age_bin,lp.landis_spec,spec_rename)
     
     ## Match LANDIS cohorts to most similar FIA cohort
     print("Matching to LANDIS cohorts...")
@@ -83,52 +65,51 @@ def toTreelist():
     
     print("Calculating tree attributes...")
     ## Calculate fields for QUIC-Fire
-    Treelist = qf_calcs(Treelist,bulk_density,cl_factor,moisture,sizescale,AOI_elev,region_flag,IC_name,landis_path)
+    Treelist = qf_calcs(Treelist,lp.bulk_density,lp.cl_factor,lp.moisture,lp.sizescale,lp.aoi_elev,lp.region_flag,lp.IC_map,landis_path)
     
     ## Replicate trees to fill LANDIS grid cell
-    Treelist = replicate_trees(Treelist, L2_res)
+    Treelist = replicate_trees(Treelist, lp.L2_res)
     
     ## Assign trees a random location within a LANDIS cell
     print("Assigning tree locations...")
-    Treelist = tree_locations(Treelist, landis_path, year, L2_res)
+    Treelist = tree_locations(Treelist, landis_path, lp.nyear,lp.year)
     
     ## Clean up for QUIC-Fire
     Treelist_alldata = Treelist.copy()
     Treelist = Treelist[["SPID","X","Y","HT_m","HTLC_m","CD_m","HTMCD_m","CBD","MOIST","SS"]]
     
-    ## Make output directory
-    run_path = os.path.join(out_path,run)
-    os.mkdir(run_path)
-    
     ## Import, interpolate, and export LANDIS fuels
     print("Interpolating surface fuels...")
-    fuels = get_fuels(landis_path, run_path, L2_res, run, year)
+    fuels = get_fuels(landis_path, lp.L2_res, lp.year)
     
     ## Write intermediate files
-    print("Writing files...")
-    file_list = [FIA_all, FIA_cohorts, LANDIS_cohorts, Plotlist, Treelist_alldata]
-    file_names = file_list.copy()
-    i = 0
-    for file in file_list :
-        obj = [k for k,v in locals().items() if v is file][0]
-        name = obj+"_"+run+".csv"
-        file_names[i] = name
-        i = i+1
-    file_dict = dict(zip(file_names,file_list))
-    write_files(file_dict, path=run_path)
+    # print("Writing files...")
+    # file_list = [FIA_all, FIA_cohorts, LANDIS_cohorts, Plotlist, Treelist_alldata]
+    # file_names = file_list.copy()
+    # i = 0
+    # for file in file_list :
+    #     obj = [k for k,v in locals().items() if v is file][0]
+    #     name = obj+"_"+run+".csv"
+    #     file_names[i] = name
+    #     i = i+1
+    # file_dict = dict(zip(file_names,file_list))
+    # write_files(file_dict, path=run_path)
+    
+    # Write Treelist_alldata for Treelist_to_LANDIS
+    Treelist_alldata.to_csv(OG_PATH, index = False)
     
     # Write final treelist and surface fuels
-    os.mkdir("VDM2FM")
+    os.makedirs("VDM2FM", exist_ok=True)
     treelist_name = "treelist_VDM.dat"
     Treelist.to_csv(path_or_buf = os.path.join("VDM2FM",treelist_name), header=False, index=False, sep=" ")
     fuels_name = "VDM_litter_trees.dat"
     np.savetxt(os.path.join("VDM2FM",fuels_name),fuels,delimiter=" ")
     
     #Calculate domain parameterss to build treelist text file (used in trees script)
-    dom_params = get_params(Treelist,landis_path,L2_res,QF_res,year,treelist_name)
-    print_fuellist(dom_params, run_path)
+    dom_params = get_params(Treelist,landis_path,lp.L2_res,lp.QF_res,lp.year,treelist_name)
+    print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
-    print("Treelist created. All files located in ",run_path)
+    print("Treelist created successfully")
     print(" %s seconds elapsed" % round(time.time() - start_time))
 
 ##### End of main function #####
@@ -222,8 +203,8 @@ def fia_cohorts(x):
     x = x.rename(columns = {"plt_cn" : "PLT_CN", "invyr" : "INVYR", "AG_Biomass_gm2" : "AGB_FIA"})
     return x
 
-def process_landis(path,year,age_bin,species,spec_rename):
-    x = pd.read_csv(os.path.join(path,"community-input-file-"+str(year)+".csv"))
+def process_landis(path,IC_name,age_bin,species,spec_rename):
+    x = pd.read_csv(os.path.join(path,IC_name))
     x = x[x["SpeciesName"].isin(species)]
     x["CohortAge"] = x["CohortAge"].apply(lambda g: roundUp(g, to=age_bin))
     x = x.rename(columns = {"SpeciesName" : "SPECIES_SYMBOL", "CohortAge" : "AGE", "CohortBiomass" : "AGB_LANDIS"})
@@ -538,7 +519,7 @@ def CW_NW_6(MinD,DBH,a1,a2):
         CW = (a1*MinD**a2)*(DBH/MinD)
     return CW
 
-def get_fuels(in_path, out_path, L2_res, run, year):
+def get_fuels(in_path, L2_res, year):
     litter_name = "SurfaceLitterBiomass-" + str(year) + ".img"
     needles_name = "ConiferNeedleBiomass-" + str(year) + ".img"
     litter = raster_import(os.path.join(in_path,"NECN",litter_name))
