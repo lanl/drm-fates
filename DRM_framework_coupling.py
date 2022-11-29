@@ -302,10 +302,14 @@ elif VDM == "FATES":
 #---- START NIKO ADDITIONS ----#
 elif VDM == "LANDIS":
     os.chdir('../1.LANDIS-MODEL')
-    #Below is what I would like to do, ie make a module with all the scipts for running the landis connection,
-    #then just do a single call using the above parameters
-    import landis_module.Run_LANDIS as landis
-    landis.LandisParams(nyears, ncycyear, ncycle)
+    import Run_LANDIS as runlandis
+    import LANDIS_to_Treelist as Landis
+    os.chdir("..")
+    OG_PATH = os.getcwd()
+    cycle = 1      # current iteration (will be looped through range(0,ncycle))
+    L2_params = runlandis.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=True)
+    runlandis.run(L2_params)
+    Landis.toTreelist(L2_params)  
 #----- END NIKO ADDITIONS -----#
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
