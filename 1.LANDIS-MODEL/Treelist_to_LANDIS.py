@@ -59,6 +59,19 @@ def treelist_to_cohorts(x,L2_res):
     community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
     return community_input_file
 
+def merge_to_uncropped(postfire,path,run,year):
+    prefire = pd.read_csv(os.path.join(path,"Treelist_"+run+".csv"))
+    prefire_mc = prefire["MapCode"].unique()
+    postfire_mc = postfire["MapCode"].unique()
+    missing_mc = list(set(prefire_mc).difference(postfire_mc))
+    postfire_missing = pd.DataFrame({"MapCode":missing_mc,
+                                     "SpeciesName":[None]*len(missing_mc),
+                                     "CohortAge":[0]*len(missing_mc),
+                                     "CohortBiomass":[0]*len(missing_mc)})
+    postfire_all = pd.concat([postfire,postfire_missing])
+    prefire_uncropped = pd.read_csv(os.path.join(path,"community-input-file-"+year+".csv"))
+    
+
 def write_IC(IC,path,year):
     with open(os.path.join(path,'postfireIC-'+str(year)+".txt"), 'w') as file:
         file.write('LandisData "Initial Communities"\n')
@@ -77,3 +90,4 @@ def write_IC(IC,path,year):
 
 # if __name__=="__main__":
 #     toLandis()
+
