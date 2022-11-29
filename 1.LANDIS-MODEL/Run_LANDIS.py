@@ -43,10 +43,11 @@ import glob
 import re
 import numpy as np
 import pandas as pd
+from LANDIS_options import opdict
 import Treelist_to_LANDIS as Treelist
 import LANDIS_to_Treelist as Landis
 
-def main():
+def run(lp):
     """
     1. Build LandisParams from DRM inputs and LANDIS files
     2. Run LANDIS "spinup"
@@ -56,25 +57,18 @@ def main():
     6. Alter LANDIS files
     7. Loop steps 3-6
     """
-    # OG_PATH = os.getcwd()
-    OG_PATH = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/drm-fates-1")
-    landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL")
-    run_folder = "Klamath_BAU_Clipped"
-    scenario_file = "Scenario1.txt"
-    necn_file = "NECN_Succession.txt"
-    batch_file = "RunIt.BAT"
+    OG_PATH = os.getcwd()
+    os.chdir("1.LANDIS-MODEL")
+    # OG_PATH = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/drm-fates-1")
+    landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL/LANDIS_run")
     
-    nyears=10      # number of years for spinup and transient runs
-    ncycyear=5     # number of cyclical year run
-    ncycle=20      # number of loops
-    cycle = 1      # current iteration (will be looped through range(0,ncycle))
+    batch_cmd = os.path.join(lp.landis_path,lp.batch_file)
     
-    spinup = True
-    L2_params = LandisParams(nyears, ncycyear, ncycle, scenario_file, necn_file, batch_file)
+    if lp.spinup == False:
+        replace_IC(landis_path,lp)
     
-    replace_duration(spinup,landis_path,L2_params)
+    replace_duration(landis_path,lp)
     
-    batch_cmd = os.path.join(landis_path,run_folder,batch_file)
     try:
         subprocess.run([batch_cmd])
     except FileNotFoundError as exc:
@@ -82,24 +76,45 @@ def main():
     except subprocess.CalledProcessError as exc:
         print(f"LANDIS run failed with return code {exc.returncode}\n{exc}")
         
+    ### CROP DOMAIN HERE ###
     
     Landis.toTreelist() # runs script to create a treelist from a landis run
     Treelist.toLandis() # runs script to create a landis input file from a treelist
-    
-    replace_IC(landis_path,L2_params)
 
 class LandisParams:
     """
     Class containing parameters for controlling the LANDIS runs/loops
     """
-    def __init__(self, nyears, ncycyear, ncycle, cycle, scenario_file, necn_file, batch_file):    
+    def __init__(self, OG_PATH, nyears, ncycyear, ncycle, cycle, spinup):  
+        self.OG_PATH = OG_PATH               #path to the drm-fates directory
+        
         self.nyears = int(nyears)            #number of years for spinup and transient runs
         self.ncycyear = int(ncycyear)        #number of cyclical year run
         self.ncycle = int(ncycle)            #number of loops
         self.cycle = int(cycle)              #current iteration
-        self.scenario = str(scenario_file)   #name of LANDIS scenario input file
-        self.necn = str(necn_file)           #name of NECN input file
-        self.batchfile = str(batch_file)     #name of LANDIS batchfile 
+        self.spinup = spinup                 #is this the initial run?
+        self.year = nyears + ncycyear*(cycle-1)
+       
+        self.states = opdict['states']
+        self.fia_spec = opdict['fia_spec']
+        self.landis_spec = opdict['landis_spec']
+        self.region_flag = opdict['region_flag']
+        self.age_bin = opdict['age_bin']
+        self.aoi_elev = opdict['aoi_elev']
+        self.bulk_density = opdict['bulk_density']
+        self.cl_factor = opdict['cl_factor']
+        self.moisture = opdict['moisture']
+        self.sizescale = opdict['sizescale']
+        self.qf_res = 2
+        
+        batch_file, scenario_file, necn_file, species_file, IC_file, IC_map = get_filenames()
+        
+        self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
+        self.necn_file = str(necn_file)           #name of NECN input file
+        self.batch_file = str(batch_file)     #name of LANDIS batchfile
+        self.species_file = str(species_file) #name of species input file
+        self.IC_file = str(IC_file)           #name of initial communities file
+        self.IC_map = str(IC_map)             #name of initial communities raster
 
 def get_filenames():
     os.chdir("LANDIS_run")
@@ -113,22 +128,26 @@ def get_filenames():
         return
     batch_file = batchfile_list[0]
     # Identify scenario file name from batchfile
-    scenario_file = read_filename(batch_file,"call")
+    scenario_file = read_filename(batch_file,"call",1)
     # Identify NECN file name from scenario file
-    necn_file = read_filename(scenario_file, '"NECN Succession"')
+    necn_file = read_filename(scenario_file, '"NECN Succession"',1)
     # Identify Species file from scenario file
-    species_file = read_filename(scenario_file, "Species")
+    species_file = read_filename(scenario_file, "Species",1)
+    # Identify Initial Communities file and raster from NECN file
+    IC_file = read_filename(necn_file, "InitialCommunities",1)
+    IC_map = read_filename(necn_file, "InitialCommunities",2)
+    return batch_file, scenario_file, necn_file, species_file, IC_file, IC_map
 
-def read_filename(file,line_id):
+def read_filename(file,line_id,which_one):
     with open(file, 'r', encoding='utf-8') as file:
         filelist = file.readlines()
     lines = [match for match in filelist if line_id in match]
-    line = lines[0]
+    line = lines[which_one-1]
     file_name = re.split(" |\t", line)[-1].strip()
     return file_name
     
 def replace_duration(spinup,path,lp):
-    if spinup == True:
+    if lp.spinup == True:
         runlen = lp.nyears
     else:
         runlen = lp.ncycyear
@@ -179,9 +198,8 @@ def replace_IC(path,lp):
         file.writelines(filelist)
 
 # if __name__=="__main__":
-#     main()
+#     run()
 
-os.chdir("1.LANDIS-MODEL")
 
 
 
