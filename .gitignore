@@ -42,7 +42,8 @@ __pycache__
 *log
 *.pyc
 # Ignore these directories
-1.LANDIS-MODEL/FIA_raw/**
+1.LANDIS-MODEL/LANDIS_run/**
+1.LANDIS-MODEL/FIA_proc/**
 2.Tree_code/**
 5.TREES-FIRETEC/**
 5.TREES-QUICFIRE/**
