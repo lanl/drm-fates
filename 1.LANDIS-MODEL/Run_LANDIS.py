@@ -39,47 +39,40 @@ possible we should try to run it in parallel
 import os
 import sys
 import subprocess
+# import numpy as np
+# import pandas as pd
 import glob
 import re
-import numpy as np
-import pandas as pd
+from time import sleep
+import rasterio as rio
 from LANDIS_options import opdict
-import Treelist_to_LANDIS as Treelist
-import LANDIS_to_Treelist as Landis
 
-def run(lp):
-    """
-    1. Build LandisParams from DRM inputs and LANDIS files
-    2. Run LANDIS "spinup"
-    3. Landis_to_Treelist
-    4. Fire modeling steps
-    5. Treelist_to_Landis
-    6. Alter LANDIS files
-    7. Loop steps 3-6
-    """
-    OG_PATH = os.getcwd()
-    os.chdir("1.LANDIS-MODEL")
-    # OG_PATH = os.path.abspath("C://Users/FireScience/Documents/2022_Projects/drm-fates-1")
-    landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL/LANDIS_run")
+def Landis(lp):
     
     batch_cmd = os.path.join(lp.landis_path,lp.batch_file)
     
     if lp.spinup == False:
-        replace_IC(landis_path,lp)
+        replace_IC(lp)
     
-    replace_duration(landis_path,lp)
+    replace_duration(lp)
     
     try:
-        subprocess.run([batch_cmd])
+        with subprocess.Popen(
+            [batch_cmd], stdout=subprocess.PIPE
+        ) as process:
+
+            def poll_and_read():
+                print(f"{process.stdout.read1().decode('utf-8')}")
+            
+            while process.poll() != 0:
+                poll_and_read()
+                sleep(1)
     except FileNotFoundError as exc:
         print(f"Batchfile not found.\n{exc}")
     except subprocess.CalledProcessError as exc:
         print(f"LANDIS run failed with return code {exc.returncode}\n{exc}")
         
     ### CROP DOMAIN HERE ###
-    
-    Landis.toTreelist() # runs script to create a treelist from a landis run
-    Treelist.toLandis() # runs script to create a landis input file from a treelist
 
 class LandisParams:
     """
@@ -93,8 +86,11 @@ class LandisParams:
         self.ncycle = int(ncycle)            #number of loops
         self.cycle = int(cycle)              #current iteration
         self.spinup = spinup                 #is this the initial run?
-        self.year = nyears + ncycyear*(cycle-1)
-       
+        if spinup == True:
+            year = int(nyears)
+        else:
+            year = int(ncycyear)
+        self.year = int(year)
         self.states = opdict['states']
         self.fia_spec = opdict['fia_spec']
         self.landis_spec = opdict['landis_spec']
@@ -105,27 +101,28 @@ class LandisParams:
         self.cl_factor = opdict['cl_factor']
         self.moisture = opdict['moisture']
         self.sizescale = opdict['sizescale']
-        self.qf_res = 2
+        self.QF_res = 2
         
-        batch_file, scenario_file, necn_file, species_file, IC_file, IC_map = get_filenames()
+        batch_file, scenario_file, necn_file, species_file, IC_file, IC_map = get_filenames(OG_PATH)
+        landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
         
+        self.landis_path = landis_path
+        self.CIF_file = "community-input-file-"+str(year)+".csv"
         self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
         self.necn_file = str(necn_file)           #name of NECN input file
         self.batch_file = str(batch_file)     #name of LANDIS batchfile
         self.species_file = str(species_file) #name of species input file
         self.IC_file = str(IC_file)           #name of initial communities file
         self.IC_map = str(IC_map)             #name of initial communities raster
+        
+        with rio.open(os.path.join(landis_path, IC_map), 'r+') as IC_map :
+            L2_res = IC_map.transform[0]
+        self.L2_res = L2_res
 
-def get_filenames():
-    os.chdir("LANDIS_run")
+def get_filenames(path):
+    os.chdir(os.path.join(path, "1.LANDIS-MODEL","LANDIS_run"))
     # Find batchfile and make sure it's the only one
     batchfile_list = glob.glob("*.bat") #case insensitive for windows, which should be what we want
-    if len(batchfile_list) == 0:
-        print("No batch file found.")
-        return
-    if len(batchfile_list) > 1:
-        print("Multiple batch files in LANDIS directory. Please make sure there is only one.")
-        return
     batch_file = batchfile_list[0]
     # Identify scenario file name from batchfile
     scenario_file = read_filename(batch_file,"call",1)
@@ -145,14 +142,14 @@ def read_filename(file,line_id,which_one):
     line = lines[which_one-1]
     file_name = re.split(" |\t", line)[-1].strip()
     return file_name
-    
-def replace_duration(spinup,path,lp):
+
+def replace_duration(lp):
     if lp.spinup == True:
         runlen = lp.nyears
     else:
         runlen = lp.ncycyear
     
-    with open(os.path.join(path,lp.scenario), 'r', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.scenario_file), 'r', encoding='utf-8') as file:
         filelist = file.readlines()
 
     matches = [match for match in filelist if "Duration" in match]
@@ -168,13 +165,12 @@ def replace_duration(spinup,path,lp):
     
     filelist[durationline] = "Duration {}\n".format(runlen)
   
-    with open(os.path.join(path,lp.scenario), 'w', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.scenario_file), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
-def replace_IC(path,lp):
-    year = lp.nyears + lp.ncycyear*(lp.cycle-1)
+def replace_IC(lp):
     
-    with open(os.path.join(path,lp.necn), 'r', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.necn), 'r', encoding='utf-8') as file:
         filelist = file.readlines()
     
     matches = [match for match in filelist if "InitialCommunities" in match]
@@ -191,14 +187,14 @@ def replace_IC(path,lp):
     IC_txt = matched_indexes[0]
     IC_map = matched_indexes[1]
     
-    filelist[IC_txt] = "InitialCommunities\t postfireIC-{}.txt\n".format(str(year))
-    filelist[IC_map] = "InitialCommunities\t output-community-{}.img\n".format(str(year))
+    filelist[IC_txt] = "InitialCommunities\t postfireIC-{}.txt\n".format(str(lp.year))
+    filelist[IC_map] = "InitialCommunities\t output-community-{}.img\n".format(str(lp.year))
     
-    with open(os.path.join(path,lp.necn), 'w', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.necn), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
-
+ 
 # if __name__=="__main__":
-#     run()
+#     main(sys.argv[1])
 
 
 

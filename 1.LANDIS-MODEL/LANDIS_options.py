@@ -5,8 +5,6 @@ Created on Tue Nov 29 08:04:05 2022
 @author: Niko Tutland
 """
 
-import os
-
 opdict = {}
 
 # Run info

@@ -21,7 +21,6 @@ def toTreelist(lp):
     
     ## Filepaths
     OG_PATH = lp.OG_PATH
-    landis_path = os.path.join(OG_PATH,"1.LANDIS-MODEL/LANDIS_run")
     
     ## Create species renaming dict
     spec_rename = dict(zip(lp.landis_spec,lp.fia_spec))
@@ -46,15 +45,15 @@ def toTreelist(lp):
         FIA_cohorts = fia_cohorts(FIA_all)
         
         ## Write to file
-        os.makedirs(proc_path)
-        FIA_cohorts.to_csv(os.path.join(proc_path,"FIA_cohorts"), index = False)
-        FIA_all.to_csv(os.path.join(proc_path,"FIA_all"), index = False)
+        os.makedirs(proc_path, exist_ok=True)
+        FIA_cohorts.to_csv(os.path.join(proc_path,"FIA_cohorts.csv"), index = False)
+        FIA_all.to_csv(os.path.join(proc_path,"FIA_all.csv"), index = False)
     else:
-        FIA_cohorts = pd.read_csv(os.path.join(proc_path,"FIA_cohorts"))
-        FIA_all = pd.read_csv(os.path.join(proc_path,"FIA_all"))
+        FIA_cohorts = pd.read_csv(os.path.join(proc_path,"FIA_cohorts.csv"))
+        FIA_all = pd.read_csv(os.path.join(proc_path,"FIA_all.csv"))
     
     ## Read in and process LANDIS outputs
-    LANDIS_cohorts = process_landis(landis_path,lp.IC_file,lp.age_bin,lp.landis_spec,spec_rename)
+    LANDIS_cohorts = process_landis(lp.landis_path,lp.CIF_file,lp.age_bin,lp.landis_spec,spec_rename)
     
     ## Match LANDIS cohorts to most similar FIA cohort
     print("Matching to LANDIS cohorts...")
@@ -65,14 +64,14 @@ def toTreelist(lp):
     
     print("Calculating tree attributes...")
     ## Calculate fields for QUIC-Fire
-    Treelist = qf_calcs(Treelist,lp.bulk_density,lp.cl_factor,lp.moisture,lp.sizescale,lp.aoi_elev,lp.region_flag,lp.IC_map,landis_path)
+    Treelist = qf_calcs(Treelist,lp.bulk_density,lp.cl_factor,lp.moisture,lp.sizescale,lp.aoi_elev,lp.region_flag,lp.IC_map,lp.landis_path)
     
     ## Replicate trees to fill LANDIS grid cell
     Treelist = replicate_trees(Treelist, lp.L2_res)
     
     ## Assign trees a random location within a LANDIS cell
     print("Assigning tree locations...")
-    Treelist = tree_locations(Treelist, landis_path, lp.nyear,lp.year)
+    Treelist = tree_locations(Treelist, lp.landis_path, lp.year, lp.L2_res)
     
     ## Clean up for QUIC-Fire
     Treelist_alldata = Treelist.copy()
@@ -80,7 +79,7 @@ def toTreelist(lp):
     
     ## Import, interpolate, and export LANDIS fuels
     print("Interpolating surface fuels...")
-    fuels = get_fuels(landis_path, lp.L2_res, lp.year)
+    fuels = get_fuels(lp.landis_path, lp.L2_res, lp.year)
     
     ## Write intermediate files
     # print("Writing files...")
@@ -96,7 +95,7 @@ def toTreelist(lp):
     # write_files(file_dict, path=run_path)
     
     # Write Treelist_alldata for Treelist_to_LANDIS
-    Treelist_alldata.to_csv(OG_PATH, index = False)
+    Treelist_alldata.to_csv(os.path.join(lp.landis_path,"Treelist_alldata_"+str(lp.cycle)+".csv"), index = False)
     
     # Write final treelist and surface fuels
     os.makedirs("VDM2FM", exist_ok=True)
@@ -106,7 +105,7 @@ def toTreelist(lp):
     np.savetxt(os.path.join("VDM2FM",fuels_name),fuels,delimiter=" ")
     
     #Calculate domain parameterss to build treelist text file (used in trees script)
-    dom_params = get_params(Treelist,landis_path,lp.L2_res,lp.QF_res,lp.year,treelist_name)
+    dom_params = get_params(Treelist,lp.landis_path,lp.L2_res,lp.QF_res,lp.year,treelist_name)
     print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
     print("Treelist created successfully")

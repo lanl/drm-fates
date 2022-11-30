@@ -25,6 +25,7 @@ sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 #import postfuelfire_new as pff # doesn't exist, but it's also never used
 import Buffer as buff
 
+
 #VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
 
 def LLMspinup(nyears):
@@ -262,9 +263,11 @@ def updateTreelist(p,ii):
 
     return
 
+
+
 #-----main------
 
-VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
+VDM = "LANDIS" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
 
 nyears=4      # number of years for spinup and transient runs
 ncycyear=5    # number of cyclical year run
@@ -272,6 +275,7 @@ ncycle=4      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
+ierr = call('make clean', shell=True)
 ierr = call('make', shell=True)
 
 # SPINUP
@@ -302,13 +306,17 @@ elif VDM == "FATES":
 #---- START NIKO ADDITIONS ----#
 elif VDM == "LANDIS":
     os.chdir('../1.LANDIS-MODEL')
-    import Run_LANDIS as runlandis
     import LANDIS_to_Treelist as Landis
+    import Run_LANDIS as Run
     os.chdir("..")
     OG_PATH = os.getcwd()
-    cycle = 1      # current iteration (will be looped through range(0,ncycle))
-    L2_params = runlandis.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=True)
-    runlandis.run(L2_params)
+    cycle = 0      # current iteration (will be looped through range(0,ncycle))
+    # Build Landis Parameters object for spinup
+    L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=True)
+    # Run LANDIS
+    Run.Landis(L2_params)
+    os.chdir("..")
+    # Build Treelist
     Landis.toTreelist(L2_params)  
 #----- END NIKO ADDITIONS -----#
     #### MAKE INTO FUNCTION
@@ -380,8 +388,21 @@ for i in range(ncycle):
         with open('../config.yaml', 'w') as file:
             yaml.dump(y, file, default_flow_style=False, sort_keys=False)
         subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
+        
     elif VDM == "LANDIS":
         os.chdir("../1.LANDIS-MODEL")
+        import Treelist_to_LANDIS as Treelist
+        os.chdir("..")
+        OG_PATH = os.getcwd()
+        cycle = ii      # current iteration (will be looped through range(0,ncycle))
+        # Build Landis Parameters object for cycles
+        L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False)
+        # Update Landis run with new treelist
+        Treelist.toLandis(L2_params)
+        # Run landis
+        Run.Landis(L2_params)
+        # Build another treelist
+        Landis.toTreelist(L2_params)
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)
