@@ -5,37 +5,6 @@ Created on Wed Nov  9 12:12:26 2022
 @author: Niko Tutland
 """
 
-"""
-This script should control some inputs to the LANDIS runs, then do the initial model "spinup". 
-After that, the LANDIS run should be cropped to the extent of the fire modeling domain,
-(which for now is 400x400m) and buffered to help the accuracy of the fire behavior. The user
-will have to somehow specify where in the LANDIS domain they want the fire domain to be. 
-This script may also be where I put the functions to "continue" the LANDIS simulation after each
-fire simulation (for looping forest change and fire behavior).
-
-The run parameters that are controlled by the DRM_framework_coupling script are:
-    nyears=10      # number of years for spinup and transient runs
-    ncycyear=5    # number of cyclical year run
-    ncycle=20      # number of loops
-
-nyears will alter the Duration of the LANDIS scenario input file (line 3 for the scenario files I have)
-for the FIRST run. This what we are calling the "spinup". I believe the minimum input for this would be
-1, since we need at lease one year of simulation to produce a community-input-file used to generate a
-treelist.
-
-ncycyear will alter the same Duration input in the LANDIS scenario file for all subsequent runs.
-I will have to make sure this is how the Community Biomass Output extension is supposed to work,
-or if there is already a functionality within LANDIS for using community-input-files to continue
-a run from where it left off. That would be useful since we wouldn't actually need the model to
-do another climate spinup. If that exists, then ncycyear would change some other input file.
-
-ncycle would not control LANDIS, it would simply tell this script when to stop looping LANDIS runs.
-
-**NOTE: Since LANDIS runs, especially with a large domain, will take a lot of time to run, so if
-possible we should try to run it in parallel
-
-"""
-
 import os
 import sys
 import subprocess
