@@ -24,12 +24,16 @@ def toTreelist(lp):
     
     ## Create species renaming dict
     spec_rename = dict(zip(lp.landis_spec,lp.fia_spec))
+    proc_path = os.path.join(OG_PATH, "1.LANDIS-MODEL/FIA_proc")
     
-    if lp.spinup == True:
+    if os.path.exists(proc_path):
+        print("Importing processed FIA data...")
+        FIA_cohorts = pd.read_csv(os.path.join(proc_path,"FIA_cohorts.csv"))
+        FIA_all = pd.read_csv(os.path.join(proc_path,"FIA_all.csv"))
+    else:
         ## Read in and process FIA data
         print("Processing FIA data...")
         raw_path = os.path.join(OG_PATH, "9.FIA/FIA_raw")
-        proc_path = os.path.join(OG_PATH, "1.LANDIS-MODEL/FIA_proc")
         RF_path = os.path.join(OG_PATH, "9.FIA/RF_models")
         
         FIA_all = process_fia(path=raw_path, states=lp.states)
@@ -48,9 +52,7 @@ def toTreelist(lp):
         os.makedirs(proc_path, exist_ok=True)
         FIA_cohorts.to_csv(os.path.join(proc_path,"FIA_cohorts.csv"), index = False)
         FIA_all.to_csv(os.path.join(proc_path,"FIA_all.csv"), index = False)
-    else:
-        FIA_cohorts = pd.read_csv(os.path.join(proc_path,"FIA_cohorts.csv"))
-        FIA_all = pd.read_csv(os.path.join(proc_path,"FIA_all.csv"))
+        
     
     ## Read in and process LANDIS outputs
     LANDIS_cohorts = process_landis(lp.landis_path,lp.CIF_file,lp.age_bin,lp.landis_spec,spec_rename)
@@ -592,22 +594,10 @@ def print_fuellist(tp,path):
         input_file.write("      ntspecies={}                    ! Number of Tree Species\n".format(tp.num_spp))
         input_file.write("      tfuelbins=1                     ! Number of size bins to distribute branches\n")
         input_file.write("      treefile='{}'                   ! Trees text file with data\n".format(tp.csv_name))
-        input_file.write("      ndatax={}                       ! JSM: size of dataset domain in x direction [m]\n".format(tp.nx*tp.dx))
-        input_file.write("      ndatay={}                       ! JSM: size of dataset domain in y direction [m]\n".format(tp.ny*tp.dy))
-        input_file.write("      datalocx=                       ! JSM: x coordinate for bottom left corner where dataset should be placed (if unspecified, =0)\n")
-        input_file.write("      datalocy=                       ! JSM: y coordinate for bottom left corner where dataset should be placed (if unspecified, =0)\n")
-        input_file.write("      tdnx=                           ! Range of x cells with trees (if unspecified then whole domain)\n")
-        input_file.write("      tdny=                           ! Range of y cells with trees (if unspecified then whole domain)\n")
         input_file.write("\n")
         input_file.write("      ilitter=0                       ! Litter flag\n")
         input_file.write("      litterconstant=5                ! Exponential constant to determine increase of litter mass under trees\n")
         input_file.write("      litterfile='litter.txt'         ! Litter text file with generalized-data\n")
-        input_file.write("      speciesfile=''                  ! file that contains species information for treelist\n")
-        input_file.write("      windprofile=0                   ! type of windprofile used by DUET: 1 = averaged yearly, 2 = binary wind profile\n")
-        input_file.write("      winddatafile=''                 ! file that contains wind information for each year since last burn (ysb)\n")
-        input_file.write("      grassstep=1                     ! StepPerYear in which the grass grows\n")
-        input_file.write("      YearsSinceBurn=4                ! number of years since the last burn\n")
-        input_file.write("      StepsPerYear=1                  ! number of time steps during the year: 1 = yearly, 2 = semiyearly, 4 = seasonally, 6 = bimonthly, 12 = monthly\n")
         input_file.write("\n")
         input_file.write("      itreatment=0                    ! Treatment flag (0 is no treatment, 1 slashlayer, 2 slashpile, 3 clearing)\n")
         input_file.write("      sdnx=25,75                      ! Range of x cells undergoing treatment\n")

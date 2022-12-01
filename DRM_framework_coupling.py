@@ -12,8 +12,9 @@ import sys,os
 import os.path
 import subprocess
 from shutil import copyfile
-from subprocess import call
 import shutil
+from subprocess import call
+from time import sleep
 import yaml
 sys.path.insert(0, '1.LLM-HSM-MODEL/')
 import LLM_model_class as llm
@@ -127,62 +128,71 @@ def runTreeQF():
     src='../'+VDM_folder+'/VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
     print(os.getcwd())
-    copyfile(src+'VDM_litter_WG.dat',dst+'VDM_litter_WG.dat')
-    copyfile(src+'treelist_VDM.dat',dst+'treelist_VDM.dat')
-    copyfile(src+'VDM_litter_trees.dat',dst+'VDM_litter_trees.dat')
-
+    file_list = ["VDM_litter_WG.dat","treelist_VDM.dat","VDM_litter_trees.dat"]
+    for i in file_list:
+        if os.path.isfile(os.path.join(os.getcwd(),"VDM2FM",i)):
+            copyfile(src+i,dst+i)
     os.chdir(dst)
-    status=subprocess.call(["wsl","./trees"])
-    while status != 0:
-       print('Tree program failed to execute...')
-       status=subprocess.call(["wsl","./trees"])
+    with subprocess.Popen(
+        ["wsl","./trees"], stdout=subprocess.PIPE
+    ) as process:
 
-    if status==0:
-        print('Tree program run successfully!')
-        ### Copying Tree Files to Fire Affects Assessment
-        copyfile('TreeTracker.txt','../8.CROWN-SCORCH/TreeTracker.txt')
-        copyfile('treelist_VDM.dat','../8.CROWN-SCORCH/treelist_VDM.dat')
-        copyfile('VDM_litter_WG.dat','../8.CROWN-SCORCH/VDM_litter_WG.dat')
-        copyfile('VDM_litter_trees.dat','../8.CROWN-SCORCH/VDM_litter_trees.dat')
+        def poll_and_read():
+            print(f"{process.stdout.read1().decode('utf-8')}")
+        
+        while process.poll() != 0:
+            poll_and_read()
+            sleep(1)
+        if process.poll()==0:
+            print('Tree program run successfully!')
+            ### Copying Tree Files to Fire Affects Assessment
+            file_list = ["TreeTracker.txt","treelist_VDM.dat","VDM_litter_WG.dat","VDM_litter_trees.dat"]
+            for i in file_list:
+                if os.path.isfile(os.path.join(os.getcwd(),i)): 
+                    copyfile(i,'../8.CROWN-SCORCH/'+i)
+    
+    # while status != 0:
+    #    print('Tree program failed to execute...')
+    #    status=subprocess.call(["wsl","./trees"])
 
+    
     return
 
-def runQF(i): 
+def runQF(i):
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
-    dst='../7.QUICFIRE-MODEL/projects/Tester/'
+    dst='../7.QUICFIRE-MODEL/projects/LandisTester/'
     copyfile(src+'treesfueldepth.dat',dst+'treesfueldepth.dat')
     copyfile(src+'treesmoist.dat',dst+'treesmoist.dat')
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
     copyfile(src+'treesss.dat',dst+'treesss.dat')
     
-    #Before running the shell script make sure that 
-    # file path '/projects/Tester/QUIC_fire.inp' 
-    # is pointing to the gridlist file in the projects/ftFiles directory.
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
-    import subprocess
+    # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 166
+    # MUST CHANGE QF INPUTS TO MATCH DOMAIN SIZE
     status=subprocess.call(["wsl","./adv_compile_and_run.sh"])
-    if status==0:
-        print('QF run successfully!')
+    if status!=0: #when QF fails it still gives an exit status of 0...
+        print('QF failed to execute...') 
+        return
     else:
-        print('QF failed to execute...')
-    #Successful run should produce bunch of binary files in 
-    #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
-    #that will generate PercentFuelChange.txt file required for the next step.
-    os.chdir("../projects/Tester")
-    # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
-    direc = "Plots"
-    dd = direc + str(i)
-    if os.path.exists(dd):
-       shutil.rmtree(dd)
-    os.rename('Plots', dd)
-    os.mkdir('Plots')
-    dd = "fuels-dens-00000." + str(i) + ".vin"
-    os.rename('fuels-dens-00000.bin', dd)
-    dd = "fire_indexes." + str(i) + ".vin"
-    os.rename('fire_indexes.bin', dd)    
-    return
+        print('QF run successfully!')
+        #Successful run should produce bunch of binary files in 
+        #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
+        #that will generate PercentFuelChange.txt file required for the next step.
+        os.chdir("../projects/LandisTester")
+        # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
+        direc = "Plots"
+        dd = direc + str(i)
+        if os.path.exists(dd):
+           shutil.rmtree(dd)
+        os.rename('Plots', dd)
+        os.mkdir('Plots')
+        dd = "fuels-dens-00000." + str(i) + ".vin"
+        os.rename('fuels-dens-00000.bin', dd)
+        dd = "fire_indexes." + str(i) + ".vin"
+        os.rename('fire_indexes.bin', dd)    
+        return
 
 def runCrownScorch(ii):
     os.chdir("../../../8.CROWN-SCORCH")
@@ -345,6 +355,7 @@ if VDM == "LLM":
 #buff.add_surf_buff()
 
 LiveDead=[]
+i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
