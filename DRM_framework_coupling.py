@@ -195,8 +195,9 @@ def runQF(i):
         return
 
 def runCrownScorch(ii):
+    ii = 1
     os.chdir("../../../8.CROWN-SCORCH")
-    copyfile('../7.QUICFIRE-MODEL/projects/Tester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
+    copyfile('../7.QUICFIRE-MODEL/projects/LandisTester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
     if VDM == "LLM":
         VDM_folder = "1.LLM-HSM-MODEL"
