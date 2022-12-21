@@ -12,14 +12,17 @@ def toLandis(lp):
     # File paths
     landis_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/LANDIS_run")
     FM2VDM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/FM2VDM")
-    VDM2FM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/VDM2FM")
+    # VDM2FM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/VDM2FM")
     ## End User Inputs ##########
     
     ## Read in post-fire treelist and assign necessary data to the remaining trees
     postfire = postfire_treelist(FM2VDM_path,landis_path,lp.year,lp.cycle)
     
     ## Group back into cohorts and sum the biomass
-    community_input_file = treelist_to_cohorts(postfire,lp.L2_res)
+    postfire_cohorts = treelist_to_cohorts(postfire,lp.L2_res)
+    
+    ## Merge with uncropped treelist 
+    community_input_file = merge_to_uncropped(postfire_cohorts, landis_path, lp.year, lp.cycle)
     
     ## Write new LANDIS community input file CSV
     community_input_file.to_csv(os.path.join(landis_path,"community-input-file-"+str(lp.year)+".csv"), index = False)
@@ -48,7 +51,6 @@ def treelist_to_cohorts(x,L2_res):
     community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
     return community_input_file
 
-merge_to_uncropped(community_input_file, landis_path, lp.year, lp.cycle)
 def merge_to_uncropped(postfire,path,year,cycle):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
@@ -60,6 +62,11 @@ def merge_to_uncropped(postfire,path,year,cycle):
                                      "CohortBiomass":[0]*len(missing_mc)})
     postfire_all = pd.concat([postfire,postfire_missing])
     prefire_uncropped = pd.read_csv(os.path.join(path,"community-input-file-"+str(year)+".csv"))
+    burndomain_mc = postfire_all["MapCode"].unique()
+    outside_burndomain = prefire_uncropped.loc["MapCode" not in burndomain_mc]
+    postfire_landis = pd.concat([outside_burndomain, postfire_all])
+    return postfire_landis
+            
     
 
 def write_IC(IC,path,year):
