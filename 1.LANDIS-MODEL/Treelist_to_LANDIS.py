@@ -68,8 +68,12 @@ def merge_to_uncropped(postfire,path,year,cycle):
     ## Replace burn domain in landis run with updated fuels
     prefire_uncropped = pd.read_csv(os.path.join(path,"community-input-file-"+str(year)+".csv"))
     burndomain_mc = postfire_all["MapCode"].unique()
-    outside_burndomain = prefire_uncropped[~prefire_uncropped["MapCode"].isin(burndomain_mc)]
-    postfire_landis = pd.concat([outside_burndomain, postfire_all])
+    uncropped_mc = prefire_uncropped["MapCode"].unique()
+    if burndomain_mc != uncropped_mc:
+        outside_burndomain = prefire_uncropped[~prefire_uncropped["MapCode"].isin(burndomain_mc)]
+        postfire_landis = pd.concat([outside_burndomain, postfire_all])
+    else:
+        postfire_landis = postfire_all
     return postfire_landis
 
 def write_IC(IC,path,year):
