@@ -55,19 +55,22 @@ def merge_to_uncropped(postfire,path,year,cycle):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     postfire_mc = postfire["MapCode"].unique()
+    ## For any mapcodes with no fuels after fire, populate with zeros/None
     missing_mc = list(set(prefire_mc).difference(postfire_mc))
-    postfire_missing = pd.DataFrame({"MapCode":missing_mc,
-                                     "SpeciesName":[None]*len(missing_mc),
-                                     "CohortAge":[0]*len(missing_mc),
-                                     "CohortBiomass":[0]*len(missing_mc)})
-    postfire_all = pd.concat([postfire,postfire_missing])
+    if len(missing_mc) != 0:
+        postfire_missing = pd.DataFrame({"MapCode":missing_mc,
+                                         "SpeciesName":[None]*len(missing_mc),
+                                         "CohortAge":[0]*len(missing_mc),
+                                         "CohortBiomass":[0]*len(missing_mc)})
+        postfire_all = pd.concat([postfire,postfire_missing])
+    else:
+        postfire_all = postfire
+    ## Replace burn domain in landis run with updated fuels
     prefire_uncropped = pd.read_csv(os.path.join(path,"community-input-file-"+str(year)+".csv"))
     burndomain_mc = postfire_all["MapCode"].unique()
-    outside_burndomain = prefire_uncropped.loc["MapCode" not in burndomain_mc]
+    outside_burndomain = prefire_uncropped[~prefire_uncropped["MapCode"].isin(burndomain_mc)]
     postfire_landis = pd.concat([outside_burndomain, postfire_all])
     return postfire_landis
-            
-    
 
 def write_IC(IC,path,year):
     with open(os.path.join(path,'postfireIC-'+str(year)+".txt"), 'w') as file:
