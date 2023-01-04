@@ -318,6 +318,7 @@ elif VDM == "LANDIS":
     os.chdir('../1.LANDIS-MODEL')
     import LANDIS_to_Treelist as Landis
     import Run_LANDIS as Run
+    import Crop_LANDIS as Crop
     os.chdir("..")
     OG_PATH = os.getcwd()
     cycle = 0      # current iteration (will be looped through range(0,ncycle))
@@ -328,6 +329,8 @@ elif VDM == "LANDIS":
     os.chdir("..")
     # Build Treelist
     Landis.toTreelist(L2_params)  
+    # Crop to fire domain
+    Crop.Landis(L2_params)
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",

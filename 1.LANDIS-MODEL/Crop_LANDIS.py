@@ -44,7 +44,7 @@ def Landis(lp):
     cell_nums = [dom.nx,dom.ny,dom.nz]
     
     qf_arrs = qf.build_ff_domain(dom, FF_request=True) #we need this to use the topo
-    filelist = ["Run","Runs","FilesToCopy","Ignitions"]
+    filelist = ["Run","Runs","FilesToCopy","Ignitions","CopyToRuns"]
     for i in filelist:
         shutil.rmtree(os.path.join(OG_PATH,i), ignore_errors = True)
     burn_plot = gpd.read_file(dom.shape_paths.burn_plot).to_crs(epsg=5070)
