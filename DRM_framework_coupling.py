@@ -314,7 +314,6 @@ elif VDM == "FATES":
     os.makedirs(dir)
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
-#---- START NIKO ADDITIONS ----#
 elif VDM == "LANDIS":
     os.chdir('../1.LANDIS-MODEL')
     import LANDIS_to_Treelist as Landis
@@ -329,7 +328,6 @@ elif VDM == "LANDIS":
     os.chdir("..")
     # Build Treelist
     Landis.toTreelist(L2_params)  
-#----- END NIKO ADDITIONS -----#
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
