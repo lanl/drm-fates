@@ -44,6 +44,8 @@ __pycache__
 # Ignore these directories
 1.LANDIS-MODEL/LANDIS_run/**
 1.LANDIS-MODEL/FIA_proc/**
+1.LANDIS-MODEL/FF_Fuel/**
+1.LANDIS-MODEL/Shapefiles/**
 2.Tree_code/**
 5.TREES-FIRETEC/**
 5.TREES-QUICFIRE/**
