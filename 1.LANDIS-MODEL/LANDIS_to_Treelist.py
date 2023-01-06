@@ -5,7 +5,6 @@ Created on Tue Aug 23 14:03:17 2022
 @author: Niko Tutland
 """
 
-from osgeo import gdal
 import numpy as np
 from scipy import interpolate
 import pandas as pd
@@ -55,7 +54,8 @@ def toTreelist(lp):
         
     
     ## Read in and process LANDIS outputs
-    LANDIS_cohorts = process_landis(lp.landis_path,lp.CIF_file,lp.age_bin,lp.landis_spec,spec_rename)
+    CIF_cropped = "community-input-file-"+str(lp.year)+"_cropped.csv"
+    LANDIS_cohorts = process_landis(lp.landis_path,CIF_cropped,lp.age_bin,lp.landis_spec,spec_rename)
     
     ## Match LANDIS cohorts to most similar FIA cohort
     print("Matching to LANDIS cohorts...")
@@ -264,8 +264,7 @@ def tree_locations(df,path,year,res):
                 df.Y.loc[i] = qf_y_min + y_pixel_loc
     return df
 
-def reproject_raster(IC,path):
-    dst_crs = 'EPSG:4326'
+def reproject_raster(IC,path,dst_crs = 'EPSG:4326'):
     with rio.open(os.path.join(path, IC), 'r+') as IC_map :
         src_transform = IC_map.transform
         transform, width, height = calculate_default_transform(
@@ -309,8 +308,8 @@ def roundUp(x,to):
 
 def raster_import(filepath, interpolate = False):    
     # Open the file:
-    raster = gdal.Open(filepath)
-    band = raster.GetRasterBand(1)
+    with rio.open(filepath,"r+") as raster:
+        band = raster.read(1)
     
     #Remove null values
     rasterArray = raster.ReadAsArray()
