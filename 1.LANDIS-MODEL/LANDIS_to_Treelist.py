@@ -54,8 +54,7 @@ def toTreelist(lp):
         
     
     ## Read in and process LANDIS outputs
-    CIF_cropped = "community-input-file-"+str(lp.year)+"_cropped.csv"
-    LANDIS_cohorts = process_landis(lp.landis_path,CIF_cropped,lp.age_bin,lp.landis_spec,spec_rename)
+    LANDIS_cohorts = process_landis(lp.landis_path,lp.CIF_cropped,lp.age_bin,lp.landis_spec,spec_rename)
     
     ## Match LANDIS cohorts to most similar FIA cohort
     print("Matching to LANDIS cohorts...")
@@ -66,7 +65,7 @@ def toTreelist(lp):
     
     print("Calculating tree attributes...")
     ## Calculate fields for QUIC-Fire
-    Treelist = qf_calcs(Treelist,lp.bulk_density,lp.cl_factor,lp.moisture,lp.sizescale,lp.aoi_elev,lp.region_flag,lp.IC_map,lp.landis_path)
+    Treelist = qf_calcs(Treelist,lp.bulk_density,lp.cl_factor,lp.moisture,lp.sizescale,lp.aoi_elev,lp.region_flag,lp.IC_cropped,lp.landis_path)
     
     ## Replicate trees to fill LANDIS grid cell
     Treelist = replicate_trees(Treelist, lp.L2_res)

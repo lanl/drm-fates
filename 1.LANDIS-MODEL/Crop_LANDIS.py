@@ -103,7 +103,7 @@ def Landis(lp):
             arr = OC.read(1)
             OC.transform = IC.transform
             OC.crs = IC.crs
-            with rio.open(os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+".tif"), 
+            with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), 
                           mode="w",
                           height=OC.height,
                           width=OC.width,
@@ -112,7 +112,7 @@ def Landis(lp):
                           crs="EPSG:5070",
                           transform=OC.transform) as new_IC:
                 new_IC.write(arr,1)
-                IC_path = os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+".tif")
+                IC_path = os.path.join(lp.landis_path,lp.OC_cropped)
     with rio.open(IC_path,"r+") as IC:
         out_image, out_transform = rasterio.mask.mask(IC,new_domain,crop=True)
         out_meta = IC.meta
@@ -120,15 +120,15 @@ def Landis(lp):
                          "height": out_image.shape[1],
                          "width": out_image.shape[2],
                          "transform": out_transform})
-        with rio.open(os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+"_cropped.tif"), "w", **out_meta) as IC_cropped:
+        with rio.open(os.path.join(lp.landis_path,lp.IC_cropped), "w", **out_meta) as IC_cropped:
             IC_cropped.write(out_image)
     
     ## Crop the community input file (csv)
-    with rio.open(os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+"_cropped.tif"),"r+") as IC:
+    with rio.open(os.path.join(lp.landis_path,lp.IC_cropped),"r+") as IC:
         cropped_mc = IC.read(1).flatten().tolist()
     cif = pd.read_csv(os.path.join(lp.landis_path,lp.CIF_file))
     cif_cropped = cif[cif["MapCode"].isin(cropped_mc)]
-    cif_cropped.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+"_cropped.csv"), index = False)
+    cif_cropped.to_csv(os.path.join(lp.landis_path,lp.CIF_cropped), index = False)
     
     
     

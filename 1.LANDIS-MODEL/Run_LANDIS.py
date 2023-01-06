@@ -88,6 +88,13 @@ class LandisParams:
         with rio.open(os.path.join(landis_path, IC_map), 'r+') as IC_map :
             L2_res = IC_map.transform[0]
         self.L2_res = L2_res
+        
+        CIF_cropped = "community-input-file-"+str(year)+"_cropped.csv"
+        IC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
+        OC_cropped = "IC_cycle"+str(cycle)+".tif"
+        self.CIF_cropped = CIF_cropped
+        self.IC_cropped = IC_cropped
+        self.OC_cropped = OC_cropped
 
 def get_filenames(path):
     os.chdir(os.path.join(path, "1.LANDIS-MODEL","LANDIS_run"))
