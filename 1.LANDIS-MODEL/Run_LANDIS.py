@@ -76,7 +76,8 @@ class LandisParams:
         landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
         
         self.landis_path = landis_path
-        self.CIF_file = "community-input-file-"+str(year)+".csv"
+        self.CIF_file = "community-input-file-"+str(year)+".csv" #name of community biomass output csv
+        self.OC_file = "output-community-"+str(year)+".img" #name of community biomass output raster
         self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
         self.necn_file = str(necn_file)           #name of NECN input file
         self.batch_file = str(batch_file)     #name of LANDIS batchfile

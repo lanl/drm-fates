@@ -327,10 +327,10 @@ elif VDM == "LANDIS":
     # Run LANDIS
     Run.Landis(L2_params)
     os.chdir("..")
-    # Build Treelist
-    Landis.toTreelist(L2_params)  
     # Crop to fire domain
     Crop.Landis(L2_params)
+    # Build Treelist
+    Landis.toTreelist(L2_params)  
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",

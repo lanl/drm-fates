@@ -10,25 +10,24 @@ import os
 def toLandis(lp):
     ## User Inputs ##############
     # File paths
-    landis_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/LANDIS_run")
     FM2VDM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/FM2VDM")
     # VDM2FM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/VDM2FM")
     ## End User Inputs ##########
     
     ## Read in post-fire treelist and assign necessary data to the remaining trees
-    postfire = postfire_treelist(FM2VDM_path,landis_path,lp.year,lp.cycle)
+    postfire = postfire_treelist(FM2VDM_path,lp.landis_path,lp.year,lp.cycle)
     
     ## Group back into cohorts and sum the biomass
     postfire_cohorts = treelist_to_cohorts(postfire,lp.L2_res)
     
     ## Merge with uncropped treelist 
-    community_input_file = merge_to_uncropped(postfire_cohorts, landis_path, lp.year, lp.cycle)
+    community_input_file = merge_to_uncropped(postfire_cohorts, lp.landis_path, lp.CIF_file, lp.cycle)
     
     ## Write new LANDIS community input file CSV
-    community_input_file.to_csv(os.path.join(landis_path,"community-input-file-"+str(lp.year)+".csv"), index = False)
+    community_input_file.to_csv(os.path.join(lp.landis_path,lp.CIF_file), index = False)
     
     ## Create new Initial Communities file (not necessary I think?)
-    write_IC(community_input_file,landis_path,lp.year)
+    write_IC(community_input_file,lp.landis_path,lp.year)
     
     ## End main function ##
 
@@ -51,7 +50,7 @@ def treelist_to_cohorts(x,L2_res):
     community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
     return community_input_file
 
-def merge_to_uncropped(postfire,path,year,cycle):
+def merge_to_uncropped(postfire,path,CIF_file,cycle):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     postfire_mc = postfire["MapCode"].unique()
@@ -66,7 +65,7 @@ def merge_to_uncropped(postfire,path,year,cycle):
     else:
         postfire_all = postfire
     ## Replace burn domain in landis run with updated fuels
-    prefire_uncropped = pd.read_csv(os.path.join(path,"community-input-file-"+str(year)+".csv"))
+    prefire_uncropped = pd.read_csv(os.path.join(path,CIF_file))
     burndomain_mc = postfire_all["MapCode"].unique()
     uncropped_mc = prefire_uncropped["MapCode"].unique()
     if burndomain_mc != uncropped_mc:
