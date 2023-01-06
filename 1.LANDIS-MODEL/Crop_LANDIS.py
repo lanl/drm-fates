@@ -41,6 +41,7 @@ import numpy as np
 import os
 import shutil
 import rasterio as rio
+import rasterio.mask
 import fiona
 import pandas as pd
 from shapely.geometry import Point, Polygon
@@ -50,7 +51,7 @@ from shapely.geometry import Point, Polygon
 
 def Landis(lp):
     IC_path = os.path.join(lp.landis_path,lp.IC_map)
-    OC_path = os.path.join(lp.landis_path,lp.OC_map)
+    OC_path = os.path.join(lp.landis_path,lp.OC_file)
     if lp.spinup:    
         #### Create burn domain that lines up with landis grid cells
         OG_PATH = os.getcwd()
@@ -100,7 +101,6 @@ def Landis(lp):
     with rio.open(IC_path, "r+") as IC:
         with rio.open(OC_path, "r+") as OC:
             arr = OC.read(1)
-            print(arr.dtype)
             OC.transform = IC.transform
             OC.crs = IC.crs
             with rio.open(os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+".tif"), 
@@ -114,7 +114,7 @@ def Landis(lp):
                 new_IC.write(arr,1)
                 IC_path = os.path.join(lp.landis_path,"IC_cycle"+str(lp.cycle)+".tif")
     with rio.open(IC_path,"r+") as IC:
-        out_image, out_transform = rio.mask.mask(IC,new_domain,crop=True)
+        out_image, out_transform = rasterio.mask.mask(IC,new_domain,crop=True)
         out_meta = IC.meta
         out_meta.update({"driver": "GTiff",
                          "height": out_image.shape[1],
