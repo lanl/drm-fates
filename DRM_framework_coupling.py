@@ -127,7 +127,7 @@ def runTreeQF():
         VDM_folder = "1.LANDIS-MODEL"
     src='../'+VDM_folder+'/VDM2FM/'
     dst='../5.TREES-QUICFIRE/'
-    print(os.getcwd())
+
     file_list = ["VDM_litter_WG.dat","treelist_VDM.dat","VDM_litter_trees.dat"]
     for i in file_list:
         if os.path.isfile(os.path.join(os.getcwd(),"VDM2FM",i)):
@@ -158,7 +158,7 @@ def runTreeQF():
     
     return
 
-def runQF(i):
+def runQF(i,VDM):
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
@@ -168,8 +168,27 @@ def runQF(i):
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
     copyfile(src+'treesss.dat',dst+'treesss.dat')
     
+    if VDM == "LANDIS":
+        os.chdir("../1.LANDIS-MODEL")
+        import TTRS_QUICFire_Support as ttrs
+        import re
+        os.chdir("../5.TREES-QUICFIRE")
+        with open('fuellist', 'r', encoding='utf-8') as file:
+            filelist = file.readlines()
+        line_id = "nx="
+        lines = [match for match in filelist if line_id in match]
+        line = lines[0]
+        cell_nums = list(map(int, re.findall(r'\d+', line)))
+        rhof = ttrs.import_fortran_dat_file("treesrhof.dat", cell_nums)
+        os.chdir("../1.LANDIS-MODEL/VDM2FM")
+        surf = np.loadtxt("VDM_litter_trees.dat")
+        rhof[0,:,:] = surf
+        os.chdir("../../7.QUICFIRE-MODEL/projects/LandisTester/")
+        ttrs.export_fortran_dat_file(rhof,"treesrhof.dat")
+        os.chdir("../../../5.TREES-QUICFIRE")
+    
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
-    # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 166
+    # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 165
     # MUST CHANGE QF INPUTS TO MATCH DOMAIN SIZE
     status=subprocess.call(["wsl","./adv_compile_and_run.sh"])
     if status!=0: #when QF fails it still gives an exit status of 0...
@@ -361,7 +380,7 @@ i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
-    runQF(i)                           # runs QuickFire
+    runQF(i,VDM)                           # runs QuickFire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
