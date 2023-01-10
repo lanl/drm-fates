@@ -305,7 +305,7 @@ def roundUp(x,to):
     x = to*(x//to + bool(x%to))
     return x
 
-def raster_import(filepath, interpolate = False):    
+def raster_import(filepath):    
     # Open the file:
     with rio.open(filepath,"r+") as raster:
         rasterArray = raster.read(1)
@@ -484,7 +484,7 @@ def get_fuels(in_path, L2_res, year):
     litter = raster_import(os.path.join(in_path,"NECN",litter_name))
     needles = raster_import(os.path.join(in_path,"NECN",needles_name))
     fuels = litter + needles
-    fuels = fuels[0]/1000 #g to kg
+    fuels = fuels/1000 #g to kg
     #fuels = fuels/0.05 #assume 5cm fuel depth? now in g/m3
     QF_fact = int(L2_res/2)
     fuels_interp = spline_interp(fuels,QF_fact)
@@ -498,7 +498,16 @@ def spline_interp(fuels, QF_fact):
     y_QF = np.linspace(0, fuels.shape[0], fuels.shape[0]*QF_fact)
     splinterp = interpolate.RectBivariateSpline(y_L2, x_L2, fuels)
     fuels_interp = splinterp(y_QF, x_QF)
-    return fuels_interp
+    
+    OldMin = fuels_interp.min()
+    OldMax = fuels_interp.max()
+    NewMin = fuels.min()
+    NewMax = fuels.max()
+    
+    OldRange = (OldMax - OldMin)  
+    NewRange = (NewMax - NewMin)  
+    squeezed = (((fuels_interp - OldMin) * NewRange) / OldRange) + NewMin
+    return squeezed
 
 def write_files(filedict, path):
     for i in range(len(filedict)):
