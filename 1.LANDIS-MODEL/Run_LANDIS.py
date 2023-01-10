@@ -81,6 +81,8 @@ class LandisParams:
         self.landis_path = landis_path
         self.CIF_file = "community-input-file-"+str(year)+".csv" #name of community biomass output csv
         self.OC_file = "output-community-"+str(year)+".img" #name of community biomass output raster
+        self.litter_file = "SurfaceLitterBiomass-" + str(year) + ".img"
+        self.needles_file = "ConiferNeedleBiomass-" + str(year) + ".img"
         self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
         self.necn_file = str(necn_file)           #name of NECN input file
         self.batch_file = str(batch_file)     #name of LANDIS batchfile
@@ -92,14 +94,14 @@ class LandisParams:
             L2_res = IC_map.transform[0]
         self.L2_res = L2_res
         
-        CIF_cropped = "community-input-file-"+str(year)+"_cropped.csv"
-        OC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
-        OC_tif = "IC_cycle"+str(cycle)+".tif"
-        IC_cropped = "IC_original_cropped.tif"
-        self.CIF_cropped = CIF_cropped
-        self.OC_cropped = OC_cropped
-        self.OC_tif = OC_tif
-        self.IC_cropped = IC_cropped 
+        self.IC_cropped = "IC_original_cropped.tif"
+        self.CIF_cropped = "community-input-file-"+str(year)+"_cropped.csv"
+        self.OC_tif = "IC_cycle"+str(cycle)+".tif"
+        self.litter_tif = "SurfaceLitterBiomass-"+str(year)+".tif"
+        self.needles_tif = "ConiferNeedleBiomass-"+str(year)+".tif"
+        self.OC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
+        self.litter_cropped = "Litter_cycle"+str(cycle)+".tif"
+        self.needles_cropped = "Needles_cycle"+str(cycle)+".tif"
 
 def get_filenames(path):
     os.chdir(os.path.join(path, "1.LANDIS-MODEL","LANDIS_run"))

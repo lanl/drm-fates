@@ -80,7 +80,7 @@ def toTreelist(lp):
     
     ## Import, interpolate, and export LANDIS fuels
     print("Interpolating surface fuels...")
-    fuels = get_fuels(lp.landis_path, lp.L2_res, lp.year)
+    fuels = get_fuels(lp.litter_cropped, lp.needles_cropped, lp.landis_path, lp.L2_res, lp.year)
     
     ## Write intermediate files
     # print("Writing files...")
@@ -478,18 +478,14 @@ def CW_NW_6(MinD,DBH,a1,a2):
         CW = (a1*MinD**a2)*(DBH/MinD)
     return CW
 
-def get_fuels(in_path, L2_res, year):
-    litter_name = "SurfaceLitterBiomass-" + str(year) + ".img"
-    needles_name = "ConiferNeedleBiomass-" + str(year) + ".img"
-    litter = raster_import(os.path.join(in_path,"NECN",litter_name))
-    needles = raster_import(os.path.join(in_path,"NECN",needles_name))
+def get_fuels(litter_name, needles_name, in_path, L2_res, year):
+    litter = raster_import(os.path.join(in_path,litter_name))
+    needles = raster_import(os.path.join(in_path,needles_name))
     fuels = litter + needles
     fuels = fuels/1000 #g to kg
-    #fuels = fuels/0.05 #assume 5cm fuel depth? now in g/m3
     QF_fact = int(L2_res/2)
     fuels_interp = spline_interp(fuels,QF_fact)
     return fuels_interp
-     
     
 def spline_interp(fuels, QF_fact):
     x_L2 = np.linspace(0, fuels.shape[1], fuels.shape[1])

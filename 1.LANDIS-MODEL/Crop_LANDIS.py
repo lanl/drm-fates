@@ -52,6 +52,8 @@ from shapely.geometry import Point, Polygon
 def Landis(lp):
     IC_path = os.path.join(lp.landis_path,lp.IC_map)
     OC_path = os.path.join(lp.landis_path,lp.OC_file)
+    litter_path = os.path.join(lp.landis_path,"NECN",lp.litter_file)
+    needles_path = os.path.join(lp.landis_path,"NECN",lp.needles_file)
     if lp.spinup:    
         #### Create burn domain that lines up with landis grid cells
         OG_PATH = os.getcwd()
@@ -95,43 +97,23 @@ def Landis(lp):
         new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
 
     ### Clip landis to new burn domain
+    
+    ## Import burn domain polygon
     with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
         new_domain = [feature["geometry"] for feature in shapefile]
+        
     ## Crop the initial communities raster (to get mean lat lon)
-    with rio.open(IC_path,"r+") as IC:
-        out_image, out_transform = rasterio.mask.mask(IC,new_domain,crop=True)
-        out_meta = IC.meta
-        out_meta.update({"driver": "GTiff",
-                         "height": out_image.shape[1],
-                         "width": out_image.shape[2],
-                         "transform": out_transform})
-        with rio.open(os.path.join(lp.landis_path,lp.IC_cropped), "w", **out_meta) as IC_cropped:
-            IC_cropped.write(out_image)
+    crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
+    
     ## Crop the output community raster
-    with rio.open(IC_path, "r+") as IC:
-        with rio.open(OC_path, "r+") as OC:
-            arr = OC.read(1)
-            OC.transform = IC.transform
-            OC.crs = IC.crs
-            with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), 
-                          mode="w",
-                          height=OC.height,
-                          width=OC.width,
-                          count=1,
-                          dtype=arr.dtype,
-                          crs="EPSG:5070",
-                          transform=OC.transform) as new_IC:
-                new_IC.write(arr,1)
-                OC_path = os.path.join(lp.landis_path,lp.OC_tif)
-    with rio.open(OC_path,"r+") as OC:
-        out_image, out_transform = rasterio.mask.mask(OC,new_domain,crop=True)
-        out_meta = OC.meta
-        out_meta.update({"driver": "GTiff",
-                         "height": out_image.shape[1],
-                         "width": out_image.shape[2],
-                         "transform": out_transform})
-        with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), "w", **out_meta) as OC_cropped:
-            OC_cropped.write(out_image)
+    OC_tif = georeference(IC_path,OC_path,lp.OC_tif,lp.landis_path)
+    crop_raster(OC_tif,new_domain,lp.landis_path,lp.OC_cropped)
+    
+    ## Crop fuels rasters
+    litter_tif = georeference(IC_path,litter_path,lp.litter_tif,lp.landis_path)
+    needles_tif = georeference(IC_path,needles_path,lp.needles_tif,lp.landis_path)
+    crop_raster(litter_tif,new_domain,lp.landis_path,lp.litter_cropped)
+    crop_raster(needles_tif,new_domain,lp.landis_path,lp.needles_cropped)
     
     ## Crop the community input file (csv)
     with rio.open(os.path.join(lp.landis_path,lp.IC_cropped),"r+") as IC:
@@ -140,8 +122,35 @@ def Landis(lp):
     cif_cropped = cif[cif["MapCode"].isin(cropped_mc)]
     cif_cropped.to_csv(os.path.join(lp.landis_path,lp.CIF_cropped), index = False)
     
+def crop_raster(raster_path, bbox, landis_path, out_name):
+    with rio.open(raster_path,"r+") as rst:
+        out_image, out_transform = rasterio.mask.mask(rst,bbox,crop=True)
+        out_meta = rst.meta
+        out_meta.update({"driver": "GTiff",
+                         "height": out_image.shape[1],
+                         "width": out_image.shape[2],
+                         "transform": out_transform})
+        with rio.open(os.path.join(landis_path,out_name), "w", **out_meta) as cropped:
+            cropped.write(out_image)
     
-    
+def georeference(IC_path,img_path,tif_name,landis_path):
+    with rio.open(IC_path, "r+") as IC:
+        with rio.open(img_path, "r+") as img:
+            arr = img.read(1)
+            img.transform = IC.transform
+            img.crs = IC.crs
+            with rio.open(os.path.join(landis_path,tif_name), 
+                          mode="w",
+                          height=img.height,
+                          width=img.width,
+                          count=1,
+                          dtype=arr.dtype,
+                          crs="EPSG:5070",
+                          transform=img.transform) as tif:
+                tif.write(arr,1)
+                out_path = os.path.join(landis_path,tif_name)
+    return out_path
+
     
     
     
