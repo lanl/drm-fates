@@ -4,6 +4,9 @@ Created on Wed Nov  9 12:12:26 2022
 
 @author: Niko Tutland
 """
+"""
+PUT FASTFUELS CALL IN HERE
+"""
 
 import os
 import sys
@@ -90,11 +93,13 @@ class LandisParams:
         self.L2_res = L2_res
         
         CIF_cropped = "community-input-file-"+str(year)+"_cropped.csv"
-        IC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
-        OC_cropped = "IC_cycle"+str(cycle)+".tif"
+        OC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
+        OC_tif = "IC_cycle"+str(cycle)+".tif"
+        IC_cropped = "IC_original_cropped.tif"
         self.CIF_cropped = CIF_cropped
-        self.IC_cropped = IC_cropped
         self.OC_cropped = OC_cropped
+        self.OC_tif = OC_tif
+        self.IC_cropped = IC_cropped 
 
 def get_filenames(path):
     os.chdir(os.path.join(path, "1.LANDIS-MODEL","LANDIS_run"))

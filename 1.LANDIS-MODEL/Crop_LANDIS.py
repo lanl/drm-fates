@@ -95,9 +95,19 @@ def Landis(lp):
         new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
 
     ### Clip landis to new burn domain
-    ## Crop the map (raster)
     with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
         new_domain = [feature["geometry"] for feature in shapefile]
+    ## Crop the initial communities raster (to get mean lat lon)
+    with rio.open(IC_path,"r+") as IC:
+        out_image, out_transform = rasterio.mask.mask(IC,new_domain,crop=True)
+        out_meta = IC.meta
+        out_meta.update({"driver": "GTiff",
+                         "height": out_image.shape[1],
+                         "width": out_image.shape[2],
+                         "transform": out_transform})
+        with rio.open(os.path.join(lp.landis_path,lp.IC_cropped), "w", **out_meta) as IC_cropped:
+            IC_cropped.write(out_image)
+    ## Crop the output community raster
     with rio.open(IC_path, "r+") as IC:
         with rio.open(OC_path, "r+") as OC:
             arr = OC.read(1)
@@ -112,16 +122,16 @@ def Landis(lp):
                           crs="EPSG:5070",
                           transform=OC.transform) as new_IC:
                 new_IC.write(arr,1)
-                IC_path = os.path.join(lp.landis_path,lp.OC_cropped)
-    with rio.open(IC_path,"r+") as IC:
-        out_image, out_transform = rasterio.mask.mask(IC,new_domain,crop=True)
-        out_meta = IC.meta
+                OC_path = os.path.join(lp.landis_path,lp.OC_tif)
+    with rio.open(OC_path,"r+") as OC:
+        out_image, out_transform = rasterio.mask.mask(OC,new_domain,crop=True)
+        out_meta = OC.meta
         out_meta.update({"driver": "GTiff",
                          "height": out_image.shape[1],
                          "width": out_image.shape[2],
                          "transform": out_transform})
-        with rio.open(os.path.join(lp.landis_path,lp.IC_cropped), "w", **out_meta) as IC_cropped:
-            IC_cropped.write(out_image)
+        with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), "w", **out_meta) as OC_cropped:
+            OC_cropped.write(out_image)
     
     ## Crop the community input file (csv)
     with rio.open(os.path.join(lp.landis_path,lp.IC_cropped),"r+") as IC:

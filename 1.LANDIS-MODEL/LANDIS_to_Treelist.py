@@ -72,7 +72,7 @@ def toTreelist(lp):
     
     ## Assign trees a random location within a LANDIS cell
     print("Assigning tree locations...")
-    Treelist = tree_locations(Treelist, lp.landis_path, lp.year, lp.L2_res)
+    Treelist = tree_locations(Treelist, lp.landis_path, lp.OC_cropped, lp.year, lp.L2_res)
     
     ## Clean up for QUIC-Fire
     Treelist_alldata = Treelist.copy()
@@ -243,9 +243,9 @@ def replicate_trees(x,res):
     x = pd.DataFrame(x.values.repeat(x['tree_multiplier'], axis=0), columns=x.columns) # repeat rows based on the value in tree_multiplier
     return x
 
-def tree_locations(df,path,year,res):
+def tree_locations(df,path,file,year,res):
     ## Import mapcode raster
-    MapCodes, nodata_MapCode = raster_import(os.path.join(path,"output-community-"+str(year)+".img"))
+    MapCodes = raster_import(os.path.join(path,file))
     df['X'] = 0.0 #setup columns
     df['Y'] = 0.0 
     for y in range(MapCodes.shape[0]):
@@ -516,7 +516,7 @@ def write_files(filedict, path):
 
 def get_params(df,path,file,L2_res,QF_res,year,csv_name):
     qf_per_raster = int(L2_res/QF_res)
-    MapCodes, nodata_MapCode = raster_import(os.path.join(path,file))
+    MapCodes = raster_import(os.path.join(path,file))
     nx = int(MapCodes.shape[1]*qf_per_raster)
     ny = int(MapCodes.shape[0]*qf_per_raster)
     nz = int(np.ceil(df.HT_m.max()))
