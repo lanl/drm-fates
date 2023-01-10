@@ -106,7 +106,7 @@ def toTreelist(lp):
     np.savetxt(os.path.join("VDM2FM",fuels_name),fuels,delimiter=" ")
     
     #Calculate domain parameterss to build treelist text file (used in trees script)
-    dom_params = get_params(Treelist,lp.landis_path,lp.L2_res,lp.QF_res,lp.year,treelist_name)
+    dom_params = get_params(Treelist,lp.landis_path,lp.OC_cropped,lp.L2_res,lp.QF_res,lp.year,treelist_name)
     print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
     print("Treelist created successfully")
@@ -308,50 +308,10 @@ def roundUp(x,to):
 def raster_import(filepath, interpolate = False):    
     # Open the file:
     with rio.open(filepath,"r+") as raster:
-        band = raster.read(1)
-    
-    #Remove null values
-    rasterArray = raster.ReadAsArray()
-    nodata = np.float32(band.GetNoDataValue())
-    
-    #Remove rows and columns that contain no data
-    rasterArray = rasterArray[:,~np.all(rasterArray==nodata, axis=0)] 
-    rasterArray = rasterArray[~np.all(rasterArray==nodata, axis=1),:]
-    
-    if interpolate:
-        #Interpolate null values
-        rasterArray = interpolate_array_2step(rasterArray, nodata)
-    
-    ##Convert null to 0
-    #rasterArray[np.where(rasterArray==nodata)]=0
+        rasterArray = raster.read(1)
+
     rasterArray = np.flip(rasterArray, axis = 0)
     
-    return rasterArray, nodata
-
-def interpolate_array_2step(rasterArray, nodata):
-    #Uses linear and nearest interpolation function to fill null values inside
-    #and outside of known points
-    rasterArray = interpolate_array(rasterArray, nodata, inter_method='linear')
-    rasterArray = interpolate_array(rasterArray, nodata=np.nan, inter_method='nearest')
-    
-    return rasterArray
-
-def interpolate_array(rasterArray, nodata, inter_method='linear'):
-    x = np.arange(0, rasterArray.shape[1])
-    y = np.arange(0, rasterArray.shape[0])
-    #mask invalid values
-    if np.isnan(nodata):
-        rasterArray = np.ma.masked_invalid(rasterArray)
-    else: rasterArray = np.ma.masked_equal(rasterArray, nodata)
-    xx, yy = np.meshgrid(x, y)
-    #get only the valid values
-    x1 = xx[~rasterArray.mask]
-    y1 = yy[~rasterArray.mask]
-    newarr = rasterArray[~rasterArray.mask]
-    
-    rasterArray = interpolate.griddata((x1, y1), newarr.ravel(),
-                              (xx, yy),
-                             method=inter_method)
     return rasterArray
 
 def qf_calcs(x,cbd,cl,moist,ss,AOI_elev,region_flag,IC,path):
@@ -545,9 +505,9 @@ def write_files(filedict, path):
         list(filedict.values())[i].to_csv(path_or_buf = os.path.join(path, list(filedict.keys())[i]),
                                           index = False)
 
-def get_params(df,path,L2_res,QF_res,year,csv_name):
+def get_params(df,path,file,L2_res,QF_res,year,csv_name):
     qf_per_raster = int(L2_res/QF_res)
-    MapCodes, nodata_MapCode = raster_import(os.path.join(path,"output-community-"+str(year)+".img"))
+    MapCodes, nodata_MapCode = raster_import(os.path.join(path,file))
     nx = int(MapCodes.shape[1]*qf_per_raster)
     ny = int(MapCodes.shape[0]*qf_per_raster)
     nz = int(np.ceil(df.HT_m.max()))
