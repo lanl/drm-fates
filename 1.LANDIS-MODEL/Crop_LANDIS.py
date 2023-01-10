@@ -116,8 +116,8 @@ def Landis(lp):
     crop_raster(needles_tif,new_domain,lp.landis_path,lp.needles_cropped)
     
     ## Crop the community input file (csv)
-    with rio.open(os.path.join(lp.landis_path,lp.IC_cropped),"r+") as IC:
-        cropped_mc = IC.read(1).flatten().tolist()
+    with rio.open(os.path.join(lp.landis_path,lp.OC_cropped),"r+") as OC:
+        cropped_mc = OC.read(1).flatten().tolist()
     cif = pd.read_csv(os.path.join(lp.landis_path,lp.CIF_file))
     cif_cropped = cif[cif["MapCode"].isin(cropped_mc)]
     cif_cropped.to_csv(os.path.join(lp.landis_path,lp.CIF_cropped), index = False)
