@@ -30,6 +30,8 @@ source `realpath "$SCRIPT_DIR/../../tools/yaml.sh"`
 #parse_yaml "$SCRIPT_DIR/../config.yaml"
 create_variables "$SCRIPT_DIR/../../config.yaml"
 PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
+RUNROOT=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+ARCHIVEROOT=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
@@ -40,7 +42,7 @@ export SITE_BASE_DIR=$PROJECT_ROOT/$DATA_DIR                	# Where is the site
 export TAG=$TAG                                            	# User defined tag to differentiate runs
 export COMPSET=$COMPSET                                    	# Compset (probably ICLM45ED or ICLM50ED)
 export MAC=$MACHINE                                           	# Name your machine
-export COMPILER=intel	                                  	# Name your compiler
+export COMPILER=gnu	                                  	# Name your compiler
 export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 	# Where the build is generated (probably on scratch partition)
 export ELM_USRDAT_DOMAIN="$PARAM_FILE_DOMAIN"   		# Name of domain file in scripts/${SITE_DIR}/
 export ELM_USRDAT_SURDAT="$PARAM_FILE_SURF"			# Name of surface file in scripts/${SITE_DIR}/
@@ -136,10 +138,11 @@ echo `pwd`
 #./xmlchange -file env_run.xml -id BATCHSUBMIT -val ''
 #./xmlchange -file env_run.xml -id DOUT_S_SAVE_INTERIM_RESTART_FILES -val TRUE
 #./xmlchange -file env_run.xml -id DOUT_S -val TRUE
-#./xmlchange -file env_run.xml -id DOUT_S_ROOT -val '$CASEROOT/run'
-#./xmlchange -file env_run.xml -id RUNDIR -val ${CASE_NAME}/run
-#./xmlchange -file env_build.xml -id EXEROOT -val ${CASE_NAME}/bld
 
+./xmlchange -file env_run.xml -id DOUT_S_ROOT -val ${ARCHIVEROOT}
+#./xmlchange -file env_run.xml -id RUNDIR -val ${RUN_ROOT}/${CASE_NAME}/run # removed to use the default
+#./xmlchange -file env_build.xml -id EXEROOT -val ${RUN_ROOT}/${CASE_NAME}/bld # removed to use the default
+./xmlchange -file env_build.xml -id CIME_OUTPUT_ROOT -val ${RUN_ROOT}
 
 # SPECIFY INPUT DATA (USERS WILL CHANGE THESE)
 # =================================================================================
@@ -153,14 +156,16 @@ cat >> user_nl_elm <<EOF
 fsurdat = '${CLM_SURFDAT_DIR}/${ELM_USRDAT_SURDAT}'
 fates_paramfile = '${FATES_PARAM_DIR}/${FATES_PARAM}'
 !paramfile = '${ELM_PARAM_DIR}/${ELM_PARAM}'
+maxpatch_pft = 17
 fates_spitfire_mode = 1
+use_fates_logging = .false.
 !use_fates_planthydro = .true.
 !use_fates_sp = .true.
 !use_fates_ed_st3 = .false.
 !use_var_soil_thick = .true.
 !hist_empty_htapes = .true.
-use_fates_inventory_init = .true.
-fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/eglin_inv_file_list.txt'
+use_fates_inventory_init = .false.
+!fates_inventory_ctrl_filename = '${SITE_BASE_DIR}/${SITE_NAME}/eglin_inv_file_list.txt'
 hist_fincl2 = 'SOILWATER_10CM','H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS', 'ZWT', 'BTRAN'
 hist_nhtfrq = 0, -24
 hist_mfilt = 1, 365

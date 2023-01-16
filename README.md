@@ -19,7 +19,7 @@ Workflow
 
 ssh user@wtrw.lanl.gov
 
-ssh ba-fe
+ssh ch-fe
 
 ! If you get disconnected from HPC, you wont loose the screen; and wont have load the environment if you use screen utility.
 ! While on screen, you could go up and down the screen with ctrl+A esc; and then esc to go back to writing mode.
@@ -27,7 +27,7 @@ ssh ba-fe
 
 screen -d -r
 
-cd /turquoise/usr/projects/higrad/$user
+cd /usr/projects/higrad/$user
 
 mkdir -p E3SM_cases
 

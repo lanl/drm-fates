@@ -1,7 +1,7 @@
-ELM_BRANCH: E3SM_v2.0_fates_with_var_soil_thick
+ELM_BRANCH: E3SMv2.0_chicoma_re-ported_12Jan2023
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_BRANCH: rutujact-IO-DRM
-FATES_REMOTE: git@github.com:rutujact/fates.git
+FATES_BRANCH: master
+FATES_REMOTE: git@github.com:NGEET/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
 VDM2FM_DIR: VDM2FM
@@ -11,11 +11,11 @@ CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 STOP_N: 1
 REST_N: 1
-CYCLE_INDEX: 1
-TAG: drm.test
+CYCLE_INDEX: 0
+TAG: drm.newqf.ch.test
 COMPSET: IELMFATES
 HYDRO: false
-MACHINE: badger
+MACHINE: chicoma #make sure to have  allocations on chicoma
 RUN_STARTDATE: 1990-01-01
 DATM_CLMNCEP_YR_START: 1990
 DATM_CLMNCEP_YR_END: 2021
@@ -24,7 +24,7 @@ PARAM_FILE:
   DOMAIN: domain_eglin_c210813.nc
   SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass.nc
+  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass_cohort_patch_cap_tolerance.nc #fates_params_default_11142022.nc 
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
@@ -53,8 +53,8 @@ FIRE_RES: 400
 FATES_RES: 200
 SIM_ID_START: 1
 SIM_ID_END: 4
-ACCOUNT: w22_fire
+ACCOUNT: y23_cimmid
 N_NODE: 1
-N_CPU_PER_NODE: 36
-WALL_TIME: 00:20:00
+N_CPU_PER_NODE: 256
+WALL_TIME: 00:05:00
 OUTPUT_TYPE: csv
