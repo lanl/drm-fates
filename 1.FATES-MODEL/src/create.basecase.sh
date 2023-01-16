@@ -12,7 +12,7 @@
 #
 # In this implementation, meteorological data will be cycled based on the data
 # offsets.  We make use of "CLM1PT" datm mode, and make a minor modification to the
-# default stream-file to signal to CLM/ELM that no downwelling long-wave is available
+# default stream--file to signal to CLM/ELM that no downwelling long-wave is available
 # in our dataset.
 #
 # The base-version of this script, works off the assumption that driver data
@@ -78,14 +78,14 @@ echo `pwd`
 # SET PATHS TO SCRATCH ROOT, DOMAIN AND MET DATA (USERS WILL PROB NOT CHANGE THESE)
 # =================================================================================
 
-./xmlchange -file env_run.xml -id ATM_DOMAIN_FILE -val ${ELM_USRDAT_DOMAIN}
-./xmlchange -file env_run.xml -id ATM_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
-./xmlchange -file env_run.xml -id LND_DOMAIN_FILE -val ${ELM_USRDAT_DOMAIN}
-./xmlchange -file env_run.xml -id LND_DOMAIN_PATH -val ${CLM_DOMAIN_DIR}
-./xmlchange -file env_run.xml -id DATM_MODE -val CLM1PT
-./xmlchange -file env_run.xml -id ELM_USRDAT_NAME -val ${SITE_NAME}
-./xmlchange -file env_run.xml -id DIN_LOC_ROOT_CLMFORC -val ${DIN_LOC_ROOT_FORCE}
-#./xmlchange -file env_build.xml -id CESMSCRATCHROOT -val ${CASE_NAME}
+./xmlchange --file env_run.xml --id ATM_DOMAIN_FILE --val ${ELM_USRDAT_DOMAIN}
+./xmlchange --file env_run.xml --id ATM_DOMAIN_PATH --val ${CLM_DOMAIN_DIR}
+./xmlchange --file env_run.xml --id LND_DOMAIN_FILE --val ${ELM_USRDAT_DOMAIN}
+./xmlchange --file env_run.xml --id LND_DOMAIN_PATH --val ${CLM_DOMAIN_DIR}
+./xmlchange --file env_run.xml --id DATM_MODE --val CLM1PT
+./xmlchange --file env_run.xml --id ELM_USRDAT_NAME --val ${SITE_NAME}
+./xmlchange --file env_run.xml --id DIN_LOC_ROOT_CLMFORC --val ${DIN_LOC_ROOT_FORCE}
+#./xmlchange --file env_build.xml --id CESMSCRATCHROOT --val ${CASE_NAME}
 
 # SPECIFY PE LAYOUT FOR SINGLE SITE RUN (USERS WILL PROB NOT CHANGE THESE)
 # =================================================================================
@@ -121,28 +121,28 @@ echo `pwd`
 # SPECIFY RUN TYPE PREFERENCES (USERS WILL CHANGE THESE)
 # =================================================================================
 
-./xmlchange -file env_build.xml -id DEBUG -val FALSE
-./xmlchange -file env_run.xml -id STOP_N -val $STOP_N
-./xmlchange -file env_run.xml -id RUN_STARTDATE -val $RUN_STARTDATE
-./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
-./xmlchange -file env_run.xml -id REST_N -val $REST_N
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_START -val $DATM_CLMNCEP_YR_START
-./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_END -val $DATM_CLMNCEP_YR_END
+./xmlchange --file env_build.xml --id DEBUG --val FALSE
+./xmlchange --file env_run.xml --id STOP_N --val $STOP_N
+./xmlchange --file env_run.xml --id RUN_STARTDATE --val $RUN_STARTDATE
+./xmlchange --file env_run.xml --id STOP_OPTION --val nyears
+./xmlchange --file env_run.xml --id REST_N --val $REST_N
+./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_START --val $DATM_CLMNCEP_YR_START
+./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_END --val $DATM_CLMNCEP_YR_END
 
 # ========
 # MACHINE SPECIFIC, AND/OR USER PREFERENCE CHANGES (USERS WILL CHANGE THESE)
 # =================================================================================
 
-#./xmlchange -file env_build.xml -id GMAKE -val make
-#./xmlchange -file env_run.xml -id BATCHQUERY -val ''
-#./xmlchange -file env_run.xml -id BATCHSUBMIT -val ''
-#./xmlchange -file env_run.xml -id DOUT_S_SAVE_INTERIM_RESTART_FILES -val TRUE
-#./xmlchange -file env_run.xml -id DOUT_S -val TRUE
+#./xmlchange --file env_build.xml --id GMAKE --val make
+#./xmlchange --file env_run.xml --id BATCHQUERY --val ''
+#./xmlchange --file env_run.xml --id BATCHSUBMIT --val ''
+#./xmlchange --file env_run.xml --id DOUT_S_SAVE_INTERIM_RESTART_FILES --val TRUE
+#./xmlchange --file env_run.xml --id DOUT_S --val TRUE
 
-./xmlchange -file env_run.xml -id DOUT_S_ROOT -val ${ARCHIVEROOT}
-#./xmlchange -file env_run.xml -id RUNDIR -val ${RUN_ROOT}/${CASE_NAME}/run # removed to use the default
-#./xmlchange -file env_build.xml -id EXEROOT -val ${RUN_ROOT}/${CASE_NAME}/bld # removed to use the default
-./xmlchange -file env_build.xml -id CIME_OUTPUT_ROOT -val ${RUN_ROOT}
+./xmlchange --file env_run.xml --id DOUT_S_ROOT --val ${ARCHIVEROOT}
+#./xmlchange --file env_run.xml --id RUNDIR --val ${RUN_ROOT}/${CASE_NAME}/run # removed to use the default
+#./xmlchange --file env_build.xml --id EXEROOT --val ${RUN_ROOT}/${CASE_NAME}/bld # removed to use the default
+./xmlchange --file env_build.xml --id CIME_OUTPUT_ROOT --val ${RUN_ROOT}
 
 # SPECIFY INPUT DATA (USERS WILL CHANGE THESE)
 # =================================================================================

@@ -5,7 +5,7 @@ setenv USERDIR /usr/projects/higrad/$user
 setenv SCRATCHDIR /lustre/scratch4/turquoise/.mdt5/$user
 
 setenv CASE_ROOT    $USERDIR/E3SM_cases
-setenv E3SM_ROOT    $SCRATCHDIR/E3SM.DRM/E3SM/
+setenv E3SM_ROOT    $SCRATCHDIR/E3SM.DRM/E3SM
 setenv ELM_ROOT     $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src
 setenv FATES_ROOT   $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src/external_models/fates
 setenv RUN_ROOT     $SCRATCHDIR/E3SM.DRM/runs
