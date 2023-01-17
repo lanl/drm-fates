@@ -10,7 +10,8 @@ setenv ELM_ROOT     $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src
 setenv FATES_ROOT   $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src/external_models/fates
 setenv RUN_ROOT     $SCRATCHDIR/E3SM.DRM/runs
 setenv ARCHIVE_ROOT $SCRATCHDIR/E3SM.DRM/archive
- 
+setenv DIN_LOC_ROOTF $SCRATCHDIR/Data/Data.E3SM/inputdata # root directory of all CIME and component input data
+
 setenv http_proxy "http://proxyout.lanl.gov:8080"
 setenv https_proxy "http://proxyout.lanl.gov:8080"
 setenv ftp_proxy "http://proxyout.lanl.gov:8080"

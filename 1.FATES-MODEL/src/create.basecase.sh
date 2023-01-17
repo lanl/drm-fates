@@ -32,6 +32,7 @@ create_variables "$SCRIPT_DIR/../../config.yaml"
 PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
 RUNROOT=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 ARCHIVEROOT=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+DIN_LOC_ROOTF=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 
 # USER SETTINGS
 # USER MAY ALSO WANT TO ADJUST XML CHANGES, AND NAMELIST ARGUMENTS
@@ -146,8 +147,7 @@ echo `pwd`
 
 # SPECIFY INPUT DATA (USERS WILL CHANGE THESE)
 # =================================================================================
-./xmlchange  DIN_LOC_ROOT=/usr/projects/higrad/e3sm_input_data/input_data
-
+./xmlchange  DIN_LOC_ROOT=${DIN_LOC_ROOTF}
 # ========
 # MODIFY THE CLM NAMELIST (USERS MODIFY AS NEEDED)
 # =================================================================================
