@@ -21,7 +21,9 @@ def toLandis(lp):
     postfire_cohorts = treelist_to_cohorts(postfire,lp.L2_res)
     
     ## Merge with uncropped treelist 
-    community_input_file = merge_to_uncropped(postfire_cohorts, lp.landis_path, lp.CIF_file, lp.cycle)
+    community_input_file = merge_cohorts(postfire_cohorts, lp.landis_path, lp.CIF_file, lp.cycle)
+    
+    ## 
     
     ## Write new LANDIS community input file CSV
     community_input_file.to_csv(os.path.join(lp.landis_path,lp.CIF_file), index = False)
@@ -50,7 +52,7 @@ def treelist_to_cohorts(x,L2_res):
     community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
     return community_input_file
 
-def merge_to_uncropped(postfire,path,CIF_file,cycle):
+def merge_cohorts(postfire,path,CIF_file,cycle):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     postfire_mc = postfire["MapCode"].unique()
