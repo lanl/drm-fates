@@ -23,7 +23,7 @@ import hsiscore_class as HSI
 import hsi_plot_utils as hsi_plt
 import LLM_display
 sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
-#import postfuelfire_new as pff # doesn't exist, but it's also never used
+import postfuelfire_new as pff 
 import Buffer as buff
 
 
@@ -200,6 +200,7 @@ def runQF(i,VDM):
         #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
         #that will generate PercentFuelChange.txt file required for the next step.
         os.chdir("../projects/LandisTester")
+        pff.main(0)
         # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
         direc = "Plots"
         dd = direc + str(i)
@@ -225,20 +226,23 @@ def runCrownScorch(ii):
     elif VDM == "LANDIS":
         VDM_folder = "1.LANDIS-MODEL"
     os.makedirs('../'+VDM_folder+'/FM2VDM', exist_ok=True)
-    file_names = ['PercentFuelChange.txt', 
-                  'TreeTracker.txt', 
-                  'treelist_VDM.dat',
-                  'VDM_litter_WG.dat', 
-                  'VDM_litter_trees.dat', 
-                  '../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt', 
-                  '../'+VDM_folder+'/FM2VDM/AfterFireWG.txt',
-                  '../'+VDM_folder+'/FM2VDM/AfterFireLitter.txt']
-
-    for i in range(len(file_names)-3):
-        # check if all input files exist
-        llmft.check_file_exists(file_names[i])
-
-    LiveDead = llmft.Treeoflife(file_names)
+    if VDM == "LANDIS":
+        dostuff()
+    else:
+        file_names = ['PercentFuelChange.txt', 
+                      'TreeTracker.txt', 
+                      'treelist_VDM.dat',
+                      'VDM_litter_WG.dat', 
+                      'VDM_litter_trees.dat', 
+                      '../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt', 
+                      '../'+VDM_folder+'/FM2VDM/AfterFireWG.txt',
+                      '../'+VDM_folder+'/FM2VDM/AfterFireLitter.txt']
+    
+        for i in range(len(file_names)-3):
+            # check if all input files exist
+            llmft.check_file_exists(file_names[i])
+    
+        LiveDead = llmft.Treeoflife(file_names)
     # saving output files with loop index
     copyfile('../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt','../'+VDM_folder+'/FM2VDM/AfterFireTrees.'+ str(ii) +'.txt')
     copyfile('../'+VDM_folder+'/FM2VDM/AfterFireWG.txt','../'+VDM_folder+'/FM2VDM/AfterFireWG.'+ str(ii) +'.txt')
@@ -349,7 +353,7 @@ elif VDM == "LANDIS":
     # Crop to fire domain
     Crop.Landis(L2_params)
     # Build Treelist
-    Landis.toTreelist(L2_params)  
+    Treelist_params = Landis.toTreelist(L2_params)  
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",

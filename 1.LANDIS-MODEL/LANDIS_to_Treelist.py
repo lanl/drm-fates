@@ -109,6 +109,7 @@ def toTreelist(lp):
     dom_params = get_params(Treelist,lp.landis_path,lp.OC_cropped,lp.L2_res,lp.QF_res,lp.year,treelist_name)
     print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
+    return dom_params
     print("Treelist created successfully")
     print(" %s seconds elapsed" % round(time.time() - start_time))
 
