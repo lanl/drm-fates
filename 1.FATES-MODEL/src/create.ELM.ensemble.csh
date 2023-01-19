@@ -29,7 +29,7 @@ foreach case_i (`seq 1 $#arr_case`)
   # Delete a case by the same name if previously present
   rm -rf $CLONE_ROOT/$E3SM_CASE_CLONE
   # Create the Clone Case
- ./create_clone -case $CLONE_ROOT/$E3SM_CASE_CLONE -clone  $CLONE_ROOT/$BASE_CASE
+ ./create_clone --case $CLONE_ROOT/$E3SM_CASE_CLONE --clone  $CLONE_ROOT/$BASE_CASE
   # Go to CLONE case directory
   cd $CLONE_ROOT/$E3SM_CASE_CLONE
 #
