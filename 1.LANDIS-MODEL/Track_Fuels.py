@@ -16,11 +16,13 @@ import pandas as pd
 
 class FuelsTracker:
     def __init__(self, VDM_folder, lp):
+        os.chdir("..")
         OG_PATH = os.getcwd()
-        self.scorch_path = os.path.join("8.CROWN-SCORCH")
+        os.chdir(VDM_folder)
+        self.scorch_path = os.path.join(OG_PATH,"8.CROWN-SCORCH")
         
         self.tree_tracker = "TreeTracker.txt"
-        self.percent_fuel = "PercentFuelChange_LANDIS.txt"
+        self.percent_fuel = "PercentFuelChange.txt"
         self.treelist = "treelist_VDM.dat"
         self.grass_fuel = "VDM_litter_WG.dat"
         self.litter_fuel = "VDM_litter_trees.dat"
@@ -80,9 +82,9 @@ def postfire_fuels(ft,tp,lp):
     with open(os.path.join(ft.scorch_path,ft.percent_fuel), 'r') as pfc:
         count = 0
         for line in pfc.readlines():
-            percentFuelChang1d[count] = line
+            percentFuelChang1d[count] = float(line)
             count = count + 1
-
+            
     # ## Import percent change in fuels for each cell
     # pfc_2d = np.loadtxt(os.path.join(ft.scorch_path, ft.percent_fuel))
     # pfc_3d = pfc_2d.reshape(
@@ -96,14 +98,14 @@ def postfire_fuels(ft,tp,lp):
     
     ## Calculate change in surface fuels
     for i in [ft.grass_fuel,ft.litter_fuel]:
-        if i in ft.file_list:
+        if i in ft.filelist:
             with open(os.path.join(ft.scorch_path,i), 'r') as pff:
                 prefire_fuel = pff.read().split()
             for locy in range(Ny):
                 for locx in range(Nx):
                     gloc = locx + (locy * Nx)
                     planarloc = (Nx*(Ny-1)-(locy*Nx)) + locx
-                    postfire_fuel[locy,locx] = float(prefire_fuel[gloc]) * percentFuelChang1d[planarloc]
+                    postfire_fuel[locx,locy] = float(prefire_fuel[gloc]) * percentFuelChang1d[planarloc]
             if i==ft.grass_fuel:
                 np.savetxt(os.path.join(ft.out_path,ft.grass_out), postfire_fuel, fmt='%10.2f')
             elif i==ft.litter_fuel:
@@ -113,27 +115,28 @@ def postfire_fuels(ft,tp,lp):
     with open(os.path.join(ft.scorch_path,ft.tree_tracker), 'r') as tt:
         with open(os.path.join(ft.scorch_path,ft.treelist), 'r') as tl:
             treezip = zip(tt,tl)
-    livetrees = 0
-    deadtrees = 0
-    for tt, tl in treezip:
-        line_tt = tt.split()
-        line_tl = tl.split()
-        cellnum = int(line_tt[1]) #number of cells with fuel from that tree
-        totfuel = 0.0
-        sppflag = int(line_tl[0]) #tree species identifier
-        spgrp = ft.spgrp_dict[sppflag]
-        threshold = ft.threshold_dict[spgrp]
-        for cell in range(cellnum):
-            cell_index = int(line_tt[2+cell]) #first two items in list are tree id and cellnum, so cound over starting on third item
-            fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
-            newfuel = percentFuelChang1d[cell_index] * fuel_conc
-            totfuel = totfuel + newfuel # sum the total amount of remaininf fuel for that tree
-        with open(os.path.join(ft.out_path,ft.trees_out), 'w') as aft:
-            if totfuel > threshold:
-                aft.write(tl)
-                livetrees += 1
-            else:
-                deadtrees += 1
+            livetrees = 0
+            deadtrees = 0
+            for tt, tl in treezip:
+                line_tt = tt.split()
+                line_tl = tl.split()
+                cellnum = int(line_tt[1]) #number of cells with fuel from that tree
+                totfuel = 0.0
+                sppflag = int(line_tl[0]) #tree species identifier
+                spgrp = ft.spgrp_dict[sppflag]
+                threshold = ft.threshold_dict[spgrp]
+                for cell in range(cellnum):
+                    cell_index = int(line_tt[2+cell]) #first two items in list are tree id and cellnum, so cound over starting on third item
+                    fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
+                    newfuel = percentFuelChang1d[cell_index] * fuel_conc
+                    totfuel = totfuel + newfuel # sum the total amount of remaininf fuel for that tree
+                print('total fuel: ',totfuel)
+                with open(os.path.join(ft.out_path,ft.trees_out), 'w') as aft:
+                    if totfuel > threshold:
+                        aft.write(tl)
+                        livetrees += 1
+                    else:
+                        deadtrees += 1
     LiveDeadList=[]
     LiveDeadList.append(livetrees)
     LiveDeadList.append(deadtrees)
@@ -152,19 +155,6 @@ def get_spp_groups(lp):
     aoi_sp = aoi_sp.merge(spid_df, how = "left", on = "SPECIES_SYMBOL")
     spgrp_dict = dict(zip(aoi_sp["SPID"],aoi_sp["MAJOR_SPGRPCD"]))
     return spgrp_dict
-
-
-OG_PATH = os.getcwd()
-prefire_treelist = pd.read_csv("1.LANDIS-MODEL/LANDIS_run/Treelist_alldata_0.csv")
-spids = list(range(1,len(prefire_treelist["SPID"].unique())+1,1))
-sps = list(prefire_treelist["SPECIES_SYMBOL"].unique())
-spid_dict = dict(zip(spids,sps))
-REF_SPECIES = pd.read_csv("9.FIA/FIA_raw/REF_SPECIES.csv")
-all_sp = REF_SPECIES["SPECIES_SYMBOL"]
-aoi_sp = REF_SPECIES[REF_SPECIES["SPECIES_SYMBOL"].isin(spid_dict.values())][["SPECIES_SYMBOL","MAJOR_SPGRPCD"]]
-spid_df = pd.DataFrame({"SPID": spid_dict.keys(), "SPECIES_SYMBOL": spid_dict.values()})
-aoi_sp = aoi_sp.merge(spid_df, how = "left", on = "SPECIES_SYMBOL")
-spgrp_dict = dict(zip(aoi_sp["SPID"],aoi_sp["MAJOR_SPGRPCD"]))
 
 
 

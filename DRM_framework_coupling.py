@@ -227,7 +227,10 @@ def runCrownScorch(ii):
         VDM_folder = "1.LANDIS-MODEL"
     os.makedirs('../'+VDM_folder+'/FM2VDM', exist_ok=True)
     if VDM == "LANDIS":
-        dostuff()
+        os.chdir("../1.LANDIS-MODEL")
+        import Track_Fuels as track
+        Fuels_params = track.FuelsTracker(VDM_folder,L2_params)
+        LiveDead = track.postfire_fuels(Fuels_params,Treelist_params,L2_params)
     else:
         file_names = ['PercentFuelChange.txt', 
                       'TreeTracker.txt', 
@@ -244,9 +247,10 @@ def runCrownScorch(ii):
     
         LiveDead = llmft.Treeoflife(file_names)
     # saving output files with loop index
-    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireTrees.txt','../'+VDM_folder+'/FM2VDM/AfterFireTrees.'+ str(ii) +'.txt')
-    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireWG.txt','../'+VDM_folder+'/FM2VDM/AfterFireWG.'+ str(ii) +'.txt')
-    copyfile('../'+VDM_folder+'/FM2VDM/AfterFireLitter.txt','../'+VDM_folder+'/FM2VDM/AfterFireLitter.'+ str(ii) +'.txt')
+    file_list = ["AfterFireTrees","AfterFireWG","AfterFireLitter"]
+    for i in file_list:
+        if os.path.exists("../"+VDM_folder+"/FM2VDM/"+i+".txt"):
+            copyfile("../"+VDM_folder+"/FM2VDM/"+i+".txt","../"+VDM_folder+"/FM2VDM/"+i+"."+str(ii)+".txt")
  
     return LiveDead
     
