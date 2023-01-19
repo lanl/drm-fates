@@ -12,19 +12,19 @@ ELM_RUN_PY: src/parallel.run.py
 STOP_N: 1
 REST_N: 1
 CYCLE_INDEX: 0
-TAG: drm.newqf.ch.test
+TAG: drm.newqf.ch.test2
 COMPSET: IELMFATES
 HYDRO: false
-MACHINE: chicoma #make sure to have  allocations on chicoma
+MACHINE: chicoma
 RUN_STARTDATE: 1990-01-01
 DATM_CLMNCEP_YR_START: 1990
 DATM_CLMNCEP_YR_END: 2021
-FINAL_TAG_YEAR: 1991
+FINAL_TAG_YEAR: 1990
 PARAM_FILE:
   DOMAIN: domain_eglin_c210813.nc
   SURF: surfdata_eglin_c210813.nc
   ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass_cohort_patch_cap_tolerance.nc #fates_params_default_11142022.nc 
+  FATES: fates_params_default_extratrop_NeedleEvg_BroadColddeci_grass_cohort_patch_cap_tolerance.nc
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:

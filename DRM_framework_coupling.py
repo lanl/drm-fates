@@ -262,9 +262,9 @@ def updateTreelist(p,ii):
 
 VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
-nyears=10      # number of years for spinup and transient runs
-ncycyear=5    # number of cyclical year run
-ncycle=20      # number of loops
+nyears=1      # number of years for spinup and transient runs
+ncycyear=1    # number of cyclical year run
+ncycle=1      # number of loops
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
