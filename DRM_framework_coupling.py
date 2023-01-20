@@ -406,7 +406,7 @@ for i in range(ncycle):
         ## Change Coordinates for QUICFIRE HERE ###
         #buff.add_tree_buff()
         #buff.add_surf_buff()    
-        dd = 'HVI.' + str(i) + '.png'
+        dd = 'HVI.' + str(ii) + '.png'
         print (dd)
         plt.savefig('HVI.png') 
         os.rename('HVI.png', dd)
@@ -434,13 +434,16 @@ for i in range(ncycle):
         import Treelist_to_LANDIS as Treelist
         os.chdir("..")
         OG_PATH = os.getcwd()
-        cycle = ii      # current iteration (will be looped through range(0,ncycle))
+        cycle = i      # current iteration (will be looped through range(0,ncycle))
         # Build Landis Parameters object for cycles
         L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False)
         # Update Landis run with new treelist
         Treelist.toLandis(L2_params)
         # Run landis
         Run.Landis(L2_params)
+        os.chdir("..")
+        # Crop again
+        Crop.Landis(L2_params)
         # Build another treelist
         Landis.toTreelist(L2_params)
 

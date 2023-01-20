@@ -75,7 +75,7 @@ class LandisParams:
         self.sizescale = opdict['sizescale']
         self.QF_res = 2
         
-        batch_file, scenario_file, necn_file, species_file, IC_file, IC_map = get_filenames(OG_PATH)
+        batch_file, scenario_file, necn_file, species_file, IC_file, IC_map, deadwood_map, coarseroots_map = get_filenames(OG_PATH)
         landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
         
         self.landis_path = landis_path
@@ -89,6 +89,10 @@ class LandisParams:
         self.species_file = str(species_file) #name of species input file
         self.IC_file = str(IC_file)           #name of initial communities file
         self.IC_map = str(IC_map)             #name of initial communities raster
+        self.deadwood_map = str(deadwood_map) #name of dead wood raster, which creates initial fuels conditions
+        self.coarseroots_map = str(coarseroots_map) #name of dead coarse roots raster, which also creates initial fuels conditions
+        
+        self.ff_percent = get_ff_percent(OG_PATH,necn_file)
         
         with rio.open(os.path.join(landis_path, IC_map), 'r+') as IC_map :
             L2_res = IC_map.transform[0]
@@ -117,7 +121,10 @@ def get_filenames(path):
     # Identify Initial Communities file and raster from NECN file
     IC_file = read_filename(necn_file, "InitialCommunities",1)
     IC_map = read_filename(necn_file, "InitialCommunities",2)
-    return batch_file, scenario_file, necn_file, species_file, IC_file, IC_map
+    # Identify files that define surface fuels
+    deadwood_map = read_filename(necn_file, "InitialDeadWoodSurfaceMapName",1)
+    coarseroots_map = read_filename(necn_file, "InitialDeadCoarseRootsMapName",1)
+    return batch_file, scenario_file, necn_file, species_file, IC_file, IC_map, deadwood_map, coarseroots_map
 
 def read_filename(file,line_id,which_one):
     with open(file, 'r', encoding='utf-8') as file:
@@ -154,7 +161,7 @@ def replace_duration(lp):
 
 def replace_IC(lp):
     
-    with open(os.path.join(lp.landis_path,lp.necn), 'r', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.necn_file), 'r', encoding='utf-8') as file:
         filelist = file.readlines()
     
     matches = [match for match in filelist if "InitialCommunities" in match]
@@ -176,7 +183,17 @@ def replace_IC(lp):
     
     with open(os.path.join(lp.landis_path,lp.necn), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
- 
+
+def get_ff_percent(path,file):
+    with open(os.path.join(path,"1.LANDIS-MODEL","LANDIS_run",file)) as necn:
+        filelist = necn.readlines()
+    matches = [match for match in filelist if "InitialFineFuels" in match]
+    stripped = re.split(" |\t", matches[0].strip())
+    while("" in stripped):
+        stripped.remove("")
+    ff_percent = float(stripped[1])
+    return ff_percent
+
 # if __name__=="__main__":
 #     main(sys.argv[1])
 
