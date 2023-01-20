@@ -99,11 +99,11 @@ def write_IC(IC,path,year):
 
 def replace_fuels(lp):
     ## Increase postfire litter values by the InitialFineFuels factor from NECN
-    litter_arr = np.loadtxt(os.path.join(lp.OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(lp.cycle)+".txt"))
+    litter_arr = np.loadtxt(os.path.join(lp.OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(lp.cycle+1)+".txt"))
     litter_arr = litter_arr*(1/lp.ff_percent)*1000
     ## Write georeferenced raster of postfire litter
     with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), "r+") as IC:
-        with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), 
+        with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle+1)+".tif"), 
                   mode="w",
                   height=IC.height,
                   width=IC.width,
@@ -113,11 +113,11 @@ def replace_fuels(lp):
                   transform=IC.transform) as pfl:
                 pfl.write(litter_arr,1)
     ## Rename the original deadwood raster so we can overwrite
-    deadwood_map_og = re.split("\.",lp.deadwood_map)[0] + "_" + str(lp.cycle-1) + ".tif"
+    deadwood_map_og = re.split("\.",lp.deadwood_map)[0] + "_" + str(lp.cycle) + ".tif"
     os.rename(os.path.join(lp.landis_path, lp.deadwood_map), 
               os.path.join(lp.landis_path,deadwood_map_og))
     ## Replace values of deadwood raster with the postfire litter values
-    with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), "r+") as pfl:
+    with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle+1)+".tif"), "r+") as pfl:
         litter_arr = pfl.read(1)
         with rio.open(os.path.join(lp.landis_path,deadwood_map_og)) as dwm:
             deadwood_arr = dwm.read(1)
@@ -127,7 +127,7 @@ def replace_fuels(lp):
             y_end = int(y_start + pfl.shape[0])
             postfire_deadwood = deadwood_arr.copy()
             postfire_deadwood[y_start:y_end,x_start:x_end] = litter_arr
-            with rio.open(os.path.join(lp.landois_path,lp.deadwood_map),
+            with rio.open(os.path.join(lp.landis_path,lp.deadwood_map),
                           mode="w",
                           height=dwm.height,
                           width=dwm.width,
@@ -136,7 +136,7 @@ def replace_fuels(lp):
                           crs="EPSG:5070",
                           transform=dwm.transform) as out:
                 out.write(postfire_deadwood,1)
-    if lp.cycle==1:
+    if lp.cycle==0:
         ## Rename the original coarseroots raster so we can overwrite
         coarseroots_map_og = re.split("\.",lp.coarseroots_map)[0] + "_original.tif"
         os.rename(os.path.join(lp.landis_path,lp.coarseroots_map), 

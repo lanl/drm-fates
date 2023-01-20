@@ -434,11 +434,11 @@ for i in range(ncycle):
         import Treelist_to_LANDIS as Treelist
         os.chdir("..")
         OG_PATH = os.getcwd()
-        cycle = i      # current iteration (will be looped through range(0,ncycle))
-        # Build Landis Parameters object for cycles
-        L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False)
         # Update Landis run with new treelist
         Treelist.toLandis(L2_params)
+        cycle = ii      # current cycle (fire sim initiates a cycle)
+        # Build Landis Parameters object for cycles
+        L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False)
         # Run landis
         Run.Landis(L2_params)
         os.chdir("..")
