@@ -112,26 +112,26 @@ def postfire_fuels(ft,tp,lp):
                 np.savetxt(os.path.join(ft.out_path,ft.litter_out), postfire_fuel, fmt='%10.2f')
     
     ## Which trees die?
-    with open(os.path.join(ft.scorch_path,ft.tree_tracker), 'r') as tt:
-        with open(os.path.join(ft.scorch_path,ft.treelist), 'r') as tl:
-            treezip = zip(tt,tl)
-            livetrees = 0
-            deadtrees = 0
-            for tt, tl in treezip:
-                line_tt = tt.split()
-                line_tl = tl.split()
-                cellnum = int(line_tt[1]) #number of cells with fuel from that tree
-                totfuel = 0.0
-                sppflag = int(line_tl[0]) #tree species identifier
-                spgrp = ft.spgrp_dict[sppflag]
-                threshold = ft.threshold_dict[spgrp]
-                for cell in range(cellnum):
-                    cell_index = int(line_tt[2+cell]) #first two items in list are tree id and cellnum, so cound over starting on third item
-                    fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
-                    newfuel = percentFuelChang1d[cell_index] * fuel_conc
-                    totfuel = totfuel + newfuel # sum the total amount of remaininf fuel for that tree
-                print('total fuel: ',totfuel)
-                with open(os.path.join(ft.out_path,ft.trees_out), 'w') as aft:
+    with open(os.path.join(ft.out_path,ft.trees_out), 'w') as aft:
+        with open(os.path.join(ft.scorch_path,ft.tree_tracker), 'r') as tt:
+            with open(os.path.join(ft.scorch_path,ft.treelist), 'r') as tl:
+                treezip = zip(tt,tl)
+                livetrees = 0
+                deadtrees = 0
+                for tt, tl in treezip:
+                    line_tt = tt.split()
+                    line_tl = tl.split()
+                    cellnum = int(line_tt[1]) #number of cells with fuel from that tree
+                    totfuel = 0.0
+                    sppflag = int(line_tl[0]) #tree species identifier
+                    spgrp = ft.spgrp_dict[sppflag]
+                    threshold = ft.threshold_dict[spgrp]
+                    for cell in range(cellnum):
+                        cell_index = int(line_tt[2+cell]) #first two items in list are tree id and cellnum, so cound over starting on third item
+                        fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
+                        newfuel = percentFuelChang1d[cell_index] * fuel_conc
+                        totfuel = totfuel + newfuel # sum the total amount of remaininf fuel for that tree
+                    print('total fuel: ',totfuel)
                     if totfuel > threshold:
                         aft.write(tl)
                         livetrees += 1
