@@ -549,7 +549,7 @@ def print_fuellist(tp,path):
         input_file.write("! FIRETEC domain info\n")
         input_file.write("! ----------------------------------\n")
         input_file.write("      nx={} ny={} nz={}           ! Size of HIGRAD/FIRETEC grid [cells]\n".format(tp.nx, tp.ny, tp.nz))
-        input_file.write("      dx={} dy={} dz={}           ! Grid Resolution [m]\n".format(tp.dx, tp.dy, tp.dz))
+        input_file.write("      dx={} dy={} dz=15           ! Grid Resolution [m]\n".format(tp.dx, tp.dy))
         input_file.write("      aa1=0.1                     ! Vertical stretching component [default=0.1]\n")
         input_file.write("      singlefuel=0                ! Flag forcing single fuel type instead of multiple fuels\n")
         input_file.write("      topofile='flat'  	        ! 'flat' -> no topo, 'name.dat' of topo file for topo\n")
