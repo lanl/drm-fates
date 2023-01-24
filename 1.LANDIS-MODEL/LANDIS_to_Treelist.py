@@ -247,24 +247,42 @@ def replicate_trees(x,res):
     x = pd.DataFrame(x.values.repeat(x['tree_multiplier'], axis=0), columns=x.columns) # repeat rows based on the value in tree_multiplier
     return x
 
+# def tree_locations(df,path,file,year,res):
+#     ## Import mapcode raster
+#     MapCodes = raster_import(os.path.join(path,file))
+#     df['X'] = 0.0 #setup columns
+#     df['Y'] = 0.0 
+#     for y in range(MapCodes.shape[0]):
+#         for x in range(MapCodes.shape[1]):
+#             mc = MapCodes[y,x]
+#             #Calc loc of bottom left corner of MapCode pixel in qf grid
+#             qf_x_min = x*res
+#             qf_y_min = y*res
+#             temp_df = df[df['MapCode']==mc] #make new df with mapcode, and x y of bottom corner of each pixel
+#             for i,row in temp_df.iterrows():
+#                 #Randomly place trees within larger pixel
+#                 x_pixel_loc = random() * res
+#                 y_pixel_loc = random() * res
+#                 df.X.loc[i] = qf_x_min + x_pixel_loc
+#                 df.Y.loc[i] = qf_y_min + y_pixel_loc
+#     return df
+
 def tree_locations(df,path,file,year,res):
     ## Import mapcode raster
     MapCodes = raster_import(os.path.join(path,file))
-    df['X'] = 0.0 #setup columns
-    df['Y'] = 0.0 
+    MapCode = []
+    X = []
+    Y = []
     for y in range(MapCodes.shape[0]):
         for x in range(MapCodes.shape[1]):
-            mc = MapCodes[y,x]
-            #Calc loc of bottom left corner of MapCode pixel in qf grid
-            qf_x_min = x*res
-            qf_y_min = y*res
-            temp_df = df[df['MapCode']==mc]
-            for i,row in temp_df.iterrows():
-                #Randomly place trees within larger pixel
-                x_pixel_loc = random() * res
-                y_pixel_loc = random() * res
-                df.X.loc[i] = qf_x_min + x_pixel_loc
-                df.Y.loc[i] = qf_y_min + y_pixel_loc
+            MapCode.append(MapCodes[y,x])
+            X.append(x*res)
+            Y.append(y*res)
+    df_mc = pd.DataFrame({"MapCode":MapCode,"X_corner":X, "Y_corner":Y})
+    df = df.merge(df_mc, how="left", on="MapCode")
+    df["X"] = df["X_corner"].apply(lambda x: x + (random()*res))
+    df["Y"] = df["Y_corner"].apply(lambda y: y + (random()*res))
+    df = df.drop(["X_corner","Y_corner"], axis=1)
     return df
 
 def reproject_raster(IC,path,dst_crs = 'EPSG:4326'):

@@ -316,8 +316,8 @@ def updateTreelist(p,ii):
 
 VDM = "LANDIS" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
 
-nyears=4      # number of years for spinup and transient runs
-ncycyear=5    # number of cyclical year run
+nyears=5      # number of years for spinup and transient runs
+ncycyear=10    # number of cyclical year run
 ncycle=4      # number of loops
 
 #Build Trees

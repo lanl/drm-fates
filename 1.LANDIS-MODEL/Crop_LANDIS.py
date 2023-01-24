@@ -95,6 +95,8 @@ def Landis(lp):
         
         ## Write to file
         new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
+        with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+            new_domain = [feature["geometry"] for feature in shapefile]
         
         ## Crop the initial communities raster (to get mean lat lon)
         crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
