@@ -50,13 +50,13 @@ from shapely.geometry import Point, Polygon
 # import numpy as np
 
 def Landis(lp):
-    IC_path = os.path.join(lp.landis_path,lp.IC_map)
+    OG_PATH = os.getcwd()
     OC_path = os.path.join(lp.landis_path,"output-community-"+str(lp.year)+".img")
     litter_path = os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img")
     needles_path = os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img")
     if lp.spinup:    
         #### Create burn domain that lines up with landis grid cells
-        OG_PATH = os.getcwd()
+        IC_path = os.path.join(lp.landis_path,lp.IC_map)
         ## Build domain class from shape:
         shape_paths = qf.Shapefile_Paths()
         dom = qf.dom_from_burn_plot(shape_paths, buffer=200)
@@ -95,6 +95,9 @@ def Landis(lp):
         
         ## Write to file
         new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
+        
+        ## Crop the initial communities raster (to get mean lat lon)
+        crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
 
     ### Clip landis to new burn domain
     
@@ -102,8 +105,8 @@ def Landis(lp):
     with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
         new_domain = [feature["geometry"] for feature in shapefile]
         
-    ## Crop the initial communities raster (to get mean lat lon)
-    crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
+    if lp.spinup == False:
+        IC_path = os.path.join(lp.landis_path,"IC_original_cropped.tif")
     
     ## Crop the output community raster
     OC_tif = georeference(IC_path,OC_path,"output-community-"+str(lp.year)+".tif",lp.landis_path)

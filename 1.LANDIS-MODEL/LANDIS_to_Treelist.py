@@ -112,9 +112,9 @@ def toTreelist(lp):
                             lp.L2_res,lp.QF_res,treelist_name)
     print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
-    return dom_params
     print("Treelist created successfully")
     print(" %s seconds elapsed" % round(time.time() - start_time))
+    return dom_params
 
 ##### End of main function #####
 

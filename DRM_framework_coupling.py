@@ -190,32 +190,38 @@ def runQF(i,VDM):
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
     # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 165
     # MUST CHANGE QF INPUTS TO MATCH DOMAIN SIZE
-    status=subprocess.call(["wsl","./adv_compile_and_run.sh"])
-    if status!=0: #when QF fails it still gives an exit status of 0...
-        print('QF failed to execute...') 
-        return
-    else:
-        print('QF run successfully!')
-        #Successful run should produce bunch of binary files in 
-        #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
-        #that will generate PercentFuelChange.txt file required for the next step.
-        os.chdir("../projects/LandisTester")
-        # pff.main(0)
-        import drawfire
-        prj_folder = os.getcwd()
-        drawfire.main(prj_folder, gen_vtk = 0,gen_gif = 0)
-        # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
-        direc = "Plots"
-        dd = direc + str(i)
-        if os.path.exists(dd):
-           shutil.rmtree(dd)
-        os.rename('Plots', dd)
-        os.mkdir('Plots')
-        dd = "fuels-dens-00000." + str(i) + ".vin"
-        os.rename('fuels-dens-00000.bin', dd)
-        dd = "fire_indexes." + str(i) + ".vin"
-        os.rename('fire_indexes.bin', dd)    
-        return
+    
+    with subprocess.Popen(
+        ["wsl","./adv_compile_and_run.sh"], stdout=subprocess.PIPE
+    ) as process:
+
+        def poll_and_read():
+            print(f"{process.stdout.read1().decode('utf-8')}")
+        
+        while process.poll() != 0:
+            poll_and_read()
+            sleep(1)
+        if process.poll()==0:
+            print('QF run successfully!')
+            #Successful run should produce bunch of binary files in 
+            #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
+            #that will generate PercentFuelChange.txt file required for the next step.
+            os.chdir("../projects/LandisTester")
+            # pff.main(0)
+            import drawfire
+            prj_folder = os.getcwd()
+            drawfire.main(prj_folder, gen_vtk = 0,gen_gif = 0)
+    direc = "Plots"
+    dd = direc + str(i)
+    if os.path.exists(dd):
+       shutil.rmtree(dd)
+    os.rename('Plots', dd)
+    os.mkdir('Plots')
+    dd = "fuels-dens-00000." + str(i) + ".vin"
+    os.rename('fuels-dens-00000.bin', dd)
+    dd = "fire_indexes." + str(i) + ".vin"
+    os.rename('fire_indexes.bin', dd)
+    return
 
 def runCrownScorch(ii):
     ii = 1
@@ -448,8 +454,10 @@ for i in range(ncycle):
         # Crop again
         Crop.Landis(L2_params)
         # Build another treelist
-        Landis.toTreelist(L2_params)
+        Treelist_params = Landis.toTreelist(L2_params)
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)
-np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
+# np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
+os.chdir("output")
+np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire Live Dead')
