@@ -9,6 +9,7 @@ import numpy as np
 import rasterio as rio
 import os
 import re
+import math
 
 def toLandis(lp):
     ## User Inputs ##############
@@ -18,46 +19,49 @@ def toLandis(lp):
     ## End User Inputs ##########
     
     ## Read in post-fire treelist and assign necessary data to the remaining trees
-    postfire = postfire_treelist(FM2VDM_path,lp.landis_path,lp.year,lp.cycle)
+    postfire = postfire_treelist(FM2VDM_path,lp.landis_path,lp.cycle)
     
     ## Group back into cohorts and sum the biomass
-    postfire_cohorts = treelist_to_cohorts(postfire,lp.L2_res)
+    spec_rename = dict(zip(lp.fia_spec,lp.landis_spec))
+    postfire_cohorts = treelist_to_cohorts(postfire,lp.L2_res,spec_rename)
     
-    ## Merge with uncropped treelist 
-    community_input_file = merge_cohorts(postfire_cohorts, lp.landis_path, lp.CIF_file, lp.cycle)
+    ## Merge with uncropped treelist
+    community_input_file = merge_cohorts(postfire_cohorts, lp.landis_path, 
+                                         "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle)
     
     ## Replace fuels
     replace_fuels(lp)
     
     ## Write new LANDIS community input file CSV
-    community_input_file.to_csv(os.path.join(lp.landis_path,lp.CIF_file), index = False)
+    community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)
     
     ## Create new Initial Communities file (not necessary I think?)
-    write_IC(community_input_file,lp.landis_path,lp.year)
+    write_IC(community_input_file,lp.landis_path,lp.cycle)
     
     ## End main function ##
 
-def postfire_treelist(postfire_path,treelist_path,year,cycle):
+def postfire_treelist(postfire_path,treelist_path,cycle):
     ## Read in treelist that has been altered by the simulated fire
-    newtreelist = pd.read_csv(os.path.join(postfire_path,"AfterFireTrees."+str(cycle+1)+".txt"), sep=" ") # the filename will change depending on what we get from Adam's code
+    newtreelist = pd.read_csv(os.path.join(postfire_path,"AfterFireTrees."+str(cycle)+".txt"), sep=" ") 
     # newtreelist = newtreelist.sample(frac=0.75) # let's pretend some trees burned (temporary)
     ## Read in the pre-QF treelist file that contains addtional information about the trees, crucially biomass, species, and mapcode
-    treelist_alldata = pd.read_csv(os.path.join(treelist_path,"Treelist_alldata_"+str(cycle)+".csv"))
+    treelist_alldata = pd.read_csv(os.path.join(treelist_path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
     newtreelist.columns = ["SPID","X","Y","HT_m","HTLC_m","CD_m","HTMCD_m","CBD","MOIST","SS"] # assign column names
     newtreelist = newtreelist[["SPID","X","Y"]] # use only columns needed to match to old treelist
     ## Assign attributes from pre-QF treelist to the remaining post-QF trees
     newtreelist_alldata = newtreelist.merge(treelist_alldata, how = "left", on = ["SPID","X","Y"])
     return newtreelist_alldata
 
-def treelist_to_cohorts(x,L2_res):
+def treelist_to_cohorts(x,L2_res,spec_rename):
     community_input_file = x.groupby(["MapCode","SPECIES_SYMBOL","AGE"], as_index=False).sum("AGB_g")
     community_input_file = community_input_file.assign(CohortBiomass = lambda x: x.AGB_g/L2_res**2)
     community_input_file = community_input_file[["MapCode","SPECIES_SYMBOL","AGE","CohortBiomass"]]
-    community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"})
+    community_input_file = community_input_file.rename({"SPECIES_SYMBOL":"SpeciesName","AGE":"CohortAge"}, axis = "columns")
+    community_input_file = community_input_file.replace({"SpeciesName" : spec_rename})
     return community_input_file
 
-def merge_cohorts(postfire,path,CIF_file,cycle):
-    prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_"+str(cycle)+".csv"))
+def merge_cohorts(postfire,path,CIF_in,cycle):
+    prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     postfire_mc = postfire["MapCode"].unique()
     ## For any mapcodes with no fuels after fire, populate with zeros/None
@@ -71,39 +75,43 @@ def merge_cohorts(postfire,path,CIF_file,cycle):
     else:
         postfire_all = postfire
     ## Replace burn domain in landis run with updated fuels
-    prefire_uncropped = pd.read_csv(os.path.join(path,CIF_file))
+    prefire_uncropped = pd.read_csv(os.path.join(path,CIF_in))
     burndomain_mc = postfire_all["MapCode"].unique()
     uncropped_mc = prefire_uncropped["MapCode"].unique()
-    if burndomain_mc != uncropped_mc:
+    if np.array_equal(burndomain_mc,uncropped_mc):
+        postfire_landis = postfire_all
+    else:
         outside_burndomain = prefire_uncropped[~prefire_uncropped["MapCode"].isin(burndomain_mc)]
         postfire_landis = pd.concat([outside_burndomain, postfire_all])
-    else:
-        postfire_landis = postfire_all
+    postfire_landis = postfire_landis[["MapCode","SpeciesName","CohortAge","CohortBiomass"]]
     return postfire_landis
 
-def write_IC(IC,path,year):
-    with open(os.path.join(path,'postfireIC-'+str(year)+".txt"), 'w') as file:
+def write_IC(IC,path,cycle):
+    with open(os.path.join(path,'postfireIC_cycle'+str(cycle)+".txt"), 'w') as file:
         file.write('LandisData "Initial Communities"\n')
         file.write("\n")
         for i in IC["MapCode"].unique():
             file.write("MapCode {}\n".format(i))
             IC_mc = IC[IC["MapCode"]==i]
-            for j in IC_mc["SpeciesName"].unique():
-                file.write("{} ".format(j))
-                IC_mc_sp = IC_mc[IC_mc["SpeciesName"]==j].reset_index()
-                for k in range(0,IC_mc_sp.shape[0]):
-                    file.write("{} ({}) ".format(IC_mc_sp.loc[k,"CohortAge"], IC_mc_sp.loc[k,"CohortBiomass"]))
+            if len(IC_mc.index) == 0:
                 file.write("\n")
+            else:
+                for j in IC_mc["SpeciesName"].unique():
+                    file.write("{} ".format(j))
+                    IC_mc_sp = IC_mc[IC_mc["SpeciesName"]==j].reset_index()
+                    for k in range(0,IC_mc_sp.shape[0]):
+                        file.write("{} ({}) ".format(int(IC_mc_sp.loc[k,"CohortAge"]), int(math.ceil(IC_mc_sp.loc[k,"CohortBiomass"]))))
+                    file.write("\n")
             file.write("\n")
         file.write("\n")
 
 def replace_fuels(lp):
     ## Increase postfire litter values by the InitialFineFuels factor from NECN
-    litter_arr = np.loadtxt(os.path.join(lp.OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(lp.cycle+1)+".txt"))
+    litter_arr = np.loadtxt(os.path.join(lp.OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(lp.cycle)+".txt"))
     litter_arr = litter_arr*(1/lp.ff_percent)*1000
     ## Write georeferenced raster of postfire litter
-    with rio.open(os.path.join(lp.landis_path,lp.OC_cropped), "r+") as IC:
-        with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle+1)+".tif"), 
+    with rio.open(os.path.join(lp.landis_path,"output-community-cycle"+str(lp.cycle-1)+"_cropped.tif"), "r+") as IC:
+        with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), 
                   mode="w",
                   height=IC.height,
                   width=IC.width,
@@ -113,13 +121,13 @@ def replace_fuels(lp):
                   transform=IC.transform) as pfl:
                 pfl.write(litter_arr,1)
     ## Rename the original deadwood raster so we can overwrite
-    deadwood_map_og = re.split("\.",lp.deadwood_map)[0] + "_" + str(lp.cycle) + ".tif"
+    deadwood_map_og = re.split("\.",lp.deadwood_map)[0] + "_" + str(lp.cycle-1) + ".tif"
     os.rename(os.path.join(lp.landis_path, lp.deadwood_map), 
               os.path.join(lp.landis_path,deadwood_map_og))
     ## Replace values of deadwood raster with the postfire litter values
-    with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle+1)+".tif"), "r+") as pfl:
+    with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), "r+") as pfl:
         litter_arr = pfl.read(1)
-        with rio.open(os.path.join(lp.landis_path,deadwood_map_og)) as dwm:
+        with rio.open(os.path.join(lp.landis_path,deadwood_map_og), "r+") as dwm:
             deadwood_arr = dwm.read(1)
             x_start = int((pfl.transform[2]-dwm.transform[2])/lp.L2_res)
             y_start = int((dwm.transform[5]-pfl.transform[5])/lp.L2_res)
@@ -136,7 +144,7 @@ def replace_fuels(lp):
                           crs="EPSG:5070",
                           transform=dwm.transform) as out:
                 out.write(postfire_deadwood,1)
-    if lp.cycle==0:
+    if lp.spinup:
         ## Rename the original coarseroots raster so we can overwrite
         coarseroots_map_og = re.split("\.",lp.coarseroots_map)[0] + "_original.tif"
         os.rename(os.path.join(lp.landis_path,lp.coarseroots_map), 

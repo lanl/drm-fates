@@ -131,7 +131,6 @@ def postfire_fuels(ft,tp,lp):
                         fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
                         newfuel = percentFuelChang1d[cell_index] * fuel_conc
                         totfuel = totfuel + newfuel # sum the total amount of remaininf fuel for that tree
-                    print('total fuel: ',totfuel)
                     if totfuel > threshold:
                         aft.write(tl)
                         livetrees += 1
@@ -145,7 +144,7 @@ def postfire_fuels(ft,tp,lp):
                   
 def get_spp_groups(lp):
     ## Link species ids to major species group codes from FIA
-    prefire_treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_alldata_"+str(lp.cycle)+".csv"))
+    prefire_treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"))
     spids = list(range(1,len(prefire_treelist["SPID"].unique())+1,1))
     sps = list(prefire_treelist["SPECIES_SYMBOL"].unique())
     spid_dict = dict(zip(spids,sps)) 

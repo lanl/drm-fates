@@ -27,3 +27,4 @@ opdict['sizescale'] = 0.0005 #canopy fuel radius (nominal fuel size - solids) (m
 opdict['L2_res'] = 150 #landis resolution in m
 opdict['QF_res'] = 2 # quic-fire resolution in m
 
+## Make sure the community output biomass extension prints outputs at an interval that will capture both the spinup end year and the cycles' end year

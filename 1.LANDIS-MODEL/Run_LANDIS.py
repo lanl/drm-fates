@@ -44,7 +44,6 @@ def Landis(lp):
     except subprocess.CalledProcessError as exc:
         print(f"LANDIS run failed with return code {exc.returncode}\n{exc}")
         
-    ### CROP DOMAIN HERE ###
 
 class LandisParams:
     """
@@ -59,9 +58,15 @@ class LandisParams:
         self.cycle = int(cycle)              #current iteration
         self.spinup = spinup                 #is this the initial run?
         if spinup == True:
+            year_prev = int(nyears)
             year = int(nyears)
-        else:
+        elif cycle == 1:
+            year_prev = int(nyears)
             year = int(ncycyear)
+        else:
+            year_prev = int(ncycyear)
+            year = int(ncycyear)
+        self.year_prev = int(year_prev)
         self.year = int(year)
         self.states = opdict['states']
         self.fia_spec = opdict['fia_spec']
@@ -79,10 +84,14 @@ class LandisParams:
         landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
         
         self.landis_path = landis_path
-        self.CIF_file = "community-input-file-"+str(year)+".csv" #name of community biomass output csv
-        self.OC_file = "output-community-"+str(year)+".img" #name of community biomass output raster
-        self.litter_file = "SurfaceLitterBiomass-" + str(year) + ".img"
-        self.needles_file = "ConiferNeedleBiomass-" + str(year) + ".img"
+        # self.CIF_in = "community-input-file-"+str(in_year)+".csv" #name of community biomass output csv
+        # self.CIF_out = "community-input-file-"+str(out_year)+".csv" #name of community biomass output csv
+        # self.OC_in = "output-community-"+str(in_year)+".img" #name of community biomass output raster
+        # self.OC_out = "output-community-"+str(out_year)+".img" #name of community biomass output raster
+        # self.litter_in = "SurfaceLitterBiomass-" + str(in_year) + ".img"
+        # self.litter_out = "SurfaceLitterBiomass-" + str(out_year) + ".img"
+        # self.needles_in = "ConiferNeedleBiomass-" + str(in_year) + ".img"
+        # self.needles_out = "ConiferNeedleBiomass-" + str(out_year) + ".img"
         self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
         self.necn_file = str(necn_file)           #name of NECN input file
         self.batch_file = str(batch_file)     #name of LANDIS batchfile
@@ -94,18 +103,25 @@ class LandisParams:
         
         self.ff_percent = get_ff_percent(OG_PATH,necn_file)
         
-        with rio.open(os.path.join(landis_path, IC_map), 'r+') as IC_map :
+        self.IC_cropped = "IC_original_cropped.tif"
+        # self.CIF_cropped = "community-input-file-"+str(in_year)+"_cropped.csv"
+        # self.OC_tif = "IC_cycle"+str(cycle)+".tif"
+        # self.litter_tif = "SurfaceLitterBiomass-"+str(in_year)+".tif"
+        # self.needles_tif = "ConiferNeedleBiomass-"+str(in_year)+".tif"
+        # self.OC_cropped_in = "IC_cycle"+str(cycle-1)+"_cropped.tif"
+        # self.OC_cropped_out = "IC_cycle"+str(cycle)+"_cropped.tif"
+        # self.litter_cropped = "Litter_cycle"+str(cycle)+".tif"
+        # self.needles_cropped = "Needles_cycle"+str(cycle)+".tif"
+        
+        if spinup:
+            IC = IC_map
+        else:
+            IC = self.IC_cropped
+        with rio.open(os.path.join(landis_path, IC), 'r+') as IC_map :
             L2_res = IC_map.transform[0]
         self.L2_res = L2_res
         
-        self.IC_cropped = "IC_original_cropped.tif"
-        self.CIF_cropped = "community-input-file-"+str(year)+"_cropped.csv"
-        self.OC_tif = "IC_cycle"+str(cycle)+".tif"
-        self.litter_tif = "SurfaceLitterBiomass-"+str(year)+".tif"
-        self.needles_tif = "ConiferNeedleBiomass-"+str(year)+".tif"
-        self.OC_cropped = "IC_cycle"+str(cycle)+"_cropped.tif"
-        self.litter_cropped = "Litter_cycle"+str(cycle)+".tif"
-        self.needles_cropped = "Needles_cycle"+str(cycle)+".tif"
+        
 
 def get_filenames(path):
     os.chdir(os.path.join(path, "1.LANDIS-MODEL","LANDIS_run"))
@@ -166,7 +182,6 @@ def replace_IC(lp):
     
     matches = [match for match in filelist if "InitialCommunities" in match]
     matched_indexes = []
-    print(matches)
     for j in range(0,len(matches)):
         i = 0
         length = len(filelist)
@@ -174,14 +189,13 @@ def replace_IC(lp):
             if matches[j] == filelist[i]:
                 matched_indexes.append(i)
             i += 1
-    print(matched_indexes)
     IC_txt = matched_indexes[0]
     IC_map = matched_indexes[1]
     
-    filelist[IC_txt] = "InitialCommunities\t postfireIC-{}.txt\n".format(str(lp.year))
-    filelist[IC_map] = "InitialCommunities\t output-community-{}.img\n".format(str(lp.year))
+    filelist[IC_txt] = "InitialCommunities\t postfireIC_cycle{}.txt\n".format(str(lp.cycle))
+    filelist[IC_map] = "InitialCommunitiesMap\t output-community-{}.img\n".format(str(lp.year_prev))
     
-    with open(os.path.join(lp.landis_path,lp.necn), 'w', encoding='utf-8') as file:
+    with open(os.path.join(lp.landis_path,lp.necn_file), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
 def get_ff_percent(path,file):

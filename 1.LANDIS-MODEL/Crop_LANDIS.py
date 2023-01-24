@@ -51,9 +51,9 @@ from shapely.geometry import Point, Polygon
 
 def Landis(lp):
     IC_path = os.path.join(lp.landis_path,lp.IC_map)
-    OC_path = os.path.join(lp.landis_path,lp.OC_file)
-    litter_path = os.path.join(lp.landis_path,"NECN",lp.litter_file)
-    needles_path = os.path.join(lp.landis_path,"NECN",lp.needles_file)
+    OC_path = os.path.join(lp.landis_path,"output-community-"+str(lp.year)+".img")
+    litter_path = os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img")
+    needles_path = os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img")
     if lp.spinup:    
         #### Create burn domain that lines up with landis grid cells
         OG_PATH = os.getcwd()
@@ -106,21 +106,21 @@ def Landis(lp):
     crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
     
     ## Crop the output community raster
-    OC_tif = georeference(IC_path,OC_path,lp.OC_tif,lp.landis_path)
-    crop_raster(OC_tif,new_domain,lp.landis_path,lp.OC_cropped)
+    OC_tif = georeference(IC_path,OC_path,"output-community-"+str(lp.year)+".tif",lp.landis_path)
+    crop_raster(OC_tif,new_domain,lp.landis_path,"output-community-cycle"+str(lp.cycle)+"_cropped.tif")
     
     ## Crop fuels rasters
-    litter_tif = georeference(IC_path,litter_path,lp.litter_tif,lp.landis_path)
-    needles_tif = georeference(IC_path,needles_path,lp.needles_tif,lp.landis_path)
-    crop_raster(litter_tif,new_domain,lp.landis_path,lp.litter_cropped)
-    crop_raster(needles_tif,new_domain,lp.landis_path,lp.needles_cropped)
+    litter_tif = georeference(IC_path,litter_path,"SurfaceLitterBiomass-"+str(lp.year)+".tif",lp.landis_path)
+    needles_tif = georeference(IC_path,needles_path,"ConiferNeedleBiomass-"+str(lp.year)+".tif",lp.landis_path)
+    crop_raster(litter_tif,new_domain,lp.landis_path,"SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif")
+    crop_raster(needles_tif,new_domain,lp.landis_path,"ConiferNeedleBiomass-cycle"+str(lp.cycle)+"_cropped.tif")
     
     ## Crop the community input file (csv)
-    with rio.open(os.path.join(lp.landis_path,lp.OC_cropped),"r+") as OC:
+    with rio.open(os.path.join(lp.landis_path,"output-community-cycle"+str(lp.cycle)+"_cropped.tif"),"r+") as OC:
         cropped_mc = OC.read(1).flatten().tolist()
-    cif = pd.read_csv(os.path.join(lp.landis_path,lp.CIF_file))
+    cif = pd.read_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+".csv"))
     cif_cropped = cif[cif["MapCode"].isin(cropped_mc)]
-    cif_cropped.to_csv(os.path.join(lp.landis_path,lp.CIF_cropped), index = False)
+    cif_cropped.to_csv(os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv"), index = False)
     
 def crop_raster(raster_path, bbox, landis_path, out_name):
     with rio.open(raster_path,"r+") as rst:

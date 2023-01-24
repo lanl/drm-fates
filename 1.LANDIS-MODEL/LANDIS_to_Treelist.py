@@ -54,7 +54,7 @@ def toTreelist(lp):
         
     
     ## Read in and process LANDIS outputs
-    LANDIS_cohorts = process_landis(lp.landis_path,lp.CIF_cropped,lp.age_bin,lp.landis_spec,spec_rename)
+    LANDIS_cohorts = process_landis(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv",lp.age_bin,lp.landis_spec,spec_rename)
     
     ## Match LANDIS cohorts to most similar FIA cohort
     print("Matching to LANDIS cohorts...")
@@ -72,7 +72,7 @@ def toTreelist(lp):
     
     ## Assign trees a random location within a LANDIS cell
     print("Assigning tree locations...")
-    Treelist = tree_locations(Treelist, lp.landis_path, lp.OC_cropped, lp.year, lp.L2_res)
+    Treelist = tree_locations(Treelist, lp.landis_path, "output-community-cycle"+str(lp.cycle)+"_cropped.tif", lp.year, lp.L2_res)
     
     ## Clean up for QUIC-Fire
     Treelist_alldata = Treelist.copy()
@@ -80,7 +80,9 @@ def toTreelist(lp):
     
     ## Import, interpolate, and export LANDIS fuels
     print("Interpolating surface fuels...")
-    fuels = get_fuels(lp.litter_cropped, lp.needles_cropped, lp.landis_path, lp.L2_res, lp.year)
+    fuels = get_fuels("SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif", 
+                      "ConiferNeedleBiomass-cycle"+str(lp.cycle)+"_cropped.tif", 
+                      lp.landis_path, lp.L2_res)
     
     ## Write intermediate files
     # print("Writing files...")
@@ -96,7 +98,7 @@ def toTreelist(lp):
     # write_files(file_dict, path=run_path)
     
     # Write Treelist_alldata for Treelist_to_LANDIS
-    Treelist_alldata.to_csv(os.path.join(lp.landis_path,"Treelist_alldata_"+str(lp.cycle)+".csv"), index = False)
+    Treelist_alldata.to_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"), index = False)
     
     # Write final treelist and surface fuels
     os.makedirs("VDM2FM", exist_ok=True)
@@ -106,7 +108,8 @@ def toTreelist(lp):
     np.savetxt(os.path.join("VDM2FM",fuels_name),fuels,delimiter=" ")
     
     #Calculate domain parameterss to build treelist text file (used in trees script)
-    dom_params = get_params(Treelist,lp.landis_path,lp.OC_cropped,lp.L2_res,lp.QF_res,lp.year,treelist_name)
+    dom_params = get_params(Treelist,lp.landis_path,"output-community-cycle"+str(lp.cycle)+"_cropped.tif",
+                            lp.L2_res,lp.QF_res,treelist_name)
     print_fuellist(dom_params, os.path.join(OG_PATH, "5.TREES-QUICFIRE"))
     
     return dom_params
@@ -479,7 +482,7 @@ def CW_NW_6(MinD,DBH,a1,a2):
         CW = (a1*MinD**a2)*(DBH/MinD)
     return CW
 
-def get_fuels(litter_name, needles_name, in_path, L2_res, year):
+def get_fuels(litter_name, needles_name, in_path, L2_res):
     litter = raster_import(os.path.join(in_path,litter_name))
     needles = raster_import(os.path.join(in_path,needles_name))
     fuels = litter + needles
@@ -511,7 +514,7 @@ def write_files(filedict, path):
         list(filedict.values())[i].to_csv(path_or_buf = os.path.join(path, list(filedict.keys())[i]),
                                           index = False)
 
-def get_params(df,path,file,L2_res,QF_res,year,csv_name):
+def get_params(df,path,file,L2_res,QF_res,csv_name):
     qf_per_raster = int(L2_res/QF_res)
     MapCodes = raster_import(os.path.join(path,file))
     nx = int(MapCodes.shape[1]*qf_per_raster)

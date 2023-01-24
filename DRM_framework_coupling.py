@@ -200,7 +200,10 @@ def runQF(i,VDM):
         #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
         #that will generate PercentFuelChange.txt file required for the next step.
         os.chdir("../projects/LandisTester")
-        pff.main(0)
+        # pff.main(0)
+        import drawfire
+        prj_folder = os.getcwd()
+        drawfire.main(prj_folder, gen_vtk = 0,gen_gif = 0)
         # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
         direc = "Plots"
         dd = direc + str(i)
@@ -434,11 +437,11 @@ for i in range(ncycle):
         import Treelist_to_LANDIS as Treelist
         os.chdir("..")
         OG_PATH = os.getcwd()
-        # Update Landis run with new treelist
-        Treelist.toLandis(L2_params)
         cycle = ii      # current cycle (fire sim initiates a cycle)
         # Build Landis Parameters object for cycles
         L2_params = Run.LandisParams(OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False)
+        # Update Landis run with new treelist
+        Treelist.toLandis(L2_params)
         # Run landis
         Run.Landis(L2_params)
         os.chdir("..")
