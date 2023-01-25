@@ -208,9 +208,6 @@ def runQF(i,VDM):
             #that will generate PercentFuelChange.txt file required for the next step.
             os.chdir("../projects/LandisTester")
             # pff.main(0)
-            import drawfire
-            prj_folder = os.getcwd()
-            drawfire.main(prj_folder, gen_vtk = 0,gen_gif = 0)
     direc = "Plots"
     dd = direc + str(i)
     if os.path.exists(dd):
@@ -224,7 +221,7 @@ def runQF(i,VDM):
     return
 
 def runCrownScorch(ii):
-    ii = 1
+    # ii = 1
     os.chdir("../../../8.CROWN-SCORCH")
     copyfile('../7.QUICFIRE-MODEL/projects/LandisTester/PercentFuelChange.txt','../8.CROWN-SCORCH/PercentFuelChange.txt')
     LiveDead = []
@@ -461,3 +458,4 @@ os.makedirs('output', exist_ok=True)
 # np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
 os.chdir("output")
 np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire Live Dead')
+print("##########################################################\n################# DRM run successfully! ##################\n##########################################################")

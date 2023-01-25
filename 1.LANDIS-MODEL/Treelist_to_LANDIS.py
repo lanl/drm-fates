@@ -144,7 +144,7 @@ def replace_fuels(lp):
                           crs="EPSG:5070",
                           transform=dwm.transform) as out:
                 out.write(postfire_deadwood,1)
-    if lp.spinup:
+    if lp.cycle==1:
         ## Rename the original coarseroots raster so we can overwrite
         coarseroots_map_og = re.split("\.",lp.coarseroots_map)[0] + "_original.tif"
         os.rename(os.path.join(lp.landis_path,lp.coarseroots_map), 
