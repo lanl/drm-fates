@@ -1,7 +1,7 @@
 ELM_BRANCH: E3SMv2.0_chicoma_re-ported_12Jan2023
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_BRANCH: sci.1.60.2_api.24.1.0
-FATES_REMOTE: git@github.com:NGEET/fates.git
+FATES_BRANCH: rutujact_IO_DRM_sci.1.58.1_api.24.1.0
+FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
 VDM2FM_DIR: VDM2FM
