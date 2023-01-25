@@ -54,52 +54,62 @@ def Landis(lp):
     OC_path = os.path.join(lp.landis_path,"output-community-"+str(lp.year)+".img")
     litter_path = os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img")
     needles_path = os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img")
-    if lp.spinup:    
+    
+    if lp.spinup: 
         #### Create burn domain that lines up with landis grid cells
         IC_path = os.path.join(lp.landis_path,lp.IC_map)
-        ## Build domain class from shape:
-        shape_paths = qf.Shapefile_Paths()
-        dom = qf.dom_from_burn_plot(shape_paths, buffer=200)
-        cell_nums = [dom.nx,dom.ny,dom.nz]
         
-        qf_arrs = qf.build_ff_domain(dom, FF_request=True) #we need this to use the topo
-        filelist = ["Run","Runs","FilesToCopy","Ignitions","CopyToRuns"]
-        for i in filelist:
-            shutil.rmtree(os.path.join(OG_PATH,i), ignore_errors = True)
-        
-        ## Import spatial data
-        # Burn domain
-        burn_domain = gpd.read_file(dom.shape_paths.bbox).to_crs(epsg=5070)
-        # Initial Communities raster
-        ## Convert landis raster to points
-        with rio.open(IC_path, 'r+') as landis_rast:
-            val = landis_rast.read(1) # band 1
-            no_data=landis_rast.nodata
-            geometry = [Point(landis_rast.xy(x,y)[0],landis_rast.xy(x,y)[1]) for x,y in np.ndindex(val.shape) if val[x,y] != no_data]
-            v = [val[x,y] for x,y in np.ndindex(val.shape) if val[x,y] != no_data]
-            landis_pts = gpd.GeoDataFrame({'geometry':geometry,'data':v})
-            landis_pts.crs = landis_rast.crs
-        
-        ## Find intersection
-        domain_mask = landis_pts.within(burn_domain.loc[0,'geometry'])
-        domain_pts = landis_pts.loc[domain_mask]
-        
-        ## Find max and min coordinates to create new burn domain
-        N,S,E,W = [domain_pts.geometry.y.max() + lp.L2_res/2,
-                   domain_pts.geometry.y.min() - lp.L2_res/2,
-                   domain_pts.geometry.x.max() + lp.L2_res/2,
-                   domain_pts.geometry.x.min() - lp.L2_res/2]
-        
-        domain_poly = Polygon([(W,S), (W,N), (E,N), (E,S), (W,S)])
-        new_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = domain_pts.crs)
-        
-        ## Write to file
-        new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
-        with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
-            new_domain = [feature["geometry"] for feature in shapefile]
-        
-        ## Crop the initial communities raster (to get mean lat lon)
-        crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
+        if os.path.exists(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))):
+            with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+                new_domain = [feature["geometry"] for feature in shapefile]
+            
+            ## Crop the initial communities raster (to get mean lat lon)
+            crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
+        else:
+            ## Use fastfuels only if not provided with a bbox
+            ## Build domain class from shape:
+            shape_paths = qf.Shapefile_Paths()
+            dom = qf.dom_from_burn_plot(shape_paths, buffer=200)
+            cell_nums = [dom.nx,dom.ny,dom.nz]
+            
+            qf_arrs = qf.build_ff_domain(dom, FF_request=True) #we need this to use the topo
+            filelist = ["Run","Runs","FilesToCopy","Ignitions","CopyToRuns"]
+            for i in filelist:
+                shutil.rmtree(os.path.join(OG_PATH,i), ignore_errors = True)
+            
+            ## Import spatial data
+            # Burn domain
+            burn_domain = gpd.read_file(dom.shape_paths.bbox).to_crs(epsg=5070)
+            # Initial Communities raster
+            ## Convert landis raster to points
+            with rio.open(IC_path, 'r+') as landis_rast:
+                val = landis_rast.read(1) # band 1
+                no_data=landis_rast.nodata
+                geometry = [Point(landis_rast.xy(x,y)[0],landis_rast.xy(x,y)[1]) for x,y in np.ndindex(val.shape) if val[x,y] != no_data]
+                v = [val[x,y] for x,y in np.ndindex(val.shape) if val[x,y] != no_data]
+                landis_pts = gpd.GeoDataFrame({'geometry':geometry,'data':v})
+                landis_pts.crs = landis_rast.crs
+            
+            ## Find intersection
+            domain_mask = landis_pts.within(burn_domain.loc[0,'geometry'])
+            domain_pts = landis_pts.loc[domain_mask]
+            
+            ## Find max and min coordinates to create new burn domain
+            N,S,E,W = [domain_pts.geometry.y.max() + lp.L2_res/2,
+                       domain_pts.geometry.y.min() - lp.L2_res/2,
+                       domain_pts.geometry.x.max() + lp.L2_res/2,
+                       domain_pts.geometry.x.min() - lp.L2_res/2]
+            
+            domain_poly = Polygon([(W,S), (W,N), (E,N), (E,S), (W,S)])
+            new_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = domain_pts.crs)
+            
+            ## Write to file
+            new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
+            with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+                new_domain = [feature["geometry"] for feature in shapefile]
+            
+            ## Crop the initial communities raster (to get mean lat lon)
+            crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
 
     ### Clip landis to new burn domain
     
