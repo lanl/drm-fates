@@ -30,7 +30,7 @@ def toLandis(lp):
                                          "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle)
     
     ## Replace fuels
-    replace_fuels(lp)
+    replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.deadwood_map, lp.coarseroots_map, lp.L2_res, lp.year_prev)
     
     ## Write new LANDIS community input file CSV
     community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)
@@ -105,13 +105,13 @@ def write_IC(IC,path,cycle):
             file.write("\n")
         file.write("\n")
 
-def replace_fuels(lp):
+def replace_fuels(OG_PATH, landis_path, cycle, coarseroots_map, L2_res, year_prev):
     ## Increase postfire litter values by the InitialFineFuels factor from NECN
-    litter_arr = np.loadtxt(os.path.join(lp.OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(lp.cycle)+".txt"))
-    litter_arr = litter_arr*(1/lp.ff_percent)*1000
+    litter_arr = np.loadtxt(os.path.join(OG_PATH,"1.LANDIS-MODEL","FM2VDM","AfterFireLitter."+str(cycle)+".txt"))
+    litter_arr = litter_arr*1000
     ## Write georeferenced raster of postfire litter
-    with rio.open(os.path.join(lp.landis_path,"output-community-cycle"+str(lp.cycle-1)+"_cropped.tif"), "r+") as IC:
-        with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), 
+    with rio.open(os.path.join(landis_path,"output-community-cycle"+str(cycle-1)+"_cropped.tif"), "r+") as IC:
+        with rio.open(os.path.join(landis_path, "Postfire_litter_"+str(cycle)+".tif"), 
                   mode="w",
                   height=IC.height,
                   width=IC.width,
@@ -120,40 +120,39 @@ def replace_fuels(lp):
                   crs="EPSG:5070",
                   transform=IC.transform) as pfl:
                 pfl.write(litter_arr,1)
-    ## Rename the original deadwood raster so we can overwrite
-    deadwood_map_og = re.split("\.",lp.deadwood_map)[0] + "_" + str(lp.cycle-1) + ".tif"
-    os.rename(os.path.join(lp.landis_path, lp.deadwood_map), 
-              os.path.join(lp.landis_path,deadwood_map_og))
     ## Replace values of deadwood raster with the postfire litter values
-    with rio.open(os.path.join(lp.landis_path, "Postfire_litter_"+str(lp.cycle)+".tif"), "r+") as pfl:
+    with rio.open(os.path.join(landis_path, "Postfire_litter_"+str(cycle)+".tif"), "r+") as pfl:
         litter_arr = pfl.read(1)
-        with rio.open(os.path.join(lp.landis_path,deadwood_map_og), "r+") as dwm:
-            deadwood_arr = dwm.read(1)
-            x_start = int((pfl.transform[2]-dwm.transform[2])/lp.L2_res)
-            y_start = int((dwm.transform[5]-pfl.transform[5])/lp.L2_res)
-            x_end = int(x_start + pfl.shape[1])
-            y_end = int(y_start + pfl.shape[0])
-            postfire_deadwood = deadwood_arr.copy()
-            postfire_deadwood[y_start:y_end,x_start:x_end] = litter_arr
-            with rio.open(os.path.join(lp.landis_path,lp.deadwood_map),
-                          mode="w",
-                          height=dwm.height,
-                          width=dwm.width,
-                          count=1,
-                          dtype=postfire_deadwood.dtype,
-                          crs="EPSG:5070",
-                          transform=dwm.transform) as out:
-                out.write(postfire_deadwood,1)
-    if lp.cycle==1:
+        with rio.open(os.path.join(landis_path,"NECN","SurfaceLitterBiomass-"+str(year_prev)+".tif"), "r+") as slb:
+            slb_arr = slb.read(1)
+            with rio.open(os.path.join(landis_path,"NECN","ConiferNeedleBiomass-"+str(year_prev)+".tif"), "r+") as cnb:
+                cnb_arr = cnb.read(1)
+                landis_arr = (slb_arr + cnb_arr)*1000
+                x_start = int((pfl.transform[2]-slb.transform[2])/L2_res)
+                y_start = int((slb.transform[5]-pfl.transform[5])/L2_res)
+                x_end = int(x_start + pfl.shape[1])
+                y_end = int(y_start + pfl.shape[0])
+                postfire_finefuel = landis_arr.copy()
+                postfire_finefuel[y_start:y_end,x_start:x_end] = litter_arr
+                with rio.open(os.path.join(landis_path,"SurfaceFuels_cycle"+str(cycle)+".tif"),
+                              mode="w",
+                              height=slb.height,
+                              width=slb.width,
+                              count=1,
+                              dtype=postfire_finefuel.dtype,
+                              crs="EPSG:5070",
+                              transform=slb.transform) as out:
+                    out.write(postfire_finefuel,1)
+    if cycle==1:
         ## Rename the original coarseroots raster so we can overwrite
-        coarseroots_map_og = re.split("\.",lp.coarseroots_map)[0] + "_original.tif"
-        os.rename(os.path.join(lp.landis_path,lp.coarseroots_map), 
-                  os.path.join(lp.landis_path,coarseroots_map_og))
-        ## Replace coarse roots values with zeros in fire domain
-        with rio.open(os.path.join(lp.landis_path,coarseroots_map_og), mode="r") as crm:
+        coarseroots_map_og = re.split("\.",coarseroots_map)[0] + "_original.tif"
+        os.rename(os.path.join(landis_path,coarseroots_map), 
+                  os.path.join(landis_path,coarseroots_map_og))
+        ## Replace coarse roots values with zeros
+        with rio.open(os.path.join(landis_path,coarseroots_map_og), mode="r") as crm:
             coarseroots_arr = crm.read(1)
-            coarseroots_arr[y_start:y_end,x_start:x_end] = 0
-            with rio.open(os.path.join(lp.landis_path,lp.coarseroots_map), 
+            coarseroots_arr[:,:] = 0
+            with rio.open(os.path.join(landis_path,coarseroots_map), 
                           mode="w",
                           height=crm.height,
                           width=crm.width,
