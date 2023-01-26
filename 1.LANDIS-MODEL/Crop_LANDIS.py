@@ -5,41 +5,9 @@ Created on Mon Nov 14 13:39:10 2022
 @author: Niko Tutland
 """
 
-"""
-This takes place after landis to treelist, before trees script
-
-Actually it probably should happen before some steps in landis to treelist
-Because the we need to preserve the landis resolution, we can't split landis grid cells
-So the fire domain will have to line up with the landis grid
-Strategy for this:
-    - create burn domain (bbox)
-    - convert raster to points (shapefile)
-    - find all points that overlap with bbox
-    - find farthest point in each cardinal direction (will be a few, pick one)
-    - add or subtract resolution/2 to the proper coordinate
-    - create a new bounding box with that extent
-
-import community-input-file.csv
-import IC.tif
-import output-community.img
-assign output-community the same crs (etc) as IC. maybe this goes in LandisParams?
-crop output-community.tif based on user-supplied shapefile for burn unit
-    - use ttrs_quicfire functions to create burn domain
-    - use burn domain to crop output-community.tif
-filter community-input-file to only include cropped output-community values
-use fastfuels to get topo
-
-DO ALL THE FIRE STUFF
-
-updated community-input-file (from postfire treelist) should have all the same mapcodes
-"""
-
-import ttrs_quicfire as qf
-import LANDIS_to_Treelist as lantotree
 import geopandas as gpd
 import numpy as np
 import os
-import shutil
 import rasterio as rio
 import rasterio.mask
 import fiona
@@ -59,27 +27,23 @@ def Landis(lp):
         #### Create burn domain that lines up with landis grid cells
         IC_path = os.path.join(lp.landis_path,lp.IC_map)
         
-        if os.path.exists(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))):
-            with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+        if os.path.exists(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp")):
+            with fiona.open(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp")) as shapefile:
                 new_domain = [feature["geometry"] for feature in shapefile]
             
             ## Crop the initial communities raster (to get mean lat lon)
             crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
         else:
-            ## Use fastfuels only if not provided with a bbox
-            ## Build domain class from shape:
-            shape_paths = qf.Shapefile_Paths()
-            dom = qf.dom_from_burn_plot(shape_paths, buffer=200)
-            cell_nums = [dom.nx,dom.ny,dom.nz]
-            
-            qf_arrs = qf.build_ff_domain(dom, FF_request=True) #we need this to use the topo
-            filelist = ["Run","Runs","FilesToCopy","Ignitions","CopyToRuns"]
-            for i in filelist:
-                shutil.rmtree(os.path.join(OG_PATH,i), ignore_errors = True)
-            
-            ## Import spatial data
-            # Burn domain
-            burn_domain = gpd.read_file(dom.shape_paths.bbox).to_crs(epsg=5070)
+            ## Create initial domain from bounds of burn plot shapefile
+            burn_plot = gpd.read_file(os.path.join(OG_PATH,"Shapefiles","burn_plot.shp")).to_crs(epsg=5070)
+            tb = burn_plot.total_bounds
+            buff = 200
+            W = tb[0] - buff
+            S = tb[1] - buff
+            E = tb[2] + buff
+            N = tb[3] + buff            
+            domain_poly = Polygon([(W,S), (W,N), (E,N), (E,S), (W,S)])
+            burn_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = 5070)
             # Initial Communities raster
             ## Convert landis raster to points
             with rio.open(IC_path, 'r+') as landis_rast:
@@ -104,8 +68,8 @@ def Landis(lp):
             new_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = domain_pts.crs)
             
             ## Write to file
-            new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp")))
-            with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+            new_domain.to_file(os.path.join(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp")))
+            with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp"))) as shapefile:
                 new_domain = [feature["geometry"] for feature in shapefile]
             
             ## Crop the initial communities raster (to get mean lat lon)
@@ -166,8 +130,8 @@ def georeference(IC_path,img_path,tif_name,landis_path):
                 out_path = os.path.join(landis_path,tif_name)
     return out_path
 
-    
-    
+if __name__=="__main__":
+    Landis()
     
     
     
