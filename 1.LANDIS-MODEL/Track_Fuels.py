@@ -48,13 +48,8 @@ class FuelsTracker:
             if os.path.exists(os.path.join(self.scorch_path,i)):
                 self.filelist.append(i)
         
-        # Decide threshold for tree death by species group code. TEMPORARY, MAYBE HAVE THE USER ASSIGN THIS MANUALLY?
-        self.spgrp_dict = get_spp_groups(lp)
-        self.threshold_dict = {
-            1: 0.30,
-            2: 0.75,
-            3: 0.75,
-            4: 0.75}
+        # Decide threshold for tree death by species
+        self.threshold_dict = get_thresholds(lp)
                 
 
 def postfire_fuels(ft,tp,lp):
@@ -124,8 +119,7 @@ def postfire_fuels(ft,tp,lp):
                     cellnum = int(line_tt[1]) #number of cells with fuel from that tree
                     totfuel = 0.0
                     sppflag = int(line_tl[0]) #tree species identifier
-                    spgrp = ft.spgrp_dict[sppflag]
-                    threshold = ft.threshold_dict[spgrp]
+                    threshold = ft.threshold_dict[sppflag]
                     for cell in range(cellnum):
                         cell_index = int(line_tt[2+cell]) #first two items in list are tree id and cellnum, so cound over starting on third item
                         fuel_conc = float(line_tt[2+cell+cellnum]) #next items correspond to inital fuel density in each cell
@@ -142,27 +136,29 @@ def postfire_fuels(ft,tp,lp):
     
     return LiveDeadList
                   
-def get_spp_groups(lp):
-    ## Link species ids to major species group codes from FIA
-    prefire_treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"))
-    spids = list(range(1,len(prefire_treelist["SPID"].unique())+1,1))
-    sps = list(prefire_treelist["SPECIES_SYMBOL"].unique())
-    spid_dict = dict(zip(spids,sps)) 
-    REF_SPECIES = pd.read_csv(os.path.join(lp.OG_PATH, "9.FIA/FIA_raw/REF_SPECIES.csv"))
-    aoi_sp = REF_SPECIES[REF_SPECIES["SPECIES_SYMBOL"].isin(spid_dict.values())][["SPECIES_SYMBOL","MAJOR_SPGRPCD"]]
-    spid_df = pd.DataFrame({"SPID": spid_dict.keys(), "SPECIES_SYMBOL": spid_dict.values()})
-    aoi_sp = aoi_sp.merge(spid_df, how = "left", on = "SPECIES_SYMBOL")
-    spgrp_dict = dict(zip(aoi_sp["SPID"],aoi_sp["MAJOR_SPGRPCD"]))
-    return spgrp_dict
+
+def get_thresholds(lp):
+    # mortality threshold dict from LANDIS_options
+    threshold_dict = dict(zip(lp.fia_spec,lp.mortality_thresholds))
+    # Species IDs to species names from treelist
+    treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"))
+    spids = list(range(1,len(treelist["SPID"].unique())+1,1))
+    sps = list(treelist["SPECIES_SYMBOL"].unique())
+    spid_dict = dict(zip(sps,spids))
+    # Match species ID to threshold by species name
+    dicts = [threshold_dict,spid_dict]
+    merge = merge_dictionary_list(dicts)
+    mortality_dict = {}
+    for i in merge.values():
+        mortality_dict[i[0]] = i[1]
+
+    return mortality_dict
 
 
-
-
-
-
-
-
-
-
+def merge_dictionary_list(dict_list):
+  return {
+    k: [d.get(k) for d in dict_list if k in d] # explanation A
+    for k in set().union(*dict_list) # explanation B
+  }
 
 

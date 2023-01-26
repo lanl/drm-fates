@@ -72,6 +72,7 @@ class LandisParams:
         self.states = opdict['states']
         self.fia_spec = opdict['fia_spec']
         self.landis_spec = opdict['landis_spec']
+        self.mortality_thresholds = opdict['mortality_thresholds']
         self.region_flag = opdict['region_flag']
         self.age_bin = opdict['age_bin']
         self.aoi_elev = opdict['aoi_elev']

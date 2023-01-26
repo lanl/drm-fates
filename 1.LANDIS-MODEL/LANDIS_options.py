@@ -27,4 +27,8 @@ opdict['sizescale'] = 0.0005 #canopy fuel radius (nominal fuel size - solids) (m
 opdict['L2_res'] = 150 #landis resolution in m
 opdict['QF_res'] = 2 # quic-fire resolution in m
 
+# Fire effects
+opdict['mortality_thresholds'] = [0.8,0.7,0.7,0.5,0.8,0.8,0.8, #threshold for percent fuel remaining after fire sim, under which the tree does not survive
+                                  0.7,0.8,0.8,0.8,0.8,0.8,0.8] #(input in same order as fia_spec and landis_spec)
+
 ## Make sure the community output biomass extension prints outputs at an interval that will capture both the spinup end year and the cycles' end year
