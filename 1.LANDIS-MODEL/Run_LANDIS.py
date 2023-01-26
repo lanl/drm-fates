@@ -25,6 +25,7 @@ def Landis(lp):
     
     if lp.spinup == False:
         replace_IC(lp)
+        replace_fuels(lp)
     
     replace_duration(lp)
     
@@ -84,14 +85,6 @@ class LandisParams:
         landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
         
         self.landis_path = landis_path
-        # self.CIF_in = "community-input-file-"+str(in_year)+".csv" #name of community biomass output csv
-        # self.CIF_out = "community-input-file-"+str(out_year)+".csv" #name of community biomass output csv
-        # self.OC_in = "output-community-"+str(in_year)+".img" #name of community biomass output raster
-        # self.OC_out = "output-community-"+str(out_year)+".img" #name of community biomass output raster
-        # self.litter_in = "SurfaceLitterBiomass-" + str(in_year) + ".img"
-        # self.litter_out = "SurfaceLitterBiomass-" + str(out_year) + ".img"
-        # self.needles_in = "ConiferNeedleBiomass-" + str(in_year) + ".img"
-        # self.needles_out = "ConiferNeedleBiomass-" + str(out_year) + ".img"
         self.scenario_file = str(scenario_file)   #name of LANDIS scenario input file
         self.necn_file = str(necn_file)           #name of NECN input file
         self.batch_file = str(batch_file)     #name of LANDIS batchfile
@@ -101,17 +94,7 @@ class LandisParams:
         self.deadwood_map = str(deadwood_map) #name of dead wood raster, which creates initial fuels conditions
         self.coarseroots_map = str(coarseroots_map) #name of dead coarse roots raster, which also creates initial fuels conditions
         
-        self.ff_percent = get_ff_percent(OG_PATH,necn_file)
-        
         self.IC_cropped = "IC_original_cropped.tif"
-        # self.CIF_cropped = "community-input-file-"+str(in_year)+"_cropped.csv"
-        # self.OC_tif = "IC_cycle"+str(cycle)+".tif"
-        # self.litter_tif = "SurfaceLitterBiomass-"+str(in_year)+".tif"
-        # self.needles_tif = "ConiferNeedleBiomass-"+str(in_year)+".tif"
-        # self.OC_cropped_in = "IC_cycle"+str(cycle-1)+"_cropped.tif"
-        # self.OC_cropped_out = "IC_cycle"+str(cycle)+"_cropped.tif"
-        # self.litter_cropped = "Litter_cycle"+str(cycle)+".tif"
-        # self.needles_cropped = "Needles_cycle"+str(cycle)+".tif"
         
         if spinup:
             IC = IC_map
@@ -198,15 +181,38 @@ def replace_IC(lp):
     with open(os.path.join(lp.landis_path,lp.necn_file), 'w', encoding='utf-8') as file:
         file.writelines(filelist)
 
-def get_ff_percent(path,file):
-    with open(os.path.join(path,"1.LANDIS-MODEL","LANDIS_run",file)) as necn:
-        filelist = necn.readlines()
-    matches = [match for match in filelist if "InitialFineFuels" in match]
-    stripped = re.split(" |\t", matches[0].strip())
-    while("" in stripped):
-        stripped.remove("")
-    ff_percent = float(stripped[1])
-    return ff_percent
+def replace_fuels(lp):
+    with open(os.path.join(lp.landis_path,lp.necn_file), 'r', encoding='utf-8') as file:
+        filelist = file.readlines()
+    ## After first fire, set InitialFineFuels to 1
+    if lp.cycle == 1:
+        matches = [match for match in filelist if "InitialFineFuels" in match]
+        matched_indexes = []
+        for j in range(0,len(matches)):
+            i = 0
+            length = len(filelist)
+            while i < length:
+                if matches[j] == filelist[i]:
+                    matched_indexes.append(i)
+                i += 1
+        FF_line = matched_indexes[0]
+        filelist[FF_line] = "InitialFineFuels\t 1.0\n"
+    ## Replace the DeadWood argument with surface fuels from the current cycle
+    matches = [match for match in filelist if "InitialDeadWoodSurfaceMapName" in match]
+    matched_indexes = []
+    for j in range(0,len(matches)):
+        i = 0
+        length = len(filelist)
+        while i < length:
+            if matches[j] == filelist[i]:
+                matched_indexes.append(i)
+            i += 1
+    DW_line = matched_indexes[0]
+    
+    filelist[DW_line] = "InitialDeadWoodSurfaceMapName\t SurfaceFuels_cycle{}.tif\n".format(str(lp.cycle))
+    
+    with open(os.path.join(lp.landis_path,lp.necn_file), 'w', encoding='utf-8') as file:
+        file.writelines(filelist)
 
 # if __name__=="__main__":
 #     main(sys.argv[1])
