@@ -88,8 +88,6 @@ framework will include the option to set different moisture values for each tree
 
 + Spatial Info:
 
-	+ **QF_res**: DO NOT CHANGE. The horizontal QUIC-Fire resolution of 2m.
-
 	+ **crop_domain**: boolean indicating whether to crop the LANDIS domain to a smaller burn domain before each fire
 simulation.
 

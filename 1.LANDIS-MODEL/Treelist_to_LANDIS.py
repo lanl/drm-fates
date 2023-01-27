@@ -30,7 +30,7 @@ def toLandis(lp):
                                          "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle)
     
     ## Replace fuels
-    replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.deadwood_map, lp.coarseroots_map, lp.L2_res, lp.year_prev)
+    replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.coarseroots_map, lp.L2_res, lp.year_prev)
     
     ## Write new LANDIS community input file CSV
     community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)

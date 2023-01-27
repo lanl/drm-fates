@@ -14,9 +14,6 @@ import fiona
 import pandas as pd
 import shutil
 from shapely.geometry import Point, Polygon
-# import TTRS_QUICFire_Support as ttrs
-# from matplotlib import pyplot as plt
-# import numpy as np
 
 def Landis(lp):
     if lp.crop_domain:   
@@ -104,6 +101,8 @@ def Landis(lp):
         cif_cropped.to_csv(os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv"), index = False)
         
     else:
+        print("LANDIS RUN NOT CROPPED")
+        print('   - files called "*_cropped" are same size as LANDIS domain')
         ## Other scripts in the framework are hard-coded to look for cropped files, so if no cropping is 
         ## occurring, we will have to rename them to "_cropped" and copy them to the right location. 
         ## I will need to rewrite things to be more intuitive.
@@ -115,8 +114,8 @@ def Landis(lp):
                os.path.join(lp.landis_path,"SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif"),
                os.path.join(lp.landis_path,"ConiferNeedleBiomass-cycle"+str(lp.cycle)+"_cropped.tif"),
                os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv")]
-        for i,o in zip(src,dst):
-            shutil.copyfile(src, dst)
+        for i in range(len(src)):
+            shutil.copyfile(src[i], dst[i])
     
 def crop_raster(raster_path, bbox, landis_path, out_name):
     with rio.open(raster_path,"r+") as rst:

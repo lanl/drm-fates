@@ -84,6 +84,7 @@ class LandisParams:
         self.moisture = opdict['moisture']
         self.sizescale = opdict['sizescale']
         self.QF_res = 2
+        self.crop_domain = opdict['crop_domain']
         
         batch_file, scenario_file, necn_file, species_file, IC_file, IC_map, deadwood_map, coarseroots_map = get_filenames(OG_PATH)
         landis_path = os.path.join(OG_PATH, "1.LANDIS-MODEL","LANDIS_run")
