@@ -23,12 +23,15 @@
 !9.FIA/**
 !DOCS/**
 !tools/**
+!QFVD4/**
+!QFVD5/**
 # Do not ignore these files
 !.gitignore
 !README*
 !DRM_framework_coupling.py
 !config.yaml
 !environment.yml
+!QUICFire_options.py
 # Ignore these files
 .DS_Store
 __pycache__

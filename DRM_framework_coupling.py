@@ -16,6 +16,7 @@ import shutil
 from subprocess import call
 from time import sleep
 import yaml
+from QUICFire_options import qf_options
 sys.path.insert(0, '1.LLM-HSM-MODEL/')
 import LLM_model_class as llm
 import LLM_FT_utils as llmft
@@ -25,6 +26,15 @@ import LLM_display
 sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff 
 import Buffer as buff
+
+#Determine which quicfire print functions to use
+if qf_options['QFVD'] == 4:
+    import QFVD4.print_functions as QFVD
+elif qf_options['QFVD'] == 5:
+    import QFVD5.print_functions as QFVD
+else: 
+    print("QFVD version not supported. Check options.py.")
+    sys.exit(70)
 
 
 #VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
@@ -116,6 +126,26 @@ def savelittersLLMQF(p,i):
     print ('lit_LLP%, lit_HW%:',percent_LP_litter,percent_HW_litter)
     
     return
+
+def print_qf_inputs(ri):
+    QFVD.print_gridlist(ri)
+    QFVD.print_QFire_Advanced_User_Inputs_inp(ri)
+    QFVD.print_QFire_Bldg_Advanced_User_Inputs_inp(ri) 
+    QFVD.print_QFire_Plume_Advanced_User_Inputs_inp(ri)
+    QFVD.print_QP_buildout_inp(ri)
+    QFVD.print_QUIC_fire_inp(ri)
+    QFVD.print_QU_buildings_inp(ri)
+    QFVD.print_QU_fileoptions_inp(ri)
+    QFVD.print_QU_metparams_inp(ri)
+    QFVD.print_QU_movingcoords_inp(ri)
+    QFVD.print_QU_simparams_inp(ri)
+    if ri['QFVD'] == 5:
+        QFVD.print_QU_TopoInputs_inp(ri)
+    QFVD.print_rasterorigin_txt(ri)
+    QFVD.print_Runtime_Advanced_User_Inputs_inp(ri)
+    QFVD.print_sensor1_inp(ri)
+    if ri['QFVD'] == 4:
+        QFVD.print_topo_inp(ri)
 
 def runTreeQF():
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
@@ -363,7 +393,13 @@ elif VDM == "LANDIS":
     # Crop to fire domain
     Crop.Landis(L2_params)
     # Build Treelist
-    Treelist_params = Landis.toTreelist(L2_params)  
+    Treelist_params = Landis.toTreelist(L2_params)
+    # Define fire grid size and ignitions
+    qf_options['nx'], qf_options['ny'], qf_options['nz'] = Treelist_params.nx, Treelist_params.ny, Treelist_params.nz
+    qf_options['ig_xmin'] = 100
+    qf_options['ig_ymin'] = Treelist_params.ny/2 # half of half the y length
+    qf_options['ig_xlen'] = 10
+    qf_options['ig_ylen'] = Treelist_params.ny #since dy is 2, this is half the length of the y side of the domain
     #### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
@@ -385,7 +421,8 @@ if VDM == "LLM":
     plt.savefig('figures/HVI.0.png')
 #### MAKE ABOVE INTO FUNTION
 
-## Change Coordinates for QUICFIRE HERE ###
+## Print QF inputs
+print_qf_inputs(qf_options)
 
 #buff.add_surf_buff()
 
@@ -394,7 +431,7 @@ i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
-    runQF(i,VDM)                           # runs QuickFire
+    runQF(i,VDM,qf_options)                           # runs QuickFire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
