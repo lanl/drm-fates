@@ -201,8 +201,8 @@ def print_QUIC_fire_inp(ri):
         input_file.write("1			! 1 = all fuels in one file, 2 = separate files\n")
         input_file.write("1			! 1 = stream, 2 = with headers\n")
         input_file.write("! FUEL\n")
-        input_file.write("5					! fuel density flag: 1 = uniform; 2 = provided thru QF_FuelDensity.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)\n")
-        input_file.write("5					! fuel moisture flag: 1 = uniform; 2 = provided thru QF_FuelMoisture.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)\n")
+        input_file.write("4					! fuel density flag: 1 = uniform; 2 = provided thru QF_FuelDensity.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)\n")
+        input_file.write("4					! fuel moisture flag: 1 = uniform; 2 = provided thru QF_FuelMoisture.inp, 3 = Firetech files for quic grid, 4 = Firetech files for different grid (need interpolation)\n")
         input_file.write("! IGNITION LOCATIONS\n")
         if custom_ig:
             input_file.write("7					! 1 = rectangle, 2 = square ring, 3 = circular ring, 4 = file (QF_Ignitions.inp), 5 = time-dependent ignitions (QF_IgnitionPattern.inp), 6 = ignite.dat (firetech)\n")
@@ -400,6 +400,7 @@ def calculate_QF_vertical_wind_grid(max_topo):
         zt = zo
         zs.append(zo)
         
-    print (zs,len(zs))
+    print("Wind grid nz: ", len(zs))
+    print("Wind grid height: ",sum(zs))
     
     return zs

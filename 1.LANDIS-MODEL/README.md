@@ -44,8 +44,8 @@ save time on the more computationally-intensive fire simulation. If cropping is 
 
 ### LANDIS_options.py
 
-Once the LANDIS run is set up, parameters must be input into LANDIS_options.py so that a treelist can be generated.
-All parameters are input as values in a python dictionary, so lists must be enclosed in brackets 
+Once the LANDIS run is set up, parameters must be input into 1.LANDIS-MODEL/LANDIS_options.py so that a treelist 
+can be generated. All parameters are input as values in a python dictionary, so lists must be enclosed in brackets 
 
 + Run Info:
 

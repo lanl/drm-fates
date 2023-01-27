@@ -431,7 +431,7 @@ i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF()                       # runs the tree program to create QF inputs
-    runQF(i,VDM,qf_options)                           # runs QuickFire
+    runQF(i,VDM)                           # runs QuickFire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
