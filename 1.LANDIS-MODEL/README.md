@@ -32,6 +32,16 @@ input value. The framework references these values as the last item in their lin
 	+ InitialDeadCoarseRootsMapName
 	+ InitialFineFuels
 
+### Cropping the LANDIS domain.
+
+The user might wish to run each iteration of the LANDIS model at a landscape extent, but conduct fire simulations on a
+smaller section of that domain. Included in the DRM is the option to crop the LANDIS run before each fire simulation to
+save time on the more computationally-intensive fire simulation. If cropping is desired, the user should do the following:
+
+1. Create a shapefile of the desired burn plot, called **burn_plot.shp**
+2. Put the shapefile in 1.LANDIS-MODEL/Shapefiles
+3. Change the "crop_domain" input in LANDIS_options.py to True *(see below)*
+
 ### LANDIS_options.py
 
 Once the LANDIS run is set up, parameters must be input into LANDIS_options.py so that a treelist can be generated.
@@ -53,9 +63,7 @@ the PLANTS codes. Species must be listed in the same order as fia_spec.
 	+ **region_flag**: flag indicating where the AOI is located. 
 
 		+ 1 = California
-
 		+ 2 = Other western state (WA, OR, ID, MT, WY, NV, UT, AZ, NM, CO)
-
 		+ 3 = Midwest, eastern, or southern state (any state not listed above)
 
 	+ **age_bin**: integer indicating how age cohorts should be grouped. Default is 10. Tree ages are ceiling rounded
@@ -73,7 +81,7 @@ of the framework will include the option to set different bulk densities for eac
 	+ **cl_factor**: value indicating the fraction of the crown above the maximum crown diameter for all trees. Default 
 is 0.8. Future versions of the framework will include the option to set different CL factors for each tree species.
 
-	+ **moisture**: value of canopy moisture content (%/100) for all trees. Default is 1. Future version of the 
+	+ **moisture**: value of canopy moisture content (proportion) for all trees. Default is 1. Future version of the 
 framework will include the option to set different moisture values for each tree species.
 
 	+ **sizescale**: value for the size scale of canopy fuels. Default is 0.0005.
@@ -82,10 +90,73 @@ framework will include the option to set different moisture values for each tree
 
 	+ **QF_res**: DO NOT CHANGE. The horizontal QUIC-Fire resolution of 2m.
 
+	+ **crop_domain**: boolean indicating whether to crop the LANDIS domain to a smaller burn domain before each fire
+simulation.
+
 + Fire Effects:
 
 	+ **mortality_thresholds**: threshold of percent of the tree canopy remaining after fire, under which a tree will
 not survive. Enter one value for each tree species, in the order corresponding to the species in the fia_spec and
 landis_spec lists. 
+
+### QUICFire_options.py
+
+The DRM has built-in functions to write QUIC-Fire input files based on user inputs in QUICFire_options.py. Like in
+LANDIS_options.py, all values are input to a python dictionary.
+
++ Simulation Parameters:
+
+	+ **QFVD**: version of QUICFire to use. Currently versions 4 and 5 are supported. 
+		+ *NOTE: Differences may exist between versions within a major release. One in particular might be
+the omegarelax input in the QU_simparams.inp file. If this is causing QUIC-Fire to crash, comment or uncomment line 320 
+in QFVD4/print_outputs.py*
+
+	+ **PROJ_FOLDER**: name of the folder containing the QUIC-Fire input files. 
+		+ *NOTE: this **must** match the "testcase" argument in 
+7.QUICFIRE-MODEL/mac_compile/adv_comiple_and_run.sh*
+
+	+ **SimTime**: fire simulation time (s).
+
+	+ **print_times**: time interval (s) at which to print output arrays of fuel density, etc. 
+
++ Domain Settings:
+
+	+ **nx**: horizontal fire grid x size (number of 2m cells)
+	+ **ny**: horizontal fire grid y size (number of 2m cells)
+	+ **nz**: vertical grid size (number of 1m cells)
+
+		+ If running the DRM with LANDIS, the domain size will be altered in the code based on the size of either
+the LANDIS domain or the user-provided burn domain, so these are placeholder values. If using LLM or FATES, domain size 
+should be set here.
+
++ Topo Settings:
+
+	+ **topo_custom**: boolean indicating whether a custom topo.inp file will be used. Currently the DRM only supports
+flat topography, but future versions will include the option to use custom topography.
+
+	+ **max_topo**: DO NOT CHANGE. Set to zero for flat topography. Future versions of the DRAM will alter this value 
+based on the difference between the highest and lowest elevations in the AOI.
+
++ Wind Settings:
+
+	+ **windspeed**: windspeed in m/s.
+	+ **winddir**: wind direction in degrees.
+
++ Ignition Settings:
+
+	+ **custom_ig**: boolean indicating whether or not custom ignitions should be used. Currently the
+DRM does not produce custom ignition patterns internally, but they may be provided by the user through an ignite.dat file.
+If set to true, next four inputs will not be used.
+
+	+ **ig_xmin**: x coordinate (m) of lower-right corner of rectangular ignition
+	+ **ig_ymin**: y coordinate (m) of lower-right corner of rectangular ignition
+	+ **ig_xlen**: length (m) of rectangular ignition, in positive x direction 
+	+ **ig_ylen**: length (m) of rectangular ignition, in positive y direction 
+
+		+ If using LANDIS, the above values will be calculated based on the size of the burn domain. Ignitions
+will be 100m from the west edge of the domain, will be 1/2 the length of the y dimension of the domain, and start 1/4 the
+y length of the domain from the origin. If using LLM or FATES, ignition will be determined from the above values.
+
+	+ **ig_method**, **ig_pattern**, **ig_spacing**: inputs for potential future implementation of driptorch.
 
 
