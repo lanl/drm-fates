@@ -15,6 +15,7 @@ import subprocess
 # import pandas as pd
 import glob
 import re
+import shutil
 from time import sleep
 import rasterio as rio
 from LANDIS_options import opdict
@@ -23,7 +24,9 @@ def Landis(lp):
     
     batch_cmd = os.path.join(lp.landis_path,lp.batch_file)
     
-    if lp.spinup == False:
+    if lp.spinup:
+        shutil.copyfile(src=os.path.join(lp.landis_path,lp.necn_file), dst=os.path.join(lp.landis_path,"NECN_original.txt"))
+    else:
         replace_IC(lp)
         replace_fuels(lp)
     

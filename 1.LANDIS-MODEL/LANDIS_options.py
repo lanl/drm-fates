@@ -24,8 +24,8 @@ opdict['moisture'] = 1 #constant canopy moisture content
 opdict['sizescale'] = 0.0005 #canopy fuel radius (nominal fuel size - solids) (m)
 
 # Spatial info
-opdict['L2_res'] = 150 #landis resolution in m
-opdict['QF_res'] = 2 # quic-fire resolution in m
+opdict['crop_domain'] = True
+opdict['QF_res'] = 2 # quic-fire resolution in m. Do not change.
 
 # Fire effects
 opdict['mortality_thresholds'] = [0.8,0.7,0.7,0.5,0.8,0.8,0.8, #threshold for percent fuel remaining after fire sim, under which the tree does not survive
