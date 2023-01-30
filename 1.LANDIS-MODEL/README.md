@@ -1,4 +1,4 @@
-## Setting up the DRM with LANDIS and QUIC-Fire
+## Running the DRM with LANDIS and QUIC-Fire
 
 LANDIS-II can be used in the Disturbance Response Model framework to incorporate the impacts of fine-scale fire
 behavior into a broad-scale model of landscape change. The framework assumes that the LANDIS model has already
@@ -50,6 +50,11 @@ in the AOI. Likewise, data from states that do not have those species (even if t
 be downloaded.
 
 + For each state XX, download **XX_TREE.csv** and **XX_COND.csv**. No other datasets are necessary.
+
+Additional data and python objects are necessary for the FIA matching method that cannot be housed on GitHub due to
+their size. Please download these files from this 
+[Google Drive folder](https://drive.google.com/drive/folders/194ETyYrKL9huV9ZSIFgBkEUvv5MdXruT?usp=share_link). 
+The two folders in the link (FIA_raw and RF_models) should be placed in the 9.FIA folder downloaded from GitHub.
 
 ### Cropping the LANDIS domain.
 
