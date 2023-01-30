@@ -96,7 +96,7 @@ the PLANTS codes. Species must be listed in the same order as fia_spec.
 to the nearest age bin to assign their cohorts (e.g. a 9 year-old tree is in the 0-10 year cohort, and an 11 year-old tree
 is in the 11-20 year cohort).
 
-	+ **aoi_ele**v: the approximate average elevation of the AOI. We are working on a method to calculate this in the
+	+ **aoi_elev**: the approximate average elevation of the AOI. We are working on a method to calculate this in the
 code.
 
 + Fuels:
@@ -158,7 +158,7 @@ should be set here.
 	+ **topo_custom**: boolean indicating whether a custom topo.inp file will be used. Currently the DRM only supports
 flat topography, but future versions will include the option to use custom topography.
 
-	+ **max_topo**: DO NOT CHANGE. Set to zero for flat topography. Future versions of the DRAM will alter this value 
+	+ **max_topo**: DO NOT CHANGE. Set to zero for flat topography. Future versions of the DRM will alter this value 
 based on the difference between the highest and lowest elevations in the AOI.
 
 + Wind Settings:
