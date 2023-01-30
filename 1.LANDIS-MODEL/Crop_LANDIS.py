@@ -107,15 +107,22 @@ def Landis(lp):
         ## occurring, we will have to rename them to "_cropped" and copy them to the right location. 
         ## I will need to rewrite things to be more intuitive.
         src = [os.path.join(lp.landis_path,"output-community-"+str(lp.year)+".img"),
-               os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img"),
-               os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img"),
-               os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+".csv")]
+               os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+".csv"),
+               os.path.join(lp.landis_path,lp.IC_map)]
         dst = [os.path.join(lp.landis_path,"output-community-cycle"+str(lp.cycle)+"_cropped.tif"),
-               os.path.join(lp.landis_path,"SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif"),
-               os.path.join(lp.landis_path,"ConiferNeedleBiomass-cycle"+str(lp.cycle)+"_cropped.tif"),
-               os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv")]
+               os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv"),
+               os.path.join(lp.landis_path,lp.IC_cropped)]
         for i in range(len(src)):
             shutil.copyfile(src[i], dst[i])
+        ## georeference .img files
+        IC_path = os.path.join(lp.landis_path,lp.IC_map)
+        litter_img =  os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img")
+        litter_tif = "SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif"
+        needles_img = os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img")
+        needles_tif = "ConiferNeedleBiomass-cycle"+str(lp.cycle)+"_cropped.tif"
+        georeference(IC_path,litter_img,litter_tif,lp.landis_path)
+        georeference(IC_path,needles_img,needles_tif,lp.landis_path)
+        
     
 def crop_raster(raster_path, bbox, landis_path, out_name):
     with rio.open(raster_path,"r+") as rst:
