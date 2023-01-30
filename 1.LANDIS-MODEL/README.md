@@ -1,4 +1,6 @@
-## Running the DRM with LANDIS and QUIC-Fire
+## Running the DRM with LANDIS-II and QUIC-Fire
+
+### 1. Set up the LANDIS run
 
 LANDIS-II can be used in the Disturbance Response Model framework to incorporate the impacts of fine-scale fire
 behavior into a broad-scale model of landscape change. The framework assumes that the LANDIS model has already
@@ -32,7 +34,7 @@ input value. The framework references these values as the last item in their lin
 	+ InitialDeadCoarseRootsMapName
 	+ InitialFineFuels
 
-### FIA Data
+### 2. Download FIA Data
 
 The fire simululation models require a 3D fuels array that is created from a list of individual trees with unique
 attributes. Because LANDIS does not track individual trees, we have developed a method for assigning these attributes
@@ -56,7 +58,7 @@ their size. Please download these files from this
 [Google Drive folder](https://drive.google.com/drive/folders/194ETyYrKL9huV9ZSIFgBkEUvv5MdXruT?usp=share_link). 
 The two folders in the link (FIA_raw and RF_models) should be placed in the 9.FIA folder downloaded from GitHub.
 
-### Cropping the LANDIS domain.
+### 3. Import optional burn plot shapefile
 
 The user might wish to run each iteration of the LANDIS model at a landscape extent, but conduct fire simulations on a
 smaller section of that domain. Included in the DRM is the option to crop the LANDIS run before each fire simulation to
@@ -66,7 +68,7 @@ save time on the more computationally-intensive fire simulation. If cropping is 
 2. Put the shapefile in 1.LANDIS-MODEL/Shapefiles
 3. Change the "crop_domain" input in LANDIS_options.py to True *(see below)*
 
-### LANDIS_options.py
+### 4. Modify LANDIS_options.py
 
 Once the LANDIS run is set up, parameters must be input into 1.LANDIS-MODEL/LANDIS_options.py so that a treelist 
 can be generated. All parameters are input as values in a python dictionary, so lists must be enclosed in brackets 
@@ -121,7 +123,7 @@ simulation.
 not survive. Enter one value for each tree species, in the order corresponding to the species in the fia_spec and
 landis_spec lists. 
 
-### QUICFire_options.py
+### 5. Modify QUICFire_options.py
 
 The DRM has built-in functions to write QUIC-Fire input files based on user inputs in QUICFire_options.py. Like in
 LANDIS_options.py, all values are input to a python dictionary.
