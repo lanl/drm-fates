@@ -107,15 +107,16 @@ def Landis(lp):
         ## occurring, we will have to rename them to "_cropped" and copy them to the right location. 
         ## I will need to rewrite things to be more intuitive.
         src = [os.path.join(lp.landis_path,"output-community-"+str(lp.year)+".img"),
-               os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+".csv"),
-               os.path.join(lp.landis_path,lp.IC_map)]
+               os.path.join(lp.landis_path,"community-input-file-"+str(lp.year)+".csv")]
         dst = [os.path.join(lp.landis_path,"output-community-cycle"+str(lp.cycle)+"_cropped.tif"),
-               os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv"),
-               os.path.join(lp.landis_path,lp.IC_cropped)]
+               os.path.join(lp.landis_path,"community-input-file-cycle"+str(lp.cycle)+"_cropped.csv")]
         for i in range(len(src)):
             shutil.copyfile(src[i], dst[i])
         ## georeference .img files
-        IC_path = os.path.join(lp.landis_path,lp.IC_map)
+        if lp.spinup:
+            shutil.copyfile(os.path.join(lp.landis_path,lp.IC_map),
+                            os.path.join(lp.landis_path,lp.IC_cropped))
+        IC_path = os.path.join(lp.landis_path,lp.IC_cropped)
         litter_img =  os.path.join(lp.landis_path,"NECN","SurfaceLitterBiomass-"+str(lp.year)+".img")
         litter_tif = "SurfaceLitterBiomass-cycle"+str(lp.cycle)+"_cropped.tif"
         needles_img = os.path.join(lp.landis_path,"NECN","ConiferNeedleBiomass-"+str(lp.year)+".img")
