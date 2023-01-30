@@ -32,6 +32,25 @@ input value. The framework references these values as the last item in their lin
 	+ InitialDeadCoarseRootsMapName
 	+ InitialFineFuels
 
+### FIA Data
+
+The fire simululation models require a 3D fuels array that is created from a list of individual trees with unique
+attributes. Because LANDIS does not track individual trees, we have developed a method for assigning these attributes
+by matching LANDIS cohorts to trees from USFS Forest Inventory and Analysis (FIA) plots. Thus, before running the DRM
+with LANDIS, the user must download the necessary FIA data.
+
++ FIA data can be accessed at the 
+[FIA DataMart](https://experience.arcgis.com/experience/3641cea45d614ab88791aef54f3a1849/)
+
++ Data should be downloaded in CSV format and placed in 9.FIA/FIA_raw.
+
++ Download data from the state the AOI is in, as well as all (or some) surrounding states. Data from FIA plots in these
+states will be used to approximate the LANDIS cohorts, so download any states with forests that have tree species present
+in the AOI. Likewise, data from states that do not have those species (even if they border the AOI state) do not need to
+be downloaded.
+
++ For each state XX, download **XX_TREE.csv** and **XX_COND.csv**. No other datasets are necessary.
+
 ### Cropping the LANDIS domain.
 
 The user might wish to run each iteration of the LANDIS model at a landscape extent, but conduct fire simulations on a
