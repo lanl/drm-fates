@@ -12,11 +12,10 @@ import re
 import math
 
 def toLandis(lp):
-    ## User Inputs ##############
+    print("Building LANDIS inputs from postfire treelist...")
+    
     # File paths
     FM2VDM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/FM2VDM")
-    # VDM2FM_path = os.path.join(lp.OG_PATH, "1.LANDIS-MODEL/VDM2FM")
-    ## End User Inputs ##########
     
     ## Read in post-fire treelist and assign necessary data to the remaining trees
     postfire = postfire_treelist(FM2VDM_path,lp.landis_path,lp.cycle)
@@ -38,6 +37,7 @@ def toLandis(lp):
     ## Create new Initial Communities file (not necessary I think?)
     write_IC(community_input_file,lp.landis_path,lp.cycle)
     
+    print("Success!")
     ## End main function ##
 
 def postfire_treelist(postfire_path,treelist_path,cycle):
@@ -124,7 +124,7 @@ def replace_fuels(OG_PATH, landis_path, cycle, coarseroots_map, IC_map, L2_res, 
         slb_arr = slb.read(1)
         with rio.open(os.path.join(landis_path,"NECN","ConiferNeedleBiomass-"+str(year_prev)+".img"), "r+") as cnb:
             cnb_arr = cnb.read(1)
-            landis_arr = (slb_arr + cnb_arr)*1000
+            landis_arr = (slb_arr + cnb_arr)
             with rio.open(os.path.join(landis_path, "Postfire_litter_cycle"+str(cycle)+".tif"), "r+") as pfl:
                 litter_arr = pfl.read(1)
                 if crop_domain:

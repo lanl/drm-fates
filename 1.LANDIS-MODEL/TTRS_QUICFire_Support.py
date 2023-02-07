@@ -11,7 +11,7 @@ from jinja2 import Template, TemplateError
 from scipy import interpolate
 from scipy.io import FortranFile
 
-def import_fortran_dat_file(filename,cell_nums): 
+def import_fortran_dat_file(filename,cell_nums):
     (nx,ny,nz) = cell_nums
     arr =  FortranFile(filename,'r','uint32').read_ints('float32').T.reshape(nz,ny,nx)
     return arr

@@ -11,6 +11,7 @@ import random
 import sys,os
 import os.path
 import subprocess
+import re
 from shutil import copyfile
 import shutil
 from subprocess import call
@@ -26,6 +27,8 @@ import LLM_display
 sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
 import postfuelfire_new as pff 
 import Buffer as buff
+sys.path.insert(0, "1.LANDIS-MODEL")
+import TTRS_QUICFire_Support as ttrs
 
 #Determine which quicfire print functions to use
 if qf_options['QFVD'] == 4:
@@ -147,7 +150,7 @@ def print_qf_inputs(ri):
     if ri['QFVD'] == 4:
         QFVD.print_topo_inp(ri)
 
-def runTreeQF():
+def runTreeQF(nsp,nx,ny,nz,ii):
 # Note: Adam has a QF Tree code in '5.TREES-QUICFIRE'
     if VDM == "LLM":
         VDM_folder = "1.LLM-HSM-MODEL"
@@ -175,6 +178,9 @@ def runTreeQF():
             sleep(1)
         if process.poll()==0:
             print('Tree program run successfully!')
+            ## If using quicfire, sum the species layers of 4D trees*.dat files
+            if FM=="QUICFIRE":
+                sp_sum(nsp,nx,ny,nz,ii)
             ### Copying Tree Files to Fire Affects Assessment
             file_list = ["TreeTracker.txt","treelist_VDM.dat","VDM_litter_WG.dat","VDM_litter_trees.dat"]
             for i in file_list:
@@ -199,9 +205,6 @@ def runQF(i,VDM):
     copyfile(src+'treesss.dat',dst+'treesss.dat')
     
     if VDM == "LANDIS":
-        os.chdir("../1.LANDIS-MODEL")
-        import TTRS_QUICFire_Support as ttrs
-        import re
         os.chdir("../5.TREES-QUICFIRE")
         with open('fuellist', 'r', encoding='utf-8') as file:
             filelist = file.readlines()
@@ -212,7 +215,8 @@ def runQF(i,VDM):
         rhof = ttrs.import_fortran_dat_file("treesrhof.dat", cell_nums)
         os.chdir("../1.LANDIS-MODEL/VDM2FM")
         surf = np.loadtxt("VDM_litter_trees.dat")
-        rhof[0,:,:] = surf
+        newsurf = surf + rhof[0,:,:]
+        rhof[0,:,:] = newsurf
         os.chdir("../../7.QUICFIRE-MODEL/projects/LandisTester/")
         ttrs.export_fortran_dat_file(rhof,"treesrhof.dat")
         os.chdir("../../../5.TREES-QUICFIRE")
@@ -244,10 +248,15 @@ def runQF(i,VDM):
        shutil.rmtree(dd)
     os.rename('Plots', dd)
     os.mkdir('Plots')
+    # rename initial fuels
     dd = "fuels-dens-00000." + str(i) + ".vin"
     os.rename('fuels-dens-00000.bin', dd)
     dd = "fire_indexes." + str(i) + ".vin"
     os.rename('fire_indexes.bin', dd)
+    # rename postfire fuels
+    simtime = str(qf_options["SimTime"]).zfill(5)
+    dd = "fuels-dens-"+simtime+"."+str(i)+".vin"
+    os.rename('fuels-dens-'+simtime+".bin", dd)
     return
 
 def runCrownScorch(ii):
@@ -289,7 +298,37 @@ def runCrownScorch(ii):
             copyfile("../"+VDM_folder+"/FM2VDM/"+i+".txt","../"+VDM_folder+"/FM2VDM/"+i+"."+str(ii)+".txt")
  
     return LiveDead
-    
+
+def sp_sum(nsp, nx, ny, nz, ii):
+    dat_list = ["rhof","moist","ss","fueldepth"]
+    for i in dat_list:
+        print("Importing trees"+str(i)+" 4D dat file")
+        shutil.copyfile("trees"+str(i)+".dat","trees"+str(i)+"4D_cycle"+str(ii)+".dat")
+        rhof= np.zeros(nsp*nx*ny*nz).reshape(nsp,nx,ny,nz)
+        datfile = "trees"+str(i)+".dat"
+        rhoffile = open("./"+datfile,'rb')
+        for ift in range(nsp):
+            print('Reading species ',ift)
+            rhof[ift,:,:,:] = readfield(rhoffile,nx,ny,nz)
+            trhof = rhof[ift,:,:,:]
+            print( 'SPECIES ',ift+1,' MIN = ',np.min(trhof) ,' ; MAX = ',np.max(trhof))
+        rhoffile.close()
+        print(rhof.shape)
+        # flip, rotate, and swap axes
+        sp_all = np.sum(rhof, axis=0)
+        sp_all = np.flip(sp_all, axis=1)
+        sp_all = np.rot90(sp_all,3)
+        sp_all = np.swapaxes(sp_all,0,2)
+        sp_all = np.swapaxes(sp_all, 1, 2)
+        
+        ttrs.export_fortran_dat_file(sp_all, datfile)
+        print("3D array created for trees"+str(i)+".dat")
+    return  
+  
+def readfield(fuelfile, Nx, Ny, Nz):
+    np.frombuffer(fuelfile.read(4),'f')
+    return np.frombuffer(fuelfile.read(Nx*Ny*Nz*4), 'f').reshape((Nx,Ny,Nz),order='F')
+
 def runLLMcyclical(p,nyears):
     os.chdir("../1.LLM-HSM-MODEL")
     flitter='FM2VDM/AfterFireLitter.txt'
@@ -342,10 +381,13 @@ def updateTreelist(p,ii):
 #-----main------
 
 VDM = "LANDIS" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
+FM = "QUICFIRE" # Fire Model: "QUICFIRE" or "FIRETEC"
 
 nyears=5      # number of years for spinup and transient runs
 ncycyear=10    # number of cyclical year run
 ncycle=4      # number of loops
+
+nfuel = 2 # number of tree species (if not using LANDIS)
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -400,7 +442,8 @@ elif VDM == "LANDIS":
     qf_options['ig_ymin'] = Treelist_params.ny/2 # half of half the y length
     qf_options['ig_xlen'] = 10
     qf_options['ig_ylen'] = Treelist_params.ny #since dy is 2, this is half the length of the y side of the domain
-    #### MAKE INTO FUNCTION
+    nfuel = Treelist_params.num_spp
+#### MAKE INTO FUNCTION
 df = pd.read_csv('VDM2FM/treelist_VDM.dat',sep=' ',
                           names=["Tree id","x coord [m]","y coord [m]","Ht [m]",
                               "htlc [m]","CRDiameter [m]","hmaxcr [m]",
@@ -430,7 +473,7 @@ LiveDead=[]
 i = 0
 for i in range(ncycle):
     ii = i + 1
-    runTreeQF()                       # runs the tree program to create QF inputs
+    runTreeQF(nfuel,qf_options['nx'],qf_options['ny'],qf_options['nz'],ii)      # runs the tree program to create QF inputs
     runQF(i,VDM)                           # runs QuickFire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
