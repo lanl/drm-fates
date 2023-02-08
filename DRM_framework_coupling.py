@@ -474,7 +474,7 @@ i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF(nfuel,qf_options['nx'],qf_options['ny'],qf_options['nz'],ii)      # runs the tree program to create QF inputs
-    runQF(i,VDM)                           # runs QuickFire
+    runQF(i,VDM)                           # runs QUIC-Fire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
@@ -532,6 +532,7 @@ for i in range(ncycle):
         Crop.Landis(L2_params)
         # Build another treelist
         Treelist_params = Landis.toTreelist(L2_params)
+        qf_options['nx'], qf_options['ny'], qf_options['nz'] = Treelist_params.nx, Treelist_params.ny, Treelist_params.nz
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)
