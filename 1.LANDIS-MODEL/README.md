@@ -183,4 +183,24 @@ y length of the domain from the origin. If using LLM or FATES, ignition will be 
 
 	+ **ig_method**, **ig_pattern**, **ig_spacing**: inputs for potential future implementation of driptorch.
 
+### Troubleshooting Tips
 
+If for any reason you need to restart the DRM, there are a few steps you will need to take to avoid errors.
+
+1. 1.LANDIS-MODEL folder
+
++ Make sure the NECN input file is correct for the spinup. If there is a file called "NECN_original.txt", you will need
+to delete the file with actual name of the original NECN input file, and rename "NECN_original.txt" to that name. For
+example, if the name of the original NECN input file is "NECN_Succession.txt", delete it, then rename 
+"NECN_original.txt" --> "NECN_Succession.txt"
+
++ Do the same for the InitialDeadCoarseRootsMap file. Delete the file *without* "_original" at the end, then remove the
+"_original" from the filename where it exists. For example, "surfacedead.tif" would be deleted, and "surfacedead_original.tif"
+would be renamed to "surfacedead.tif"
+
++ It may be desirable to delete all files that were produced in LANDIS runs during the last DRM run, but it is not necessary.
+
+2. 7.QUICFIRE-MODEL folder
+
++ Any binary files that have been renamed to ".vin" must be removed prior to restarting a run. It may be desirable to delete
+all .bin files, but not necessary.
