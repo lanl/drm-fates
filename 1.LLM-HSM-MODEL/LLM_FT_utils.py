@@ -340,15 +340,15 @@ def update_tree_info_per_location(pp,ftreelist,graph):
     
     #count only trees higher than 1.37m and dbh>1
     lp_count=pp.old_LPcount.copy()
-    lp_count[pp.old_ht<1.37]=0
-    lp_count[lp_dbh<1.001]=0
+    lp_count[pp.old_ht<0.15]=0
+    #lp_count[lp_dbh<1.001]=0
     if graph:
         axx=plot_area_matrix(lp_count,'LLP tree number ','yes') 
     print ('number of LLPs:',np.sum(lp_count))
 
     hw_count=pp.old_HWcount.copy()
-    hw_count[pp.old_htHW<1.37]=0
-    hw_count[hw_dbh<1.001]=0
+    hw_count[pp.old_htHW<0.15]=0
+    #hw_count[hw_dbh<1.001]=0
     if graph:
         axx=plot_area_matrix(hw_count,'LLP tree number ','yes') 
     print ('number of HWs:',np.sum(hw_count))
