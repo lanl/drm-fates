@@ -391,8 +391,35 @@ nfuel = 2 # number of tree species (if not using LANDIS)
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
-ierr = call('make clean', shell=True)
-ierr = call('make', shell=True)
+
+with subprocess.Popen(
+    ["wsl","make","clean"], stdout=subprocess.PIPE
+) as process:
+
+    def poll_and_read():
+        print(f"{process.stdout.read1().decode('utf-8')}")
+    
+    while process.poll() != 0:
+        poll_and_read()
+        sleep(1)
+    if process.poll()==0:
+        print('make clean successful - running make')
+        with subprocess.Popen(
+            ["wsl","make"], stdout=subprocess.PIPE
+        ) as process:
+
+            def poll_and_read():
+                print(f"{process.stdout.read1().decode('utf-8')}")
+            
+            while process.poll() != 0:
+                poll_and_read()
+                sleep(1)
+            if process.poll()==0:
+                print('trees successfully compiled')
+        
+
+# ierr = call('make clean', shell=True)
+# ierr = call('make', shell=True)
 
 # SPINUP
 if VDM == "LLM":
