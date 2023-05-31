@@ -150,7 +150,8 @@ def get_thresholds(lp):
     merge = merge_dictionary_list(dicts)
     mortality_dict = {}
     for i in merge.values():
-        mortality_dict[i[1]] = i[0]
+        if len(i)==2:
+            mortality_dict[i[1]] = i[0]
 
     return mortality_dict
 

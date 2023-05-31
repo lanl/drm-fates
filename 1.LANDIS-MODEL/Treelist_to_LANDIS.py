@@ -29,7 +29,11 @@ def toLandis(lp):
                                          "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle)
     
     ## Replace fuels
-    replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.coarseroots_map, lp.IC_map, lp.L2_res, lp.year_prev, lp.crop_domain)
+    if lp.cycle == 1:
+        IC_map = lp.IC_map
+    else:
+        IC_map = "output-community-"+str(lp.year_prev)+".tif"
+    replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.coarseroots_map, IC_map, lp.L2_res, lp.year_prev, lp.crop_domain)
     
     ## Write new LANDIS community input file CSV
     community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)
@@ -63,7 +67,9 @@ def treelist_to_cohorts(x,L2_res,spec_rename):
 def merge_cohorts(postfire,path,CIF_in,cycle):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
+    # print("prefire_mc:", prefire_mc)
     postfire_mc = postfire["MapCode"].unique()
+    # print("postfire_mc:", postfire_mc)
     ## For any mapcodes with no fuels after fire, populate with zeros/None
     missing_mc = list(set(prefire_mc).difference(postfire_mc))
     if len(missing_mc) != 0:
@@ -77,7 +83,9 @@ def merge_cohorts(postfire,path,CIF_in,cycle):
     ## Replace burn domain in landis run with updated fuels
     prefire_uncropped = pd.read_csv(os.path.join(path,CIF_in))
     burndomain_mc = postfire_all["MapCode"].unique()
+    # print("burndomain_mc:", burndomain_mc)
     uncropped_mc = prefire_uncropped["MapCode"].unique()
+    # print("prefire_uncropped:", uncropped_mc)
     if np.array_equal(burndomain_mc,uncropped_mc):
         postfire_landis = postfire_all
     else:
@@ -120,6 +128,7 @@ def replace_fuels(OG_PATH, landis_path, cycle, coarseroots_map, IC_map, L2_res, 
                   transform=IC.transform) as pfl:
                 pfl.write(litter_arr,1)
     ## Replace values of deadwood raster with the postfire litter values
+    print("cycle =", cycle, "year_prev =", year_prev)
     with rio.open(os.path.join(landis_path,"NECN","SurfaceLitterBiomass-"+str(year_prev)+".img"), "r+") as slb:
         slb_arr = slb.read(1)
         with rio.open(os.path.join(landis_path,"NECN","ConiferNeedleBiomass-"+str(year_prev)+".img"), "r+") as cnb:
@@ -129,11 +138,15 @@ def replace_fuels(OG_PATH, landis_path, cycle, coarseroots_map, IC_map, L2_res, 
                 litter_arr = pfl.read(1)
                 if crop_domain:
                     with rio.open(os.path.join(landis_path,IC_map), "r+") as IC:
+                        print("IC_map:", IC_map) #this might be the problem
                         x_start = int((pfl.transform[2]-IC.transform[2])/L2_res)
                         y_start = int((IC.transform[5]-pfl.transform[5])/L2_res)
                         x_end = int(x_start + pfl.shape[1])
                         y_end = int(y_start + pfl.shape[0])
+                        print("x_start:",x_start,"y_start:",y_start,"x_end:",x_end,"y_end:",y_end)
                         postfire_finefuel = landis_arr.copy()
+                        print("litter_arr shape:", litter_arr.shape)
+                        print("start/end shape:", postfire_finefuel[y_start:y_end,x_start:x_end].shape)
                         postfire_finefuel[y_start:y_end,x_start:x_end] = litter_arr
                         with rio.open(os.path.join(landis_path,"SurfaceFuels_cycle"+str(cycle)+".tif"),
                                       mode="w",

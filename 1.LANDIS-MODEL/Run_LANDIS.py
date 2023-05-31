@@ -4,9 +4,6 @@ Created on Wed Nov  9 12:12:26 2022
 
 @author: Niko Tutland
 """
-"""
-PUT FASTFUELS CALL IN HERE
-"""
 
 import os
 import sys
@@ -62,7 +59,7 @@ class LandisParams:
         self.cycle = int(cycle)              #current iteration
         self.spinup = spinup                 #is this the initial run?
         if spinup == True:
-            year_prev = int(nyears)
+            year_prev = int(nyears) #should this be null?
             year = int(nyears)
         elif cycle == 1:
             year_prev = int(nyears)

@@ -308,7 +308,7 @@ def sp_sum(nsp, nx, ny, nz, ii):
         datfile = "trees"+str(i)+".dat"
         rhoffile = open("./"+datfile,'rb')
         for ift in range(nsp):
-            print('Reading species ',ift)
+            print('Reading species ',ift+1)
             rhof[ift,:,:,:] = readfield(rhoffile,nx,ny,nz)
             trhof = rhof[ift,:,:,:]
             print( 'SPECIES ',ift+1,' MIN = ',np.min(trhof) ,' ; MAX = ',np.max(trhof))
@@ -407,7 +407,7 @@ with subprocess.Popen(
         with subprocess.Popen(
             ["wsl","make"], stdout=subprocess.PIPE
         ) as process:
-
+        
             def poll_and_read():
                 print(f"{process.stdout.read1().decode('utf-8')}")
             
@@ -560,6 +560,7 @@ for i in range(ncycle):
         # Build another treelist
         Treelist_params = Landis.toTreelist(L2_params)
         qf_options['nx'], qf_options['ny'], qf_options['nz'] = Treelist_params.nx, Treelist_params.ny, Treelist_params.nz
+        nfuel = Treelist_params.num_spp
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)

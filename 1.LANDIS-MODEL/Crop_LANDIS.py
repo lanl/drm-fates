@@ -10,10 +10,11 @@ import numpy as np
 import os
 import rasterio as rio
 import rasterio.mask
+from shapely.geometry import Point, Polygon
 import fiona
 import pandas as pd
 import shutil
-from shapely.geometry import Point, Polygon
+
 
 def Landis(lp):
     if lp.crop_domain:   
@@ -77,7 +78,7 @@ def Landis(lp):
         ### Clip landis to new burn domain
         
         ## Import burn domain polygon
-        with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","new_bbox.shp"))) as shapefile:
+        with fiona.open(os.path.join(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp"))) as shapefile:
             new_domain = [feature["geometry"] for feature in shapefile]
             
         if lp.spinup == False:
