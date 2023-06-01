@@ -563,6 +563,7 @@ for i in range(ncycle):
         nfuel = Treelist_params.num_spp
 
 LiveDead=np.array(LiveDead)
+os.chdir("..")
 os.makedirs('output', exist_ok=True)
 # np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
 os.chdir("output")
