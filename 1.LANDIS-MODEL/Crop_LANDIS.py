@@ -26,6 +26,8 @@ def Landis(lp):
         if lp.spinup: 
             #### Create burn domain that lines up with landis grid cells
             IC_path = os.path.join(lp.landis_path,lp.IC_map)
+            with rio.open(IC_path, 'r+') as landis_rast:
+                IC_epsg = landis_rast.crs.to_epsg()
             
             if os.path.exists(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp")):
                 with fiona.open(os.path.join(OG_PATH,"Shapefiles","burn_domain.shp")) as shapefile:
@@ -35,7 +37,7 @@ def Landis(lp):
                 crop_raster(IC_path, new_domain, lp.landis_path, lp.IC_cropped)
             else:
                 ## Create initial domain from bounds of burn plot shapefile
-                burn_plot = gpd.read_file(os.path.join(OG_PATH,"Shapefiles","burn_plot.shp")).to_crs(epsg=5070)
+                burn_plot = gpd.read_file(os.path.join(OG_PATH,"Shapefiles","burn_plot.shp")).to_crs(epsg=IC_epsg)
                 tb = burn_plot.total_bounds
                 buff = 200
                 W = tb[0] - buff
@@ -43,7 +45,7 @@ def Landis(lp):
                 E = tb[2] + buff
                 N = tb[3] + buff            
                 domain_poly = Polygon([(W,S), (W,N), (E,N), (E,S), (W,S)])
-                burn_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = 5070)
+                burn_domain = gpd.GeoDataFrame({'col1':['name']}, geometry=[domain_poly], crs = IC_epsg)
                 # Initial Communities raster
                 ## Convert landis raster to points
                 with rio.open(IC_path, 'r+') as landis_rast:

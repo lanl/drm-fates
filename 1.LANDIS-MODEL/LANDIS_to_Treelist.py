@@ -140,6 +140,7 @@ def process_fia(path, states):
     for i in states:
         ## From Trees Table: Pull in attributes we'll need for matching and for building a treelist
         tree = pd.read_csv(os.path.join(path,i+"_TREE.csv"))
+        tree.columns = tree.columns.str.lower()
         tree = tree[tree["statuscd"]==1]
         tree = tree[["cn","plt_cn","condid","dia","ht","cclcd","cr","drybio_ag","spcd","tpa_unadj","invyr","bhage","totage"]]
         tree = tree[tree["cn"].notna()]
@@ -149,6 +150,7 @@ def process_fia(path, states):
         tree["state"] = i
         ## From Condition Table: make sure it's forested with live trees, then get site condition
         cond = pd.read_csv(os.path.join(path,i+"_COND.csv"))
+        cond.columns = cond.columns.str.lower()
         cond = cond[(cond["cond_status_cd"]==1) & (cond["live_canopy_cvr_pct"] > 0)]
         cond = cond[["plt_cn","condid","physclcd","sicond","stdage","balive"]]
         ## Join cond and tree tables together
@@ -179,8 +181,9 @@ def age_calc(x,path,age_bin):
     mask = (x["totage"]>0) | (x["bhage"]>0)
     withage = x[mask]
     noage = x[~mask]
-    # use totage or bhage+10 if age is populated
-    withage["AGE"] = withage.apply(lambda x: x.totage if x.totage > 0 else x.bhage + 10, axis = 1)
+    if len(withage.index > 0):
+        # use totage or bhage+10 if age is populated
+        withage["AGE"] = withage.apply(lambda x: x.totage if x.totage > 0 else x.bhage + 10, axis = 1)
     # now predict age for everything else
     y = noage[["cn","plt_cn","condid","spcd","drybio_ag","tpa_unadj","invyr","AG_Biomass_gm2","cr","state","SPECIES_SYMBOL","MAJOR_SPGRPCD"]]
     x_vars = noage[["dia","ht","cclcd","physclcd","sicond","stdage","balive","MAJOR_SPGRPCD"]]
