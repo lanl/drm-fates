@@ -26,7 +26,8 @@ def toLandis(lp):
     
     ## Merge with uncropped treelist
     community_input_file = merge_cohorts(postfire_cohorts, lp.landis_path, 
-                                         "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle)
+                                         "community-input-file-"+str(lp.year_prev)+".csv", lp.cycle,
+                                         "output-community-"+str(lp.year_prev)+".img")
     
     ## Replace fuels
     if lp.cycle == 1:
@@ -36,7 +37,7 @@ def toLandis(lp):
     replace_fuels(lp.OG_PATH, lp.landis_path, lp.cycle, lp.coarseroots_map, IC_map, lp.L2_res, lp.year_prev, lp.crop_domain)
     
     ## Write new LANDIS community input file CSV
-    community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)
+    # community_input_file.to_csv(os.path.join(lp.landis_path,"community-input-file-"+str(lp.year_prev)+".csv"), index = False)
     
     ## Create new Initial Communities file (not necessary I think?)
     write_IC(community_input_file,lp.landis_path,lp.cycle)
@@ -64,7 +65,7 @@ def treelist_to_cohorts(x,L2_res,spec_rename):
     community_input_file = community_input_file.replace({"SpeciesName" : spec_rename})
     return community_input_file
 
-def merge_cohorts(postfire,path,CIF_in,cycle):
+def merge_cohorts(postfire,path,CIF_in,cycle,OC_in):
     prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     # print("prefire_mc:", prefire_mc)
@@ -92,7 +93,19 @@ def merge_cohorts(postfire,path,CIF_in,cycle):
         outside_burndomain = prefire_uncropped[~prefire_uncropped["MapCode"].isin(burndomain_mc)]
         postfire_landis = pd.concat([outside_burndomain, postfire_all])
     postfire_landis = postfire_landis[["MapCode","SpeciesName","CohortAge","CohortBiomass"]]
-    return postfire_landis
+    pf_landis_mc = postfire_landis["MapCode"].unique()
+    with rio.open(os.path.join(path,OC_in)) as OC:
+        OC_mc = OC.read(1).flatten()
+    missing_mc = list(set(OC_mc).difference(pf_landis_mc))
+    if len(missing_mc) != 0:
+        postfire_missing = pd.DataFrame({"MapCode":missing_mc,
+                                         "SpeciesName":[None]*len(missing_mc),
+                                         "CohortAge":[0]*len(missing_mc),
+                                         "CohortBiomass":[0]*len(missing_mc)})
+        postfire_landis_all = pd.concat([postfire_landis,postfire_missing])
+    else:
+        postfire_landis_all = postfire_landis
+    return postfire_landis_all
 
 def write_IC(IC,path,cycle):
     with open(os.path.join(path,'postfireIC_cycle'+str(cycle)+".txt"), 'w') as file:
@@ -105,11 +118,14 @@ def write_IC(IC,path,cycle):
                 file.write("\n")
             else:
                 for j in IC_mc["SpeciesName"].unique():
-                    file.write("{} ".format(j))
-                    IC_mc_sp = IC_mc[IC_mc["SpeciesName"]==j].reset_index()
-                    for k in range(0,IC_mc_sp.shape[0]):
-                        file.write("{} ({}) ".format(int(IC_mc_sp.loc[k,"CohortAge"]), int(math.ceil(IC_mc_sp.loc[k,"CohortBiomass"]))))
-                    file.write("\n")
+                    if j==None:
+                        file.write("\n")
+                    else:
+                        file.write("{} ".format(j))
+                        IC_mc_sp = IC_mc[IC_mc["SpeciesName"]==j].reset_index()
+                        for k in range(0,IC_mc_sp.shape[0]):
+                            file.write("{} ({}) ".format(int(IC_mc_sp.loc[k,"CohortAge"]), int(math.ceil(IC_mc_sp.loc[k,"CohortBiomass"]))))
+                        file.write("\n")
             file.write("\n")
         file.write("\n")
 
