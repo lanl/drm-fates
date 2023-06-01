@@ -27,7 +27,7 @@ for(i in 0:4){
 ```
 
 ```{r}
-all_cyc %>% filter(SPECIES_SYMBOL=="PSME") %>%
+all_cyc %>% filter(SPECIES_SYMBOL=="ACRU") %>%
   ggplot(aes(X,Y,color=SPECIES_SYMBOL)) +
   geom_point(size = 0.1) +
   facet_wrap(.~Cycle) +

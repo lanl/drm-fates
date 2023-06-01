@@ -61,3 +61,4 @@ __pycache__
 9.FIA/FIA_raw/**
 elm_env/**
 .Rproj.user
+.Rhistory
