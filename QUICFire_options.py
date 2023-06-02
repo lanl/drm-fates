@@ -15,13 +15,17 @@ PROJ_PATH = os.path.join(OG_PATH,"7.QUICFIRE-MODEL","projects")
 # Simulation parameters
 qf_options['QFVD'] = 4 #version 4 or 5
 PROJ_FOLDER = "LandisTester" #folder containing QF inputs
-qf_options['SimTime'] = 60
-qf_options['print_times'] = 20
+qf_options['SimTime'] = 240
+qf_options['print_times'] = 60
 
 # Domain settings
 qf_options['nx'] = 200 #starting values, may be modified in code
 qf_options['ny'] = 200 #"
 qf_options['nz'] = 22  #"
+
+# Constant surface fuel parameters
+qf_options['fuel_moisture'] = 0.05
+qf_options['fuel_height'] = 0.1
 
 # Topo settings
 qf_options['topo_custom'] = False

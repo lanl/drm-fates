@@ -178,9 +178,9 @@ def runTreeQF(nsp,nx,ny,nz,ii):
             sleep(1)
         if process.poll()==0:
             print('Tree program run successfully!')
-            ## If using quicfire, sum the species layers of 4D trees*.dat files
+            ## If using quicfire, combine the species layers of 4D trees*.dat files
             if FM=="QUICFIRE":
-                sp_sum(nsp,nx,ny,nz,ii)
+                treesdat_combine(nsp,nx,ny,nz,ii)
             ### Copying Tree Files to Fire Affects Assessment
             file_list = ["TreeTracker.txt","treelist_VDM.dat","VDM_litter_WG.dat","VDM_litter_trees.dat"]
             for i in file_list:
@@ -194,7 +194,7 @@ def runTreeQF(nsp,nx,ny,nz,ii):
     
     return
 
-def runQF(i,VDM):
+def runQF(i,VDM,qf_options):
     #copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
@@ -204,7 +204,10 @@ def runQF(i,VDM):
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
     copyfile(src+'treesss.dat',dst+'treesss.dat')
     
+    # for landis, add surface fuel density, moisture, and depth values for non-canopy fuels
     if VDM == "LANDIS":
+        # import .dat files output by trees
+        # these will only have canopy fuels
         os.chdir("../5.TREES-QUICFIRE")
         with open('fuellist', 'r', encoding='utf-8') as file:
             filelist = file.readlines()
@@ -213,12 +216,23 @@ def runQF(i,VDM):
         line = lines[0]
         cell_nums = list(map(int, re.findall(r'\d+', line)))
         rhof = ttrs.import_fortran_dat_file("treesrhof.dat", cell_nums)
+        moist = ttrs.import_fortran_dat_file("treesmoist.dat", cell_nums)
+        fueldepth = ttrs.import_fortran_dat_file("treesfueldepth.dat",cell_nums)
+        # read in surface fuels from landis
         os.chdir("../1.LANDIS-MODEL/VDM2FM")
         surf = np.loadtxt("VDM_litter_trees.dat")
-        newsurf = surf + rhof[0,:,:]
-        rhof[0,:,:] = newsurf
+        # replace fuel moisture and depth values only where there are no canopy fuels
+        qf_moist = np.full((cell_nums[0],cell_nums[1]), qf_options['fuel_moisture'])
+        moist[0,:,:] = np.where((rhof[0,:,:]>0) | (surf == 0), moist[0,:,:], qf_moist)
+        qf_depth = np.full((cell_nums[0],cell_nums[1]), qf_options['fuel_height'])
+        fueldepth[0,:,:] = np.where((rhof[0,:,:]>0) | (surf==0), fueldepth[0,:,:], qf_depth)
+        # now add surface fuel density from landis to canopy fuel density from trees
+        rhof[0,:,:] = surf + rhof[0,:,:]
+        # export new .dat files
         os.chdir("../../7.QUICFIRE-MODEL/projects/LandisTester/")
         ttrs.export_fortran_dat_file(rhof,"treesrhof.dat")
+        ttrs.export_fortran_dat_file(moist,"treesmoist.dat")
+        ttrs.export_fortran_dat_file(fueldepth,"treesfueldepth.dat")
         os.chdir("../../../5.TREES-QUICFIRE")
     
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
@@ -299,7 +313,7 @@ def runCrownScorch(ii):
  
     return LiveDead
 
-def sp_sum(nsp, nx, ny, nz, ii):
+def treesdat_combine(nsp, nx, ny, nz, ii):
     dat_list = ["rhof","moist","ss","fueldepth"]
     for i in dat_list:
         print("Importing trees"+str(i)+" 4D dat file")
@@ -314,8 +328,13 @@ def sp_sum(nsp, nx, ny, nz, ii):
             print( 'SPECIES ',ift+1,' MIN = ',np.min(trhof) ,' ; MAX = ',np.max(trhof))
         rhoffile.close()
         print(rhof.shape)
+        ## SUM AND MAX ONLY WORK FOR CONSTANT VALUES
+        ## UPDATE IF ALLOWING FOR DIFFERENT RHOF or MOISTURE VALUES
+        if i=="rhof":
+            sp_all = np.sum(rhof, axis=0)
+        else:
+            sp_all = np.max(rhof, axis=0)
         # flip, rotate, and swap axes
-        sp_all = np.sum(rhof, axis=0)
         sp_all = np.flip(sp_all, axis=1)
         sp_all = np.rot90(sp_all,3)
         sp_all = np.swapaxes(sp_all,0,2)
@@ -385,7 +404,7 @@ FM = "QUICFIRE" # Fire Model: "QUICFIRE" or "FIRETEC"
 
 nyears=5      # number of years for spinup and transient runs
 ncycyear=10    # number of cyclical year run
-ncycle=4      # number of loops
+ncycle=1      # number of loops
 
 nfuel = 2 # number of tree species (if not using LANDIS)
 
@@ -501,7 +520,7 @@ i = 0
 for i in range(ncycle):
     ii = i + 1
     runTreeQF(nfuel,qf_options['nx'],qf_options['ny'],qf_options['nz'],ii)      # runs the tree program to create QF inputs
-    runQF(i,VDM)                           # runs QUIC-Fire
+    runQF(i,VDM,qf_options)                           # runs QUIC-Fire
     L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
