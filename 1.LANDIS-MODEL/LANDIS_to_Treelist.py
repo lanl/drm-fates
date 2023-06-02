@@ -98,7 +98,7 @@ def toTreelist(lp):
     # write_files(file_dict, path=run_path)
     
     # Write Treelist_alldata for Treelist_to_LANDIS
-    Treelist_alldata.to_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"), index = False)
+    Treelist_alldata.to_csv(os.path.join(lp.landis_path,"Treelist_postlandis_cycle"+str(lp.cycle)+".csv"), index = False)
     
     # Write final treelist and surface fuels
     os.makedirs("VDM2FM", exist_ok=True)

@@ -141,7 +141,7 @@ def get_thresholds(lp):
     # mortality threshold dict from LANDIS_options
     threshold_dict = dict(zip(lp.fia_spec,lp.mortality_thresholds))
     # Species IDs to species names from treelist
-    treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_alldata_cycle"+str(lp.cycle)+".csv"))
+    treelist = pd.read_csv(os.path.join(lp.landis_path,"Treelist_postlandis_cycle"+str(lp.cycle)+".csv"))
     spids = list(range(1,len(treelist["SPID"].unique())+1,1))
     sps = list(treelist["SPECIES_SYMBOL"].unique())
     spid_dict = dict(zip(sps,spids))

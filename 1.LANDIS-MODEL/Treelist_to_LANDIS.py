@@ -19,6 +19,7 @@ def toLandis(lp):
     
     ## Read in post-fire treelist and assign necessary data to the remaining trees
     postfire = postfire_treelist(FM2VDM_path,lp.landis_path,lp.cycle)
+    postfire.to_csv(os.path.join(lp.landis_path,"Treelist_postfire_cycle"+str(lp.cycle)+".csv"), index = False)
     
     ## Group back into cohorts and sum the biomass
     spec_rename = dict(zip(lp.fia_spec,lp.landis_spec))
@@ -50,7 +51,7 @@ def postfire_treelist(postfire_path,treelist_path,cycle):
     newtreelist = pd.read_csv(os.path.join(postfire_path,"AfterFireTrees."+str(cycle)+".txt"), sep=" ") 
     # newtreelist = newtreelist.sample(frac=0.75) # let's pretend some trees burned (temporary)
     ## Read in the pre-QF treelist file that contains addtional information about the trees, crucially biomass, species, and mapcode
-    treelist_alldata = pd.read_csv(os.path.join(treelist_path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
+    treelist_alldata = pd.read_csv(os.path.join(treelist_path,"Treelist_postlandis_cycle"+str(cycle-1)+".csv"))
     newtreelist.columns = ["SPID","X","Y","HT_m","HTLC_m","CD_m","HTMCD_m","CBD","MOIST","SS"] # assign column names
     newtreelist = newtreelist[["SPID","X","Y"]] # use only columns needed to match to old treelist
     ## Assign attributes from pre-QF treelist to the remaining post-QF trees
@@ -66,7 +67,7 @@ def treelist_to_cohorts(x,L2_res,spec_rename):
     return community_input_file
 
 def merge_cohorts(postfire,path,CIF_in,cycle,OC_in):
-    prefire = pd.read_csv(os.path.join(path,"Treelist_alldata_cycle"+str(cycle-1)+".csv"))
+    prefire = pd.read_csv(os.path.join(path,"Treelist_postlandis_cycle"+str(cycle-1)+".csv"))
     prefire_mc = prefire["MapCode"].unique()
     # print("prefire_mc:", prefire_mc)
     postfire_mc = postfire["MapCode"].unique()
