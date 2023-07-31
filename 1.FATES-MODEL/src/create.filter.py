@@ -55,7 +55,7 @@ print('finaltag check is ' + finaltag)
 df_result_r = r_function_filter(outdir, runroot, filebase, finaltag, sam_start, sam_stop)
 # Converting it back to a pandas dataframe.
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_result = robjects.conversion.ri2py(df_result_r) # in later rpy2 versions use rpy2py
+  df_result = robjects.conversion.rpy2py(df_result_r) # in later rpy2 versions use rpy2py
 df_result
 print(' ', int(df_result),' out of ',nsam,' cases finished successfully!')
 if Fraction(int(df_result), nsam)==1:

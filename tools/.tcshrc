@@ -1,8 +1,10 @@
 #!/bin/sh
+
+alias ls 'ls --color'
+
 ## 1. set environmental variables
-setenv USERDIR /usr/projects/higrad/$user
-#module load e3smenv/2.0.0 # Variables from this file are set below
-setenv SCRATCHDIR /lustre/scratch4/turquoise/.mdt5/$user
+setenv USERDIR /usr/projects/climate/$user
+setenv SCRATCHDIR /usr/projects/climate/$user
 
 setenv CASE_ROOT    $USERDIR/E3SM_cases
 #setenv E3SM_ROOT    /usr/projects/cimmid/users/rutuja/E3SM_cases/NOTOUCH.Src.E3SM.FATES.SR.25Dec2022/ACME
@@ -14,7 +16,7 @@ setenv ELM_ROOT     $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src
 setenv FATES_ROOT   $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src/external_models/fates
 setenv RUN_ROOT     $SCRATCHDIR/E3SM.DRM/runs
 setenv ARCHIVE_ROOT $SCRATCHDIR/E3SM.DRM/archive
-setenv DIN_LOC_ROOTF $SCRATCHDIR/Data/Data.E3SM/inputdata # root directory of all CIME and component input data
+setenv DIN_LOC_ROOTF /lustre/scratch4/turquoise/xiaoming/Data/Data.E3SM/inputdata # root directory of all CIME and component input data
 
 setenv http_proxy "http://proxyout.lanl.gov:8080"
 setenv https_proxy "http://proxyout.lanl.gov:8080"
@@ -22,25 +24,24 @@ setenv ftp_proxy "http://proxyout.lanl.gov:8080"
 setenv HTTP_PROXY "http://proxyout.lanl.gov:8080"
 setenv HTTPS_PROXY "http://proxyout.lanl.gov:8080"
 setenv FTP_PROXY "http://proxyout.lanl.gov:8080"
-svn ls https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata
+svn ls https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata # comment this line out when running on a salloc-interactive-node as we cannot set the proxy on the salloc-interactive-node
 
-module load cmake/3.20.3 intel/2022.2.1 friendly-testing mkl cray-mpich/8.1.21 cray-hdf5-parallel/1.12.2.1 cray-netcdf-hdf5parallel/4.9.0.1 #python/3.9-anaconda-2021.11
+setenv CXX "CC"
+setenv CC "cc"
+ml purge
+module load gcc/11.2.0
+module load PrgEnv-gnu/8.3.3
+module load cmake/3.20.3 gcc/11.2.0 friendly-testing mkl cray-mpich/8.1.21 cray-hdf5-parallel/1.12.2.1 cray-netcdf-hdf5parallel/4.9.0.1 python/3.9-anaconda-2021.11
+
+setenv R_HOME /usr/projects/climate/xiaoming/.condaSun/envs/DRM_FATES/lib/R
 
 ## 2. Add conda path.
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-
-if ( -f "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/etc/profile.d/conda.csh" ) then
-	    source "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/etc/profile.d/conda.csh"
-    else
-	        setenv PATH "/usr/projects/hpcsoft/common/x86_64/anaconda/2020.07-python-3.8/bin:$PATH"
-	endif
-
-#if ( -f "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/etc/profile.d/conda.csh" ) then
-	#	source "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/etc/profile.d/conda.csh"
-	#else
-	#	setenv PATH "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/bin:$PATH"
-	#endif
+if ( -f "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/etc/profile.d/conda.csh" ) then
+	source "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/etc/profile.d/conda.csh"
+else
+	setenv PATH "/usr/projects/hpcsoft/common/x86_64/anaconda/2021.11-python-3.9/bin:$PATH"
+endif
 # <<< conda initialize <<<
 

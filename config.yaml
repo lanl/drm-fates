@@ -5,38 +5,42 @@ FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
 VDM2FM_DIR: VDM2FM
-PARAM_DIR: params
-DATA_DIR: data
+FM2VDM_DIR: FM2VDM
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
-STOP_N: 1
-REST_N: 1
+STOP_N: 5
+REST_N: 5
 CYCLE_INDEX: 0
 TAG: drm.newqf.FATES.api.24.1.0
 COMPSET: IELMFATES
 HYDRO: false
 MACHINE: chicoma
+COMPILER: gnu
 RUN_STARTDATE: 1990-01-01
 DATM_CLMNCEP_YR_START: 1990
 DATM_CLMNCEP_YR_END: 2021
-FINAL_TAG_YEAR: 1990
-PARAM_FILE:
-  DOMAIN: domain_eglin_c210813.nc
-  SURF: surfdata_eglin_c210813.nc
-  ELM: elm_parameter_file_name.3563.nc
-  FATES: fates_params_api.24.0.0_12pft_c220719.nc
+FINAL_TAG_YEAR: 2022
+DOMAIN_DIR: params
+DOMAIN_FILE: domain_eglin_c210813.nc
+SURF_DIR: params
+SURF_FILE: surfdata_eglin_c210813.nc
+PARAM_ELM_DIR: params
+PARAM_ELM_FILE: elm_parameter_file_name.3563.nc
+PARAM_FATES_DIR: /usr/projects/climate/xiaoming/MODELING.SXM/Run.E3SM/Run.E3SM.FATES.Calbrtn/eglin.params.3PFTs
+PARAM_FATES_FILE: FL_eglin800.nc
+IC_DATA_DIR: data/eglin_0.1x0.1_v4.0i
+CLIM_DATA_DIR: data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio
 CLONE_BASE:
   SURF: surfdata_eglin_c210813.
 FILE_TYPE_TO_CLONE:
   LIST:
   - SURF
-CLIM_DATA_DIR: eglin_0.1x0.1_v4.0i
-CLIM_DATA: eglin_0.1x0.1_met.v2pio
 SENSITIVITY: true
 SITES_PARAM_TABLE_PATH: data/HPU.Table.csv
 BUILD_PARAM_TABLE: true
 GIVEN_PARAM_TABLE_PATH: data/Param.Table.csv
 BUILT_PARAM_TABLE_PATH: output/Param.Table.csv
+MAXPFT: 3
 RANGE:
   PARAMETERS:
   - FMAX
@@ -53,8 +57,8 @@ FIRE_RES: 400
 FATES_RES: 200
 SIM_ID_START: 1
 SIM_ID_END: 4
-ACCOUNT: y23_cimmid
+ACCOUNT: w22_fire
 N_NODE: 1
 N_CPU_PER_NODE: 256
-WALL_TIME: 00:05:00
+WALL_TIME: 12:00:00
 OUTPUT_TYPE: csv

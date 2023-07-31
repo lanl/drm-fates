@@ -51,3 +51,9 @@ git remote add fates_repo $FATES_REMOTE
 git config remote.fates_repo.fetch "+refs/heads/*:refs/remotes/fates_repo/*"
 git fetch --all
 git checkout $FATES_BRANCH
+
+## 5. Manually fix a F90 for the FATES branch selected by Rutuja on Jan 26, 2023 (ASXM)
+cp /usr/projects/climate/xiaoming/MODELING.SXM/MODELING.DRM/E3SM/components/elm/src/external_models/fates/main/FatesRestartInterfaceMod.F90.SXM /usr/projects/climate/xiaoming/E3SM.DRM/E3SM/components/elm/src/external_models/fates/main/FatesRestartInterfaceMod.F90
+
+## 6. Fix for the change of Tmod to Lmod on Chicoma occurred on 04Mar2023
+cp /usr/projects/climate/xiaoming/MODELING.SXM/MODELING.E3SM.FATES/E3SM.SrcMdfy.04Mar2023/cime_config/machines/config_machines.xml /usr/projects/climate/xiaoming/E3SM.DRM/E3SM/cime_config/machines/config_machines.xml 

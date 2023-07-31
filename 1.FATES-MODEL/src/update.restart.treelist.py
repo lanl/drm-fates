@@ -27,6 +27,8 @@ R_file = SCRIPT_DIR+'/update.restart.treelist.R'
 PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
 VDM2FM = PROJECT_ROOT+'/'+config_dict['VDM2FM_DIR']
+FM2VDM = PROJECT_ROOT+'/'+config_dict['FM2VDM_DIR'] # ASXM
+print(FM2VDM)
 runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
@@ -42,7 +44,9 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fire_res = int(config_dict['FIRE_RES'])
 fates_res = int(config_dict['FATES_RES'])
 
-grass_pft_index = 3
+#CSXM: for multiPFTs, wrt as "grass_pft_index = [0, 10, 11, 12]"
+grass_pft_index = 3 
+
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
@@ -52,7 +56,8 @@ filterFile = "Filter.txt"
 # Converting python objects into r objects for passing into r function
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, grass_pft_index)
+# restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, grass_pft_index) # commented out by SXM
+restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, FM2VDM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, grass_pft_index) # ASXM
 if (restart_result):
     print("Restart file successfully updated by removing trees that died in fire.")
     exit(0)

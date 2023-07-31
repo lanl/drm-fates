@@ -38,7 +38,8 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 FINALTAG = "clm2.h0."+ str(finalyear) +"-12.nc"
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
-command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
+# command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # commented out by SXM
+command = "srun -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # ASXM
 
 file = open("mpi_command.txt", "w")
 file.write(command + "\n")

@@ -50,7 +50,8 @@ file_to_clone = []
 clone_base = []
 for i in range(0,len(CLONE_TYPE)):
    clone_type.append(CLONE_TYPE[i])
-   file_to_clone.append(config_dict['PARAM_FILE'][CLONE_TYPE[i]])
+   # file_to_clone.append(config_dict['PARAM_FILE'][CLONE_TYPE[i]]) # commented out by SXM
+   file_to_clone.append(config_dict['SURF_FILE']) # ASXM
    clone_base.append(config_dict['CLONE_BASE'][CLONE_TYPE[i]])
 clone_b = ' '.join(str(n) for n in clone_base)
 clone_t = ' '.join(str(n) for n in clone_type)

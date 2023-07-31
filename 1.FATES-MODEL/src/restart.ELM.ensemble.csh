@@ -20,6 +20,6 @@ foreach case_i (`seq 1 $#arr_case`)
   set E3SM_CASE_CLONE = $BASE_CASE.$case_i
   # Go to CLONE case directory
   cd $CLONE_ROOT/$E3SM_CASE_CLONE
-  ./xmlchange -file env_run.xml -id CONTINUE_RUN -val TRUE
-  ./xmlchange -file env_run.xml -id STOP_N -val $STOP_N 
+  ./xmlchange --file env_run.xml --id CONTINUE_RUN --val TRUE
+  ./xmlchange --file env_run.xml --id STOP_N --val $STOP_N 
 end

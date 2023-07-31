@@ -1,5 +1,6 @@
-# This a master coupling script, that streamlines all the components of the DRM framework
-#
+
+# This is a master coupling script, that streamlines all the components of the DRM framework
+
 # (c) Elchin Jafarov 03/30/2021
 
 import numpy as np
@@ -22,10 +23,8 @@ import hsiscore_class as HSI
 import hsi_plot_utils as hsi_plt
 import LLM_display
 sys.path.insert(0, '7.QUICFIRE-MODEL/projects/Tester')
-import postfuelfire_new as pff
+#TBK import postfuelfire_new as pff
 import Buffer as buff
-
-#VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
 def LLMspinup(nyears):
     # --spinup run ---
@@ -37,9 +36,9 @@ def LLMspinup(nyears):
     p.verbose=0
 
     start_time = time.time()
-    p.run(nyears) # here 200 is a number of years
+    p.run(nyears)   # here 200 is a number of years
     print("--- %s seconds ---" % (time.time() - start_time))
-    p.save_pickle() #saves the results
+    p.save_pickle() # saves the results
     
     return
    
@@ -63,9 +62,10 @@ def LLMtransient(nyears):
         p.fire_prob=0
         p.run(1)
     #p.save_randfromfile()
+
     return p
 
-def dbh_cr(p):
+def dbh_cr(p): #CSXM: LLM only
     lp_count=p.old_LPcount.copy()
     lp_count[p.old_ht<1.37]=0
 
@@ -95,7 +95,7 @@ def dbh_cr(p):
     
     return p
 
-def savelittersLLMQF(p,i):
+def savelittersLLMQF(p,i): #CSXM: LLM only
     filename='VDM2FM/VDM_litter_WG.dat'
     ftitle='WG litter [kg/4m2]'
     llmft.save_litter_LLM_FT(filename,ftitle,p.litterWG,'plot','grass')
@@ -145,7 +145,7 @@ def runTreeQF():
     return
 
 def runQF(i): 
-    #copy produced by Tree program files to the QF folder
+    # copy produced by Tree program files to the QF folder
     #os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src=''
     dst='../7.QUICFIRE-MODEL/projects/ftFiles/'
@@ -154,31 +154,44 @@ def runQF(i):
     copyfile(src+'treesrhof.dat',dst+'treesrhof.dat')
     copyfile(src+'treesss.dat',dst+'treesss.dat')
     
-    #Before running the shell script make sure that 
+    # Before running the shell script make sure that 
     # file path '/projects/Tester/QUIC_fire.inp' 
     # is pointing to the gridlist file in the projects/ftFiles directory.
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
-    import subprocess
+    # ASXM (BGN)
+    # https://www.geeksforgeeks.org/how-to-search-and-replace-text-in-a-file-in-python/
+    if i<= 1: # only needed for i = 0 and 1
+        with open("adv_compile_and_run.sh", "r") as file:
+            data_adv_compile_and_run = file.read()
+            if i == 0:
+                data_adv_compile_and_run = data_adv_compile_and_run.replace("compile=0 run=1", "compile=1 run=1")
+            if i == 1:
+                data_adv_compile_and_run = data_adv_compile_and_run.replace("compile=1 run=1", "compile=0 run=1")
+        with open("adv_compile_and_run.sh", "w") as file:
+            file.write(data_adv_compile_and_run)
+    # ASXM (END)
+    import subprocess 
     status=subprocess.call(["./adv_compile_and_run.sh"])
     if status==0:
         print('QF run successfully!')
     else:
         print('QF failed to execute...')
-    #Successful run should produce bunch of binary files in 
-    #7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
-    #that will generate PercentFuelChange.txt file required for the next step.
+    # Successful run should produce bunch of binary files in 
+    # 7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
+    # that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
-    # MAtch this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
+    # Match this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
     direc = "Plots"
     dd = direc + str(i)
     if os.path.exists(dd):
-       shutil.rmtree(dd)
+        shutil.rmtree(dd)
     os.rename('Plots', dd)
     os.mkdir('Plots')
-    dd = "fuels-dens-00000." + str(i) + ".vin"
+    dd = "fuels-dens-00000." + str(i) + ".vin" #CSXM: vin is the renamed bin
     os.rename('fuels-dens-00000.bin', dd)
-    dd = "fire_indexes." + str(i) + ".vin"
-    os.rename('fire_indexes.bin', dd)    
+    dd = "fire_indexes." + str(i) + ".vin"     #CSXM: vin is the renamed bin
+    os.rename('fire_indexes.bin', dd)
+
     return
 
 def runCrownScorch(ii):
@@ -211,7 +224,7 @@ def runCrownScorch(ii):
  
     return LiveDead
     
-def runLLMcyclical(p,nyears):
+def runLLMcyclical(p,nyears): #CSXM: LLM only
     os.chdir("../1.LLM-HSM-MODEL")
     flitter='FM2VDM/AfterFireLitter.txt'
     fwg='FM2VDM/AfterFireWG.txt'
@@ -226,7 +239,7 @@ def runLLMcyclical(p,nyears):
     
     return p
 
-def updateTreelist(p,ii):
+def updateTreelist(p,ii): #CSXM: LLM only
     ftlist='FM2VDM/AfterFireTrees.txt'
     [lp_list,hw_list]=llmft.update_tree_info_per_location(p,ftlist,0)
 
@@ -262,9 +275,14 @@ def updateTreelist(p,ii):
 
 VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 
-nyears=1      # number of years for spinup and transient runs
-ncycyear=1    # number of cyclical year run
-ncycle=1      # number of loops
+# Adam suggested values
+# CSXM: nyears and ncycyear may need to be the same because the workflow looks for restarting files (double check)
+# nyears   = 100 # number of years for spinup (turn on SPITFIRE)                   Rutuja: 10 Adam: 100
+# ncycyear = 5   # number of years for VDM to run in each loop (turn off SPITFIRE) Rutuja: 5  Adam: 5
+# ncycle   = 10  # number of loop                                                  Rutuja: 20 Adam: 10 (Adam decided to go from 10 to 20 on Apr. 11 2023)
+nyears   =  160
+ncycyear =  5
+ncycle   =  20
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -284,7 +302,8 @@ elif VDM == "FATES":
     with open('../config.yaml', 'r') as file:
         y = yaml.safe_load(file)
         y['STOP_N'] = nyears
-        y['REST_N'] = nyears
+        # y['REST_N'] = nyears # commented out by SXM
+        y['REST_N'] = 1 #ASXM: hardwired as 1 as otherwise do not generate the restarting file at nyears+ncycyear for the first ncycyear (i.e., 160+5 years) (to fix later by working on nyears, ncycyear and ncycle)
         y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears - 1
         y['CYCLE_INDEX'] = 0
     with open('../config.yaml', 'w') as file:
@@ -292,6 +311,7 @@ elif VDM == "FATES":
     dir = '../1.FATES-MODEL/VDM2FM'
     shutil.rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
+    # last visit reading: stopped here by SXM
     subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
@@ -323,9 +343,9 @@ if VDM == "LLM":
 LiveDead=[]
 for i in range(ncycle):
     ii = i + 1
-    runTreeQF()                       # runs the tree program to create QF inputs
-    runQF(i)                           # runs QuickFire
-    L=np.array(runCrownScorch(ii))                  # runs the tree program to create LLM inputs
+    runTreeQF()                    # runs the tree program to create QF inputs
+    runQF(i)                       # runs QuickFire
+    L=np.array(runCrownScorch(ii)) # runs the tree program to create LLM inputs
     L=np.insert(L,0,ii)
     LiveDead.append(L)    
     ## Change Coordinates Back to Eco system model HERE ###
@@ -350,7 +370,6 @@ for i in range(ncycle):
         print ('ADAM GT', llm.gt_sc)
         print ('ADAM RCW',sc_rcw)
         np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')
-
     elif VDM == "FATES":
         os.chdir('../1.FATES-MODEL')
         subprocess.call(['sh', './src/update.restart.treelist.sh']) 
@@ -358,7 +377,8 @@ for i in range(ncycle):
         with open('../config.yaml', 'r') as file:
             y = yaml.safe_load(file)
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
-            y['REST_N'] = ncycyear 
+            # y['REST_N'] = ncycyear # commented out by SXM
+            y['REST_N'] = 1 #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
             y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear
             y['CYCLE_INDEX'] = ii
         with open('../config.yaml', 'w') as file:
@@ -367,4 +387,4 @@ for i in range(ncycle):
 
 LiveDead=np.array(LiveDead)
 os.makedirs('output', exist_ok=True)
-np.savetxt('LiveDead.txt',LiveDead,fmt='%i',header='Fire LLP(L/D) Turk(L/D)')
+np.savetxt('LiveDead.txt', LiveDead, fmt='%i', header='Fire LLP(L/D) Turk(L/D)')

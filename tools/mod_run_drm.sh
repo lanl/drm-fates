@@ -12,6 +12,12 @@ source `realpath "$SCRIPT_DIR/../tools/yaml.sh"`
 create_variables "$SCRIPT_DIR/../config.yaml"
 
 # 2. To prepare shell script to submit on the back-end node:
-sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" run_drm.sh
-sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" run_drm.sh
-sed -i "s/^#SBATCH -A.*/#SBATCH -A ${ACCOUNT}/g" run_drm.sh
+sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" $SCRIPT_DIR/../run_drm.sh # MSXM
+sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" $SCRIPT_DIR/../run_drm.sh # MSXM
+sed -i "s/^#SBATCH -A.*/#SBATCH -A ${ACCOUNT}/g" $SCRIPT_DIR/../run_drm.sh # MSXM
+
+# ASXM (BGN)
+sed -i "s/^#SBATCH -N.*/#SBATCH -N ${N_NODE} # number of nodes/g" $SCRIPT_DIR/../1.FATES-MODEL/src/run_elm.sh
+sed -i "s/^#SBATCH -t.*/#SBATCH -t ${WALL_TIME}/g" $SCRIPT_DIR/../1.FATES-MODEL/src/run_elm.sh
+sed -i "s/^#SBATCH -A.*/#SBATCH -A ${ACCOUNT}/g" $SCRIPT_DIR/../1.FATES-MODEL/src/run_elm.sh
+# ASXM (END)

@@ -45,7 +45,7 @@ generate_param_table_function_r = robjects.globalenv['generate.param.table']
 # Converting pandas object into r object for passing into r function
 #df_r = pandas2ri.py2ri(df) # This works for rpy2 2.9.4
 with localconverter(robjects.default_converter + pandas2ri.converter):
- df_r = robjects.conversion.py2ri(pd_df) #For rpy2 versions >2.9 use .py2rpy
+ df_r = robjects.conversion.py2rpy(pd_df) #For rpy2 versions >2.9 use .py2rpy
 #print(type(df_r))
 #calling function under base package
 #print(base.summary(r_df))
@@ -56,7 +56,7 @@ df_result_r = generate_param_table_function_r(df_r, SLICES, outdir, PARAM_Table)
 # df_result = pandas2ri.ri2py(df_result_r)
 
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  df_result = robjects.conversion.ri2py(df_result_r) #For rpy2 versions >=2.9 use .rpy2py
+  df_result = robjects.conversion.rpy2py(df_result_r) #For rpy2 versions >=2.9 use .rpy2py
 #df_result
 
 if(df_result):

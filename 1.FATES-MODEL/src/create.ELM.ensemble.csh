@@ -24,15 +24,19 @@ foreach case_i (`seq 1 $#arr_case`)
   echo "============From a base case creating a clone with a case name prefix = $case_i============"
   # Go to CASE scripts directory
   cd $E3SM_ROOT/cime/scripts
+
   # Name the case
   set E3SM_CASE_CLONE = $BASE_CASE.$case_i
+
   # Delete a case by the same name if previously present
   rm -rf $CLONE_ROOT/$E3SM_CASE_CLONE
+
   # Create the Clone Case
- ./create_clone --case $CLONE_ROOT/$E3SM_CASE_CLONE --clone  $CLONE_ROOT/$BASE_CASE
+  ./create_clone --case $CLONE_ROOT/$E3SM_CASE_CLONE --clone  $CLONE_ROOT/$BASE_CASE
+
   # Go to CLONE case directory
   cd $CLONE_ROOT/$E3SM_CASE_CLONE
-#
+
   # Set up the Clone case
   if ($MUTATE == TRUE) then
      # Replace the parameter file for this run
@@ -44,7 +48,9 @@ foreach case_i (`seq 1 $#arr_case`)
           #sed -i 's:'parameter_file_name1.nc':'parameter_file_name${bestfit_i}.nc':g' user_nl_clm
 	end  
   endif
+
   ./case.setup
+
   ./xmlchange BUILD_COMPLETE="TRUE"
   #./xmlchange BATCH_SYSTEM="slurm" --file env_batch.xml
   #./xmlchange BATCH_SYSTEM="slurm" --file LockedFiles/env_batch.xml
