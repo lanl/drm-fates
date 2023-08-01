@@ -16,7 +16,7 @@ setenv ELM_ROOT     $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src
 setenv FATES_ROOT   $SCRATCHDIR/E3SM.DRM/E3SM/components/elm/src/external_models/fates
 setenv RUN_ROOT     $SCRATCHDIR/E3SM.DRM/runs
 setenv ARCHIVE_ROOT $SCRATCHDIR/E3SM.DRM/archive
-setenv DIN_LOC_ROOTF /lustre/scratch4/turquoise/xiaoming/Data/Data.E3SM/inputdata # root directory of all CIME and component input data
+setenv DIN_LOC_ROOTF /lustre/scratch4/turquoise/$user/Data/Data.E3SM/inputdata # root directory of all CIME and component input data
 
 setenv http_proxy "http://proxyout.lanl.gov:8080"
 setenv https_proxy "http://proxyout.lanl.gov:8080"
@@ -32,8 +32,6 @@ ml purge
 module load gcc/11.2.0
 module load PrgEnv-gnu/8.3.3
 module load cmake/3.20.3 gcc/11.2.0 friendly-testing mkl cray-mpich/8.1.21 cray-hdf5-parallel/1.12.2.1 cray-netcdf-hdf5parallel/4.9.0.1 python/3.9-anaconda-2021.11
-
-setenv R_HOME /usr/projects/climate/xiaoming/.condaSun/envs/DRM_FATES/lib/R
 
 ## 2. Add conda path.
 # >>> conda initialize >>>
