@@ -18,6 +18,7 @@ conda config --set env_prompt envname
 sed -i '/prefix/d' environment.yml
 sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/elm_env" environment.yml
 cd $PROJECT_ROOT
+export R_HOME=$PROJECT_ROOT/elm_env/lib/R
 conda env create -f environment.yml
 
 # Alternatively, you could also create the environment from scratch:
@@ -53,7 +54,7 @@ git fetch --all
 git checkout $FATES_BRANCH
 
 ## 5. Manually fix a F90 for the FATES branch selected by Rutuja on Jan 26, 2023 (ASXM)
-cp /usr/projects/climate/xiaoming/MODELING.SXM/MODELING.DRM/E3SM/components/elm/src/external_models/fates/main/FatesRestartInterfaceMod.F90.SXM /usr/projects/climate/xiaoming/E3SM.DRM/E3SM/components/elm/src/external_models/fates/main/FatesRestartInterfaceMod.F90
+#cp /usr/projects/higrad/rutuja/files_from_xiaoming/FatesRestartInterfaceMod.F90.SXM  $FATES_ROOT/main/FatesRestartInterfaceMod.F90
 
 ## 6. Fix for the change of Tmod to Lmod on Chicoma occurred on 04Mar2023
-cp /usr/projects/climate/xiaoming/MODELING.SXM/MODELING.E3SM.FATES/E3SM.SrcMdfy.04Mar2023/cime_config/machines/config_machines.xml /usr/projects/climate/xiaoming/E3SM.DRM/E3SM/cime_config/machines/config_machines.xml 
+#cp /usr/projects/higrad/rutuja/files_from_xiaoming/config_machines.xml $E3SM_ROOT/cime_config/machines/config_machines.xml
