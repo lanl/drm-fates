@@ -34,17 +34,19 @@ conda config --add envs_dirs $PROJECT_ROOT
 conda remove --prefix $PROJECT_ROOT/elm_env --all
 
 # Create a conda environment with a specified name, elm_env, and a desired list of modules and their versions
-conda create -n elm_env pip
+conda create --prefix=elm_env pip #for conda to add the pathname of the project directory automatically, important that this command is run from $PROJECT_ROOT (this is set above)
 
 # Activate the environment. Activation prepends to PATH.
-conda activate elm_env
+conda activate elm_env # While ran from the prefix folder mentioned in conda create ($PROJECT ROOT), this invokes the elm_env referred to by the above prefix (even if there are other environments with the same name elm_env exist, with a different prefix)
 
 # Add any other modules that were not found by the default conda channels
 conda install python=3.9
+python -m pip cache remove mpi4py
 env CC="cc" MPICC="cc" python -m pip install --no-binary=mpi4py mpi4py
 conda install matplotlib pandas pyyaml xarray
 conda install -c conda-forge tzlocal scipy netcdf4 hdf5
 conda install -c r r-base r-essentials r-ncdf4 r-slhd r-stringi
+python -m pip cache remove rpy2
 pip install rpy2 (install after other r-packages above, Jun-29-2023-modifications-for-cxu)
 conda install -c conda-forge imageio
 
