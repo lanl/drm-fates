@@ -3,8 +3,8 @@
 alias ls 'ls --color'
 
 ## 1. set environmental variables
-setenv USERDIR /usr/projects/climate/$user
-setenv SCRATCHDIR /usr/projects/climate/$user
+setenv USERDIR /usr/projects/higrad/$user
+setenv SCRATCHDIR /usr/projects/higrad/$user
 
 setenv CASE_ROOT    $USERDIR/E3SM_cases
 #setenv E3SM_ROOT    /usr/projects/cimmid/users/rutuja/E3SM_cases/NOTOUCH.Src.E3SM.FATES.SR.25Dec2022/ACME

@@ -26,7 +26,7 @@ SURF_DIR: params
 SURF_FILE: surfdata_eglin_c210813.nc
 PARAM_ELM_DIR: params
 PARAM_ELM_FILE: elm_parameter_file_name.3563.nc
-PARAM_FATES_DIR: /usr/projects/climate/xiaoming/MODELING.SXM/Run.E3SM/Run.E3SM.FATES.Calbrtn/eglin.params.3PFTs
+PARAM_FATES_DIR: params
 PARAM_FATES_FILE: FL_eglin800.nc
 IC_DATA_DIR: data/eglin_0.1x0.1_v4.0i
 CLIM_DATA_DIR: data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio
