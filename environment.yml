@@ -1,4 +1,4 @@
-name: /usr/projects/higrad/rutuja/newqf/elm_env
+name: elm_env
 channels:
   - r
   - conda-forge
@@ -321,4 +321,4 @@ dependencies:
   - zipp=3.7.0=pyhd3eb1b0_0
   - zlib=1.2.11=h7f8727e_4
   - zstd=1.4.9=haebb681_0
-prefix: /usr/projects/higrad/rutuja/newqf/elm_env
+prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj1/elm_env
