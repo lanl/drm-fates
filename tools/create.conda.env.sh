@@ -38,6 +38,7 @@ conda create --prefix=elm_env pip #for conda to add the pathname of the project 
 
 # Activate the environment. Activation prepends to PATH.
 conda activate elm_env # While ran from the prefix folder mentioned in conda create ($PROJECT ROOT), this invokes the elm_env referred to by the above prefix (even if there are other environments with the same name elm_env exist, with a different prefix)
+# One can check whether the desired conda elm_env is activated, by checking with, conda info --envs, if the * marking the active env is marked at the correct path
 
 # Add any other modules that were not found by the default conda channels
 conda install python=3.9
