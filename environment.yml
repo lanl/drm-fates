@@ -158,4 +158,4 @@ dependencies:
     - mpi4py==3.1.4
     - pycparser==2.21
     - rpy2==3.5.13
-prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj2/elm_env
+prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj3/elm_env
