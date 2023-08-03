@@ -53,8 +53,3 @@ git config remote.fates_repo.fetch "+refs/heads/*:refs/remotes/fates_repo/*"
 git fetch --all
 git checkout $FATES_BRANCH
 
-## 5. Manually fix a F90 for the FATES branch selected by Rutuja on Jan 26, 2023 (ASXM)
-#cp /usr/projects/higrad/rutuja/files_from_xiaoming/FatesRestartInterfaceMod.F90.SXM  $FATES_ROOT/main/FatesRestartInterfaceMod.F90
-
-## 6. Fix for the change of Tmod to Lmod on Chicoma occurred on 04Mar2023
-#cp /usr/projects/higrad/rutuja/files_from_xiaoming/config_machines.xml $E3SM_ROOT/cime_config/machines/config_machines.xml
