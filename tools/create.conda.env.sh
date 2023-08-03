@@ -50,6 +50,7 @@ conda install -c r r-base r-essentials r-ncdf4 r-slhd r-stringi
 python -m pip cache remove rpy2
 pip install rpy2 (install after other r-packages above, Jun-29-2023-modifications-for-cxu)
 conda install -c conda-forge imageio
+conda install -c r r-tidyverse
 
 # Export your active environment to a new file:
 conda env export > tools/environment.yml # this is the backup made from scratch from teh above script
