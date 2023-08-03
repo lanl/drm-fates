@@ -280,9 +280,9 @@ VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 # nyears   = 100 # number of years for spinup (turn on SPITFIRE)                   Rutuja: 10 Adam: 100
 # ncycyear = 5   # number of years for VDM to run in each loop (turn off SPITFIRE) Rutuja: 5  Adam: 5
 # ncycle   = 10  # number of loop                                                  Rutuja: 20 Adam: 10 (Adam decided to go from 10 to 20 on Apr. 11 2023)
-nyears   =  160
-ncycyear =  5
-ncycle   =  20
+nyears   =  1
+ncycyear =  1
+ncycle   =  1
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
