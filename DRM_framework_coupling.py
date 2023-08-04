@@ -282,7 +282,7 @@ VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 # ncycle   = 10  # number of loop                                                  Rutuja: 20 Adam: 10 (Adam decided to go from 10 to 20 on Apr. 11 2023)
 nyears   =  1
 ncycyear =  1
-ncycle   =  1
+ncycle   =  2
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
