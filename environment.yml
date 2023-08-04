@@ -1,4 +1,4 @@
-name: /usr/projects/higrad/rutuja/E3SM_cases/proj3/elm_env
+name: elm_env
 channels:
   - r
   - conda-forge
