@@ -66,7 +66,7 @@ extract_litter <-
       group_by(nsam) %>%
       #Values are only present per patch, rest are zero
       summarise_all(list(sum), na.rm = TRUE) %>%
-      mutate(litter = rowSums(.)*fates_c2b) %>% # From kgC/m2 to kg/m2
+      mutate(litter = rowSums(.)) %>% # Already in kg/m2
       select(nsam, litter) %>%
       left_join(cell.xy, by = "nsam")
 
