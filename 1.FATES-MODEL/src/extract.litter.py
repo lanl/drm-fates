@@ -51,16 +51,27 @@ base_case=ff.read()
 filebase=base_case.strip()
 
 filterFile = "Filter.txt"
-var_vec_re = ["fates_leaf_fines_vec_001", "fates_ag_cwd_vec_001", "fates_livegrass"]
+# Vars from Restart file. These vars are also being set to zero after extraction in restart file.
+var_vec_re_R = ["fates_leaf_fines_vec_001", "fates_ag_cwd_vec_001", "fates_livegrass"]
+# Vars from History file
+var_vec_re_H = ["FATES_LITTER_CWD_ELDC"]
+# fates_ag_cwd_vec_001 has sum of all four size classes, and they are all being set to zero.
+# FATES_LITTER_CWD_ELDC has separate CWD (ag+bg) classes, and only first two (twigs and small branches are being extracted to pass onto QF).
 
 # Converting python objects into r objects for passing into r function
 
 with localconverter(robjects.default_converter + pandas2ri.converter):
-  var_vec_re_r = robjects.vectors.StrVector(var_vec_re)
-var_vec_re_r
+    var_vec_re_r_R = robjects.vectors.StrVector(var_vec_re_R)
+var_vec_re_r_R
+
+with localconverter(robjects.default_converter + pandas2ri.converter):
+     var_vec_re_r_H = robjects.vectors.StrVector(var_vec_re_H)
+var_vec_re_r_H
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-litter_result = extract_litter_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_c2b, cycle_index)
+litter_result = extract_litter_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r_R, 
+                        var_vec_re_r_H, filterFile, finalyear, fire_res, fates_res, fates_c2b, cycle_index)
+
 
 if (litter_result):
     print('FATES tree litter extracted successfully at', VDM2FM + "/VDM_litter_trees.dat")

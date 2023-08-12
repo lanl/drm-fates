@@ -6,7 +6,8 @@ extract_litter <-
            VDM2FM,
 	   runroot,
            filebase,
-           var.vec.re,
+           var.vec.re.R,
+           var.vec.re.H,
            filterFile,
            finalyear,
            fire_res,
@@ -21,38 +22,68 @@ extract_litter <-
       c(sam.start:sam.end)[filter.arr$V1]
     nsam <- length(sam.vec)
     # base lists
-    all.sam.list <- rep(list(), nsam)
+    all.sam.list.R <- rep(list(), nsam)
+    all.sam.list.H <- rep(list(), nsam)
     for (i in 1:nsam) {
       sample <- sam.vec[i]
       casename <- paste0(filebase, ".", sample)
-      filetag <- paste0("elm.r.", finalyear + 1, "-", "01-01-00000.nc") # a restart file at the end of final year has timestamp for the beginning of next year
-      filename <-
+      #--------------
+      # Extracting from Restart file (should have only .R suffix):-------
+      #--------------
+      filetag.R <- paste0("elm.r.", finalyear + 1, "-", "01-01-00000.nc") # a restart file at the end of final year has timestamp for the beginning of next year
+      filename.R <-
         paste0(runroot,
                "/",
                casename,
                "/run/",
                casename,
                ".",
-               filetag)
-      nc <- nc_open(filename, write = TRUE)
-      res.arr <- vector("list", length = length(var.vec.re))  
-      for (v in 1:length(var.vec.re)) {
-        var.name <- var.vec.re[v]
-        names(res.arr)[v] <- var.name
-        res.arr[[v]] <- ncvar_get(nc, var.name)
+               filetag.R)
+      nc.R <- nc_open(filename.R, write = TRUE)
+      res.arr.R <- vector("list", length = length(var.vec.re.R))  
+      for (v in 1:length(var.vec.re.R)) {
+        var.name.R <- var.vec.re.R[v]
+        names(res.arr.R)[v] <- var.name.R
+        res.arr.R[[v]] <- ncvar_get(nc.R, var.name.R)
 
         #--------------
         # Reset litter to 0: Satisfies current full fire events, but when fire spread is partial through the area
         # this may be modified in post-fire src/restart.update.treelist.py script
         #--------------
-        ncdf4::ncvar_put(nc, var.name, rep(0, length(res.arr[[v]])))
+        ncdf4::ncvar_put(nc.R, var.name.R, rep(0, length(res.arr.R[[v]])))
       }
-      res.all.df <- do.call(cbind.data.frame, res.arr)
-      res.all.df$nsam <- i
-      all.sam.list[[i]] <- res.all.df
-      nc_close(nc)
+      nc_close(nc.R)
+      res.all.df.R <- do.call(cbind.data.frame, res.arr.R)
+      res.all.df.R$nsam <- i
+      all.sam.list.R[[i]] <- res.all.df.R
+      #--------------
+      # Extracting from History file (should have only .H suffix):-------
+      #--------------
+      filetag.H <- paste0("elm.h0.", finalyear, "-", "12.nc") # History file h1 doesn't have these variables by default
+      filename.H <-
+        paste0(runroot,
+               "/",
+               casename,
+               "/run/",
+               casename,
+               ".",
+               filetag.H)
+      nc.H <- nc_open(filename.H, write = TRUE)
+      res.arr.H <- vector("list", length = length(var.vec.re.H))   
+      for (v in 1:length(var.vec.re.H)) {
+        var.name.H <- var.vec.re.H[v]
+        names(res.arr.H)[v] <- var.name.H
+        # "FATES_LITTER_CWD_ELDC" has ncwd = 4 size classes.
+        # Summing only first two size classes (twigs and small branches), excluding large branches and trunk
+        res.arr.H[[v]] <- sum(ncvar_get(nc.H, var.name.H)[1:2], na.rm = TRUE) 
+      }
+      nc_close(nc.H)
+      res.all.df.H <- do.call(cbind.data.frame, res.arr.H)
+      res.all.df.H$nsam <- i
+      all.sam.list.H[[i]] <- res.all.df.H
     }
-    all.sam.var <- do.call(rbind, all.sam.list)
+    all.sam.var.R <- do.call(rbind, all.sam.list.R)
+    all.sam.var.H <- do.call(rbind, all.sam.list.H)
 
     ## Assign x-y location. Assume simulation index, nsam, increases from East to West, then increases northwards.
     nsam_side = sam.end^0.5
@@ -61,16 +92,18 @@ extract_litter <-
       ymin = rep(fates_res*c(1:nsam_side-1) + 1, each = nsam_side)) %>%
       mutate(xmax = xmin + fates_res - 0.1, ymax = ymin + fates_res - 0.01)
 
-    litter_by_nsam <- all.sam.var %>% 
-      select(c(contains("leaf"), contains("cwd"), nsam)) %>%
+    litter_by_nsam <- all.sam.var.R %>%
+      select(c(contains("leaf"), nsam)) %>%
       group_by(nsam) %>%
       #Values are only present per patch, rest are zero
       summarise_all(list(sum), na.rm = TRUE) %>%
-      mutate(litter = rowSums(.)) %>% # Already in kg/m2
+      # Joining all.sam.var.H here, since values are per site
+      left_join(all.sam.var.H, by = "nsam") %>%
+      mutate(litter = rowSums(select(., -nsam))) %>% # Already in kg/m2
       select(nsam, litter) %>%
       left_join(cell.xy, by = "nsam")
 
-    grass_by_nsam <- all.sam.var %>%
+    grass_by_nsam <- all.sam.var.R %>%
       select(contains("grass"), nsam) %>%
       group_by(nsam) %>%
       #Values are only present per patch, rest are zero
@@ -78,7 +111,7 @@ extract_litter <-
       mutate(grass = grass*fates_c2b) %>% # From kgC/m2 to kg/m2
       left_join(cell.xy, by = "nsam")
 
-    # fates litter is given for fates_res scale, but needs to be averaged for 2m resolution
+     # fates litter is given for fates_res scale, but needs to be averaged for 2m resolution
     # Creating trees_res x trees_res coordinate structure and finding correspondence with low-res coordinates in cell.xy 
     trees_res <- 2
     trees_seq <- seq(from = trees_res, to = fire_res, by = trees_res)
