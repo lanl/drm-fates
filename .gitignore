@@ -50,3 +50,4 @@ __pycache__
 7.QUICFIRE-MODEL/mac_compile/**
 7.QUICFIRE-MODEL/source_code/**
 elm_env/**
+mpi4pyEnv_GNU/**
