@@ -35,7 +35,7 @@ base_case=ff.read()
 BASE_CASE=base_case.strip()
 RUN_ROOT = os.environ["RUN_ROOT"]
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-FINALTAG = "clm2.h0."+ str(finalyear) +"-12.nc"
+FINALTAG = "elm.h0."+ str(finalyear) +"-12.nc"
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 # command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # commented out by SXM
