@@ -313,7 +313,7 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   #CSXM: for multiPFTs, wrt as "treelist.no.grass <- treelist[which(!(treelist$fates_pft  grass_pft_index)),]"
   treelist.no.grass <- treelist[which(treelist$fates_pft != as.numeric(grass_pft_index)),] 
   # treelist.VDM2FM <- subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh)) # commented out by SXM
-  treelist.VDM2FM <- subset(treelist.no.grass, select = -c(treeid, nsam, fates_nplant, cohort.rowid, fates_dbh)) # ASXM: removed treeid to have 10 columns in the output as in Adam's LLM operations (to confirm wt. Adam)
+  treelist.VDM2FM <- subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh))
 
   write.table(
     treelist,
