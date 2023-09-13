@@ -23,15 +23,8 @@ update_restart_treelist <-
       # file = file.path(paste0("FM2VDM/AfterFireTrees.txt")), header = FALSE # commented out by SXM
       file = file.path(paste0(FM2VDM, "/AfterFireTrees.txt")), header = FALSE
     )
-    # commented out by SXM (BGN)
-    # colnames(aft) <- c("fates_pft", "x", "y", "fates_height", "fates_height_to_crown_base", "fates_crown_dia",
-    #    "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel", "treeid")
-    # commented ot by SXM (END)
-    # ASXM (BGN)
-    # removed "treeid" compared to the lines above from RCT
     colnames(aft) <- c("fates_pft", "x", "y", "fates_height", "fates_height_to_crown_base", "fates_crown_dia",
-      "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel")
-    # ASXM (END)
+        "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel", "treeid")
 
     # bft has grasses, but aft does not, so the difference, fire.dead.plantlist, contains grasses which are also removed
     fire.dead.plantlist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),]
