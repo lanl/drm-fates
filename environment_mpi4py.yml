@@ -1,4 +1,4 @@
-name: /usr/projects/higrad/rutuja/E3SM_cases/proj4/mpi4pyEnv_GNU
+name: mpi4pyEnv_GNU
 channels:
   - defaults
 dependencies:
@@ -37,4 +37,4 @@ dependencies:
     - pip==23.2.1
     - setuptools==68.0.0
     - wheel==0.38.4
-prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj4/mpi4pyEnv_GNU
+prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj1/mpi4pyEnv_GNU

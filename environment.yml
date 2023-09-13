@@ -260,4 +260,4 @@ dependencies:
     - pycparser==2.21
     - pyevtk==1.6.0
     - rpy2==3.5.13
-prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj4/elm_env
+prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj1/elm_env

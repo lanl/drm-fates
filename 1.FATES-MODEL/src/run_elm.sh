@@ -10,14 +10,14 @@
 #conda activate elm_env
 conda activate mpi4pyEnv_GNU
 
-setenv casedir /usr/projects/higrad/rutuja/E3SM_cases/proj4/1.FATES-MODEL/CASE_DIR
+setenv casedir /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/CASE_DIR
 
 echo 'Started on '`date`' for '$casedir' starting in '$casedir
 
 cd $casedir
 
 setenv location `date "+%F-%T"`
-srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj4/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.InvFIX.module_changes.IELMFATES.chicoma.gnu.Cc6963c159f-F8267647a4.1990-1991.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f clm2.h0.1990-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj4/1.FATES-MODEL/log
+srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.chicoma.test2.IELMFATES.chicoma.gnu.Cc6963c159f-F8267647a4.1990-1991.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f elm.h0.1990-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/log
 
 
 echo 'Finished on '`date`

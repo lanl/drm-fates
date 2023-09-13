@@ -8,10 +8,10 @@ source `realpath "$SCRIPT_DIR/../tools/yaml.sh"`
 create_variables "$SCRIPT_DIR/../config.yaml"
 
 PROJECT_ROOT=`realpath "$SCRIPT_DIR/.."`
-cd $PROJECT_ROOT
-mkdir -p elm_env # create if not already present
 
 # 2. To create the environment from a yml file, run this in a shell:
+cd $PROJECT_ROOT
+mkdir -p elm_env # create if not already present
 # Let conda know the path to the new conda env and update it in environment.yml file
 conda config --add envs_dirs $PROJECT_ROOT
 conda config --set env_prompt envname
@@ -20,6 +20,14 @@ sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/elm_env" environment.yml
 cd $PROJECT_ROOT
 export R_HOME=$PROJECT_ROOT/elm_env/lib/R
 conda env create -f environment.yml
+
+# 2.5 Also creating a minimal conda environment to run ELM on the back node, not loading it on the front node
+cd $PROJECT_ROOT
+mkdir -p mpi4pyEnv_GNU
+sed -i '/prefix/d' environment_mpi4py.yml
+sed -i -e '$a\' -e "prefix: $PROJECT_ROOT/mpi4pyEnv_GNU" environment_mpi4py.yml
+cd $PROJECT_ROOT
+conda env create -f environment_mpi4py.yml
 
 # Alternatively, you could also create the environment from scratch:
 # ./src/create.conda.env.sh

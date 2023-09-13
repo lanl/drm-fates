@@ -19,14 +19,15 @@ python src/elm.py
 MPICOMMAND=`cat $SCRIPT_DIR/../mpi_command.txt`
 CASEDIR=`realpath $SCRIPT_DIR/../${CASE_DIR}`
 
-sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh
+sed -i "s|^setenv casedir.*|setenv casedir $CASEDIR|g" src/run_elm.sh # the script is now in tcsh after adding to be able to source ~/.tcshrc for the minimal conda env 
+#sed -i "s|^casedir.*|casedir\=\'$CASEDIR\'|g" src/run_elm.sh # when the script is in bash
 sed -i '/^srun/d' src/run_elm.sh
 sed -i "/location*/a $MPICOMMAND" src/run_elm.sh
 
 # 4. If this is a restart simulation run, modify cases to set CONTINUE_RUN variable to TRUE & update STOP_N:
 if [ "$RESTART" == TRUE ] || [ "$RESTART" == true ]; then
 	echo "Preparing FATES for a restart run"
-        python src/restart.ELM.ensemble.py
+	python src/restart.ELM.ensemble.py
 else
         echo "Preparing FATES for an initial run"
 fi
