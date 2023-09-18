@@ -180,6 +180,8 @@ def runQF(i):
     # 7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script 
     # that will generate PercentFuelChange.txt file required for the next step.
     os.chdir("../projects/Tester")
+    # Outputs for paraview plotting 
+    #python3 drawfire.py /usr/projects/higrad/rutuja/E3SM_cases/proj1/7.QUICFIRE-MODEL/projects/Tester/ 1 0
     # Match this value at Line 5 of 7.QUICFIRE-MODEL/projects/Tester/QUIC_fire.inp
     direc = "Plots"
     dd = direc + str(i)
@@ -280,7 +282,7 @@ VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 # nyears   = 100 # number of years for spinup (turn on SPITFIRE)                   Rutuja: 10 Adam: 100
 # ncycyear = 5   # number of years for VDM to run in each loop (turn off SPITFIRE) Rutuja: 5  Adam: 5
 # ncycle   = 10  # number of loop                                                  Rutuja: 20 Adam: 10 (Adam decided to go from 10 to 20 on Apr. 11 2023)
-nyears   =  1
+nmonths   =  1
 ncycyear =  1
 ncycle   =  1
 
@@ -301,10 +303,10 @@ elif VDM == "FATES":
     os.chdir('../1.FATES-MODEL')
     with open('../config.yaml', 'r') as file:
         y = yaml.safe_load(file)
-        y['STOP_N'] = nyears
+        y['STOP_N'] = nmonths
         # y['REST_N'] = nyears # commented out by SXM
-        y['REST_N'] = 1 #ASXM: hardwired as 1 as otherwise do not generate the restarting file at nyears+ncycyear for the first ncycyear (i.e., 160+5 years) (to fix later by working on nyears, ncycyear and ncycle)
-        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] + nyears - 1
+        #y['REST_N'] = 1 #ASXM: hardwired as 1 as otherwise do not generate the restarting file at nyears+ncycyear for the first ncycyear (i.e., 160+5 years) (to fix later by working on nyears, ncycyear and ncycle)
+        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] #+ nyears - 1 
         y['CYCLE_INDEX'] = 0
     with open('../config.yaml', 'w') as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
@@ -379,7 +381,7 @@ for i in range(ncycle):
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
             # y['REST_N'] = ncycyear # commented out by SXM
             y['REST_N'] = 1 #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
-            y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear
+            y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear - 1
             y['CYCLE_INDEX'] = ii
         with open('../config.yaml', 'w') as file:
             yaml.dump(y, file, default_flow_style=False, sort_keys=False)

@@ -35,7 +35,12 @@ base_case=ff.read()
 BASE_CASE=base_case.strip()
 RUN_ROOT = os.environ["RUN_ROOT"]
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-FINALTAG = "elm.h0."+ str(finalyear) +"-12.nc"
+# First FATES simulation is set to run for 1 month
+if int(config_dict['CYCLE_INDEX'])==0:
+    FINALTAG = "elm.h0."+ str(finalyear) +"-01.nc"
+else:
+    FINALTAG = "elm.h0."+ str(finalyear) +"-12.nc"
+print('finaltag check is ' + FINALTAG)
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 # command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # commented out by SXM

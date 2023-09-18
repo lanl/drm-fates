@@ -30,7 +30,11 @@ extract_litter <-
       #--------------
       # Extracting from Restart file (should have only .R suffix):-------
       #--------------
-      filetag.R <- paste0("elm.r.", finalyear + 1, "-", "01-01-00000.nc") # a restart file at the end of final year has timestamp for the beginning of next year
+      if (cycle_index==0) {
+        filetag.R <- paste0("elm.r.", finalyear, "-", "01-01-01800.nc") # at the end of the first month
+      } else {
+        filetag.R <- paste0("elm.r.", finalyear + 1, "-", "01-01-01800.nc") # a restart file at the end of final year has timestamp for the beginning of next year
+      }  
       filename.R <-
         paste0(runroot,
                "/",
@@ -59,7 +63,11 @@ extract_litter <-
       #--------------
       # Extracting from History file (should have only .H suffix):-------
       #--------------
-      filetag.H <- paste0("elm.h0.", finalyear, "-", "12.nc") # History file h1 doesn't have these variables by default
+      if (cycle_index==0) {
+        filetag.H <- paste0("elm.h0.", finalyear, "-", "01.nc") # at the end of the first month
+      } else {
+	filetag.H <- paste0("elm.h0.", finalyear, "-", "12.nc") # for full years
+      } # History file h1 doesn't have these variables by default
       filename.H <-
         paste0(runroot,
                "/",

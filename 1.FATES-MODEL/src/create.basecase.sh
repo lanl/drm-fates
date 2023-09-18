@@ -133,12 +133,14 @@ echo `pwd`
 # Note: see http://esmci.github.io/cime/versions/ufs_release_v1.1/html/data_models/data-atm.html for details
 # CSXM (END)
 ./xmlchange --file env_build.xml --id DEBUG --val FALSE
-./xmlchange --file env_run.xml --id STOP_N --val $STOP_N                               # STOP_N                is set in config.yaml
-./xmlchange --file env_run.xml --id RUN_STARTDATE --val $RUN_STARTDATE                 # RUN_STARTDATE         is set in config.yaml
-./xmlchange --file env_run.xml --id STOP_OPTION --val nyears                           # nyears                is set in DRM_framework_coupling.py
-./xmlchange --file env_run.xml --id REST_N --val $REST_N                               # REST_N                is set in config.yaml
-./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_START --val $DATM_CLMNCEP_YR_START # DATM_CLMNCEP_YR_START is set in config.yaml
-./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_END --val $DATM_CLMNCEP_YR_END     # DATM_CLMNCEP_YR_END   is set in config.yaml
+./xmlchange --file env_run.xml --id STOP_N --val $STOP_N                               	# STOP_N                is set in config.yaml
+./xmlchange --file env_run.xml --id STOP_OPTION --val nmonth                            # nmonth              	Later, before restarting, changed to nyears,  set via STOP_N i . #at least 1 month's output is required for extract.mooisture from FATES-HYDRO to work. ndays won't do
+./xmlchange --file env_run.xml --id RUN_STARTDATE --val $RUN_STARTDATE                 	# RUN_STARTDATE         is set in config.yaml
+./xmlchange --file env_run.xml --id REST_OPTION --val date				# To get restart file at beg. When REST_OPTION is date, REST_N not used.
+./xmlchange --file env_run.xml --id REST_DATE --val $REST_DATE                 	       	# REST_DATE             is set in config.yaml
+#./xmlchange --file env_run.xml --id REST_N --val $REST_N                               # REST_N                is set in config.yaml
+./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_START --val $DATM_CLMNCEP_YR_START 	# DATM_CLMNCEP_YR_START is set in config.yaml
+./xmlchange --file env_run.xml --id DATM_CLMNCEP_YR_END --val $DATM_CLMNCEP_YR_END     	# DATM_CLMNCEP_YR_END   is set in config.yaml
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # MACHINE SPECIFIC, AND/OR USER PREFERENCE CHANGES (USERS WILL CHANGE THESE)
@@ -231,7 +233,8 @@ use_fates_logging = .false.
 ! hist fields
 hist_fincl2 = ${hist_fincl2SXM} 
 hist_nhtfrq = 0, -24
-hist_mfilt  = 1, 365
+hist_mfilt  = 1, 365 
+! Final tag check is based on annual file of individual days -24, 365
 
 use_fates_planthydro = .true.
 ! options considered but not used by Rutuja

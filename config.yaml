@@ -1,6 +1,6 @@
 ELM_BRANCH: E3SMv2.0_chicoma_re-ported_12Jan2023
 ELM_REMOTE: git@github.com:rutujact/E3SM.git
-FATES_BRANCH: rutujact_IO_DRM_sci.1.58.1_api.24.1.0
+FATES_BRANCH: rutujact_IO_DRM_Hydro_sci.1.58.1_api.24.1.0
 FATES_REMOTE: git@github.com:rutujact/fates.git
 LOG_DIR: log
 OUTPUT_DIR: output
@@ -9,14 +9,14 @@ FM2VDM_DIR: FM2VDM
 CASE_DIR: CASE_DIR
 ELM_RUN_PY: src/parallel.run.py
 STOP_N: 1
-REST_N: 1
 CYCLE_INDEX: 0
-TAG: drm.FATES.chicoma.test2
+TAG: drm.FATES.api24.Hydro.REST0
 COMPSET: IELMFATES
-HYDRO: false
+HYDRO: true
 MACHINE: chicoma
 COMPILER: gnu
 RUN_STARTDATE: 1990-01-01
+REST_DATE: 19900101
 DATM_CLMNCEP_YR_START: 1990
 DATM_CLMNCEP_YR_END: 1991
 FINAL_TAG_YEAR: 1990
@@ -60,5 +60,6 @@ SIM_ID_END: 4
 ACCOUNT: w22_fire
 N_NODE: 1
 N_CPU_PER_NODE: 256
-WALL_TIME: 00:30:00
+WALL_TIME: 00:05:00
 OUTPUT_TYPE: csv
+REST_N: 1

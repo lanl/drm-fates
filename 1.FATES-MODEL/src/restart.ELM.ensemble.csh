@@ -22,4 +22,8 @@ foreach case_i (`seq 1 $#arr_case`)
   cd $CLONE_ROOT/$E3SM_CASE_CLONE
   ./xmlchange --file env_run.xml --id CONTINUE_RUN --val TRUE
   ./xmlchange --file env_run.xml --id STOP_N --val $STOP_N 
+  ./xmlchange --file env_run.xml --id REST_N --val $STOP_N
+  ./xmlchange --file env_run.xml --id STOP_OPTION --val nyears
+  ./xmlchange --file env_run.xml --id REST_OPTION --val nyears
+  ./xmlchange --file env_run.xml --id REST_DATE --val -999
 end

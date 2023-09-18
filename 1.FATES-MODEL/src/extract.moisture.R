@@ -25,7 +25,11 @@ extract_moisture <-
     for (i in 1:nsam) {
       sample <- sam.vec[i]
       casename <- paste0(filebase, ".", sample)
-      filetag <- paste0("elm.h0.", finalyear, "-12.nc")
+      if (cycle_index==0) {
+	filetag <- paste0("elm.h0.", finalyear, "-01.nc")
+      } else {
+	filetag <- paste0("elm.h0.", finalyear, "-12.nc")
+      }
       filename <-
         paste0(runroot,
                "/",

@@ -3,7 +3,7 @@
 #SBATCH -e slurm%j.err
 #SBATCH -A w22_fire
 #SBATCH -N 1 # number of nodes
-#SBATCH -t 00:10:00
+#SBATCH -t 00:05:00
 
 . ~/.tcshrc
 
@@ -17,7 +17,7 @@ echo 'Started on '`date`' for '$casedir' starting in '$casedir
 cd $casedir
 
 setenv location `date "+%F-%T"`
-srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.chicoma.test3.IELMFATES.chicoma.gnu.Cc6963c159f-F8267647a4.1990-1991.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f elm.h0.1995-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/log
+srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.api24.Hydro.REST0.IELMFATES.chicoma.gnu.Cc6963c159f-Fbeceb996d.1990-1991.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f elm.h0.1991-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/log
 
 
 echo 'Finished on '`date`
