@@ -1,2 +1,2 @@
 LATITUDE LONGITUDE PSS-FILE CSS-FILE
-1 30.547183 273.360949 /usr/projects/higrad/rutuja/E3SM_cases/proj3/1.FATES-MODEL/data/eglin_0.1x0.1_v4.0i/Eglin_default.lat30.547lon-86.639.pss /usr/projects/higrad/rutuja/E3SM_cases/proj3/1.FATES-MODEL/data/eglin_0.1x0.1_v4.0i/Eglin_default.lat30.547lon-86.639.css
+1 30.547183 273.360949 /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/data/eglin_0.1x0.1_v4.0i/Eglin_default.lat30.547lon-86.639_08232023.pss /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/data/eglin_0.1x0.1_v4.0i/Eglin_default.lat30.547lon-86.639_08232023.css

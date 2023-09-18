@@ -200,7 +200,7 @@ then
 fi
 
 #Update inventory file paths
-export psscssFilepaths="${IC_DATA_ROOT}/Eglin_default.lat30.547lon-86.639.pss ${IC_DATA_ROOT}/Eglin_default.lat30.547lon-86.639.css"
+export psscssFilepaths="${IC_DATA_ROOT}/Eglin_default.lat30.547lon-86.639_08232023.pss ${IC_DATA_ROOT}/Eglin_default.lat30.547lon-86.639_08232023.css"
 # Replace third space with a unique string, then replace everythign after that string with the file paths
 sed -i "2s|\s\+| XXX|3" ${IC_DATA_ROOT}/${inventoryFile}
 sed -i "s|XXX.*|$psscssFilepaths|1" ${IC_DATA_ROOT}/${inventoryFile}
