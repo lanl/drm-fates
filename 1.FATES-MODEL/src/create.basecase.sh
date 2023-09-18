@@ -233,6 +233,7 @@ hist_fincl2 = ${hist_fincl2SXM}
 hist_nhtfrq = 0, -24
 hist_mfilt  = 1, 365
 
+use_fates_planthydro = .true.
 ! options considered but not used by Rutuja
 ! use_fates_planthydro = .true.
 ! use_fates_sp = .true.
