@@ -59,7 +59,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 var_vec_re_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-moisture_result = extract_moisture_r(sam_start, sam_end, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls, cycle_index)
+moisture_result = extract_moisture_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fates_res, fates_c2b, fates_levscls, cycle_index)
 
 if (moisture_result):
     print('Live fuel moisture extracted successfully at', VDM2FM + "/livefuel.moisture.txt")
