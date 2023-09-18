@@ -42,8 +42,8 @@ fi
 #     a) we found that using "sbatch --wait" can specify SBATCH properties (e.g., the project account and JOB_WALLCLOCK_TIME) while letting the next step to run until the completetion of this step
 #     b) we therefore using "sbatch --wait src/run_elm.sh"
 # CSXM (END)
-#sbatch --wait src/run_elm.sh # MSXM
-sbatch --wait -q debug --reservation=debug src/run_elm.sh
+sbatch --wait src/run_elm.sh # MSXM
+#sbatch --wait -q debug --reservation=debug src/run_elm.sh
 
 #6. To find out if all simulations (cases) finished successfully, run this. It will also save which cases are complete (output/Filter.txt) and which are not (output/Missing.txt):
 python src/create.filter.py
