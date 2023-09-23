@@ -48,9 +48,11 @@ ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
 base_case=ff.read()
 filebase = base_case.strip()
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-# First FATES simulation is set to run for 1 month
+finaltag_month_ci0 = int(config_dict['FINALTAG_MONTH_CI0'])
+
+# First FATES simulation is set to run for nmonth
 if int(config_dict['CYCLE_INDEX'])==0: 
-    finaltag = "elm.h0."+ str(finalyear) +"-01.nc"
+    finaltag = "elm.h0."+ str(finalyear) + "-" + format(finaltag_month_ci0, '02d') + ".nc"
 else:
     finaltag = "elm.h0."+ str(finalyear) +"-12.nc"
 print('finaltag check is ' + finaltag)

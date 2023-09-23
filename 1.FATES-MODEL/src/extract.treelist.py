@@ -51,6 +51,7 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fire_res = int(config_dict['FIRE_RES'])
 fates_res = int(config_dict['FATES_RES'])
 cycle_index = int(config_dict['CYCLE_INDEX'])
+finaltag_month_ci0 = int(config_dict['FINALTAG_MONTH_CI0'])
 
 # HYDRO ON/OFF? if OFF (e.g. currently HYDRO doesn't work iwth grasses), moisture is set to 1.
 HYDRO = int(config_dict['HYDRO'])
@@ -104,7 +105,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 sizescale_pd_df_r
 
 # invoking the R function and getting the result. Note that the sequence of arguments is critical
-treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r, grass_pft_index, HYDRO, cycle_index)
+treelist_result = extract_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r, filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig, fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r, grass_pft_index, HYDRO, cycle_index, finaltag_month_ci0)
 
 if(treelist_result):
   print('**********----Treelist extracted successfully at', VDM2FM + "/treelist_VDM.dat----**********")

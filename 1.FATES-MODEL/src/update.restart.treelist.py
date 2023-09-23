@@ -44,7 +44,7 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fire_res = int(config_dict['FIRE_RES'])
 fates_res = int(config_dict['FATES_RES'])
 cycle_index = int(config_dict['CYCLE_INDEX'])
-
+finaltag_month_ci0 = int(config_dict['FINALTAG_MONTH_CI0'])
 #CSXM: for multiPFTs, wrt as "grass_pft_index = [0, 10, 11, 12]"
 grass_pft_index = 3 
 
@@ -58,7 +58,7 @@ filterFile = "Filter.txt"
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
 # restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, grass_pft_index) # commented out by SXM
-restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, FM2VDM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, cycle_index, grass_pft_index) # ASXM
+restart_result = update_restart_treelist_r(sam_start, sam_end, outdir, VDM2FM, FM2VDM, runroot, filebase, filterFile, finalyear, fire_res, fates_res, cycle_index, finaltag_month_ci0, grass_pft_index) # ASXM
 if (restart_result):
     print("Restart file successfully updated by removing trees that died in fire.")
     exit(0)

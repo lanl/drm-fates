@@ -42,6 +42,7 @@ finalyear = int(config_dict['FINAL_TAG_YEAR'])
 fire_res = int(config_dict['FIRE_RES'])
 fates_res = int(config_dict['FATES_RES'])
 cycle_index = int(config_dict['CYCLE_INDEX'])
+finaltag_month_ci0 = int(config_dict['FINALTAG_MONTH_CI0'])
 
 fates_c2b = 2 # Carbon to biomass 
 
@@ -70,7 +71,7 @@ var_vec_re_r_H
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
 litter_result = extract_litter_r(sam_start, sam_end, outdir, VDM2FM, runroot, filebase, var_vec_re_r_R, 
-                        var_vec_re_r_H, filterFile, finalyear, fire_res, fates_res, fates_c2b, cycle_index)
+                        var_vec_re_r_H, filterFile, finalyear, fire_res, fates_res, fates_c2b, cycle_index, finaltag_month_ci0)
 
 
 if (litter_result):

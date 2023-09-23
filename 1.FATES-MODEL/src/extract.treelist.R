@@ -6,7 +6,7 @@
 extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, filebase, var.vec.re, 
            filterFile, finalyear, fire_res, fates_res, fates_CWD_frac_twig,
            fates_c2b, leafdensity, wooddensity, sizescale_pd_df_r, grass_pft_index, 
-           HYDRO, cycle_index) {
+           HYDRO, cycle_index, finaltag_month_ci0) {
 
   #CSXM: load packages
   library(ncdf4)
@@ -147,10 +147,12 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   for (i in 1:nsam) {
     sample <- sam.vec[i]
     casename <- paste0(filebase, ".", sample)
-    if (cycle_index==0) {
-      filetag <- paste0("elm.r.", finalyear, "-", "01-01-01800.nc") # at the end of the first month
+    if (cycle_index==0 && finaltag_month_ci0 != 12) {
+      finalhour <- "01800"
+      filetag <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc") # at the end of the nmonth
     } else {
-      filetag <- paste0("elm.r.", finalyear + 1, "-", "01-01-01800.nc") # a restart file at the end of final year has timestamp for the beginning of next year
+      finalhour <- "00000"
+      filetag <- paste0("elm.r.", finalyear + 1, "-01-01-", finalhour,".nc") # a restart file at the end of final year has timestamp for the beginning of next year
     }
     filename <-
       paste0(runroot,

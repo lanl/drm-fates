@@ -13,7 +13,8 @@ extract_litter <-
            fire_res,
            fates_res,
            fates_c2b,
-           cycle_index) {
+           cycle_index,
+	   finaltag_month_ci0) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -30,10 +31,12 @@ extract_litter <-
       #--------------
       # Extracting from Restart file (should have only .R suffix):-------
       #--------------
-      if (cycle_index==0) {
-        filetag.R <- paste0("elm.r.", finalyear, "-", "01-01-01800.nc") # at the end of the first month
+      if (cycle_index==0 && finaltag_month_ci0 != 12) {
+	finalhour <- "01800"
+        filetag.R <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc") # at the end of the nmonth
       } else {
-        filetag.R <- paste0("elm.r.", finalyear + 1, "-", "01-01-01800.nc") # a restart file at the end of final year has timestamp for the beginning of next year
+	finalhour <- "00000"
+        filetag.R <- paste0("elm.r.", finalyear + 1, "-01-01-", finalhour, ".nc") # a restart file at the end of final year has timestamp for the beginning of next year
       }  
       filename.R <-
         paste0(runroot,

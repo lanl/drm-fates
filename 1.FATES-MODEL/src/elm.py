@@ -35,16 +35,18 @@ base_case=ff.read()
 BASE_CASE=base_case.strip()
 RUN_ROOT = os.environ["RUN_ROOT"]
 finalyear = int(config_dict['FINAL_TAG_YEAR'])
-# First FATES simulation is set to run for 1 month
-if int(config_dict['CYCLE_INDEX'])==0:
-    FINALTAG = "elm.h0."+ str(finalyear) +"-01.nc"
+finaltag_month_ci0 = int(config_dict['FINALTAG_MONTH_CI0'])
+
+# First FATES simulation is set to run for nmonth
+if int(config_dict['CYCLE_INDEX'])==0: 
+    finaltag = "elm.h0."+ str(finalyear) + "-" + format(finaltag_month_ci0, '02d') + ".nc"
 else:
-    FINALTAG = "elm.h0."+ str(finalyear) +"-12.nc"
-print('finaltag check is ' + FINALTAG)
+    finaltag = "elm.h0."+ str(finalyear) +"-12.nc"
+print('finaltag check is ' + finaltag)
 #command = "python " + str(SCRIPT) + " -c " + str(BASE_CASE) + "." + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH)
 
 # command = "mpiexec -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # commented out by SXM
-command = "srun -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(FINALTAG) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # ASXM
+command = "srun -n " + str(TOTAL) + " python " + str(SCRIPT) + " -c " + "'"+ str(BASE_CASE) + "." + "'" + " -r " + str(RUN_ROOT) + " -f " + str(finaltag) + " -s " +str(SIM_ID_START) + " -t " + str(TOTAL) + " -g " + str(LOG_PATH) # ASXM
 
 file = open("mpi_command.txt", "w")
 file.write(command + "\n")

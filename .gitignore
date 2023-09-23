@@ -45,6 +45,7 @@ __pycache__
 2.Tree_code/**
 5.TREES-FIRETEC/**
 5.TREES-QUICFIRE/**
+5.TREES-QUICFIRE/*.o
 7.FIRETEC-MODEL/**
 7.QUICFIRE-MODEL/**
 7.QUICFIRE-MODEL/mac_compile/**

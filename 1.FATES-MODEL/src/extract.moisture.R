@@ -12,7 +12,8 @@ extract_moisture <-
            fates_res,
            fates_c2b,
            fates_levscls,
-           cycle_index) {
+           cycle_index,
+	   finaltag_month_ci0) {
     library(ncdf4)
     library(tidyverse)
     filter.arr <-
@@ -26,7 +27,7 @@ extract_moisture <-
       sample <- sam.vec[i]
       casename <- paste0(filebase, ".", sample)
       if (cycle_index==0) {
-	filetag <- paste0("elm.h0.", finalyear, "-01.nc")
+	filetag <- paste0("elm.h0.", finalyear, "-", formatC(finaltag_month_ci0, width=2, flag="0"), ".nc")
       } else {
 	filetag <- paste0("elm.h0.", finalyear, "-12.nc")
       }

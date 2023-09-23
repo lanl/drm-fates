@@ -15,6 +15,11 @@ create_variables "$SCRIPT_DIR/../../config.yaml"
 
 unzip -u data/ConvertMetCSVtoCLM/NCOut/eglin_0.1x0.1_met.v2pio.zip -d data/eglin_0.1x0.1_v4.0i/
 
+# To repeat the first year
+cp -r data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio/* data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio_bkp/
+rm -rf data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio/*
+cp data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio_bkp/1990*.nc data/eglin_0.1x0.1_v4.0i/eglin_0.1x0.1_met.v2pio/
+
 # 3. If MUTATE is true, then if sensitivity analysis is true, build or use exisitng parameter table:
 
 if [ ${MUTATE} == TRUE ] || [ ${MUTATE} == true ]; then
