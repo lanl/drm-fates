@@ -52,6 +52,7 @@ export CLIM_DATA_ROOT=$PROJECT_ROOT/$CLIM_DATA_DIR      # CLIM_DATA_DIR   is set
 export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 # CASE_DIR        is set in config.yaml (where to the built is generated, probably on scratch)
 export MAXPFT=$MAXPFT                                   # MAXPFT          is set in config.yaml
 export CLIM_DATA_LINE=$CLIM_DATA_ROOT/$IC_DATA_DIR/CLM1PT_data
+export HYDRO=$HYDRO
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
@@ -211,6 +212,7 @@ histZJB="'FATES_NPLANT_SZ', 'FATES_CANOPYAREA_HT', 'FATES_BASALAREA_SZ', 'FATES_
 histZJBS01="'FATES_LAI_CANOPY_SZ', 'FATES_LAI_USTORY_SZ', 'FATES_NPLANT_CANOPY_SZ', 'FATES_NPLANT_USTORY_SZ', 'FATES_VEGC_ABOVEGROUND_SZ'"
 histZJBS02="'FATES_GPP_PF', 'FATES_NPLANT_PF', 'FATES_NPP_PF', 'FATES_STOREC_PF', 'FATES_VEGC_PF'"
 hist_fincl2SXM="${histDRM}, ${histCX}, ${histZJB}, ${histZJBS01}, ${histZJBS02}"
+
 cat >> user_nl_elm <<EOF
 ! domain file
 ! set in env_run.xml using ATM_DOMAIN_FILE, LND_DOMAIN_FILE and etc.
@@ -236,7 +238,7 @@ hist_nhtfrq = 0, -24
 hist_mfilt  = 1, 365 
 ! Final tag check is based on annual file of individual days -24, 365
 
-use_fates_planthydro = .true.
+use_fates_planthydro = .${HYDRO}.
 ! options considered but not used by Rutuja
 ! use_fates_planthydro = .true.
 ! use_fates_sp = .true.
