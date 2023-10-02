@@ -116,7 +116,8 @@ extractres_h1 <-
            scale.vec.h1,
            filterFile,
            start.year,
-           end.year) {
+           end.year,
+	   cycle_index) {
     library(ncdf4)
     cnames <- seq(from = as.Date(paste0(start.year, "-01-01")),
                        to = as.Date(paste0(end.year, "-12-31")),
@@ -134,33 +135,6 @@ extractres_h1 <-
     all.var.df$doy <- format(all.var.df$date, "%j")
     all.var.df[, var.vec.h1] <- NA
     all.sam.list <- rep(list(all.var.df), nsam)
-    ## to get the length of value vector (for H2OSOI the number of depths)#-----
-#    casename <- paste(filebase, sam.vec[1], sep = "")
-#    filetag <- paste0("elm.h1.", start.year, "-")
-#    filename <- paste0(runroot,
-#                       "/",
-#                       casename,
-#                       "/run/",
-#                       casename,
-#                       ".",
-#                       filetag,
-#                       "01-01-00000.nc")
-#    nc <- nc_open(filename, write = F)
-#    res.arr <- vector("list", length = length(var.vec.h1))
-    var.dim <- vector()
-#    for (v in 1:length(var.vec.h1)) {
-#      var.name <- var.vec.h1[v]
-#      val <- ncvar_get(nc, var.name)
-#      if (length(dim(val)) == 1) {
-#        var.dim[v] <- 1
-#      } else {
-#        var.dim[v] <- dim(val)[1]
-#      }
-#      for (k in 1:var.dim[v]) {
-#        res.arr[[v]][[k]] <- matrix(NA, nsam, ncol)
-#      }
-#    }
-    ##----
     #pb <- txtProgressBar(min = 0, max = nsam, style = 3)
     for (i in 1:nsam) {
       sample <- sam.vec[i]
@@ -178,7 +152,7 @@ extractres_h1 <-
                  ".",
                  filetag,
                  "01-01-00000.nc")
-        nc <- nc_open(filename, write = F)
+	nc <- nc_open(filename, write = F)
         for (v in 1:length(var.vec.h1)) {
           var.name <- var.vec.h1[v]
           scale <- scale.vec.h1[v]
@@ -190,7 +164,6 @@ extractres_h1 <-
       	  }
           index.start <- (yr - start.year) * 365 + 1
           index.end <- index.start + 365 - 1
-          if (var.dim[v] == 1) {
             all.sam.list[[i]][index.start:index.end, var.name] <- val * scale
 #           res.arr[[v]][[1]][i, index.start:index.end] <- val * scale
           } else {
@@ -222,6 +195,8 @@ extractres_h1 <-
 #    }
       all.sam.var <- do.call(rbind, all.sam.list)
       write.table(all.sam.var, file = file.path(outdir, "elm_daily_outputs.txt"), row.names = FALSE)
+      write.table(all.sam.var, file = file.path(outdir, paste0("elm_daily_outputs.", cycle_index, ".txt")), row.names = FALSE)
+      
       return(TRUE)
   }
 

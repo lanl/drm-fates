@@ -39,8 +39,9 @@ extractres_h1_r = robjects.globalenv['extractres_h1']
 
 sam_start = int(config_dict['SIM_ID_START'])
 sam_end = int(config_dict['SIM_ID_END'])
-start_year = config_dict['DATM_CLMNCEP_YR_START']
-end_year = int(config_dict['DATM_CLMNCEP_YR_START']) + config_dict['STOP_N'] - 1
+start_year = int(config_dict['FINAL_TAG_YEAR']) - int(config_dict['NCYCYEAR'])
+end_year = int(config_dict['FINAL_TAG_YEAR'])
+cycle_index = int(config_dict['CYCLE_INDEX'])
 
 # Set the BASE CASE name. This is generated from yaml and src/create.basecase.sh
 ff=open(PROJECT_ROOT+"/BASE_CASE_NAME.txt", "r")
@@ -48,7 +49,9 @@ base_case=ff.read()
 filebase=base_case.strip()
 
 filterFile = "Filter.txt"
-var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI", "QVEGE", "QVEGT", "QDRAI", "QOVER", "ZWT", "SOILWATER_10CM"] 
+# var_vec_h1 = ["RAIN", "QRUNOFF", "TWS", "BTRAN", "ZWT", "H2OSOI", "QVEGE", "QVEGT", "QDRAI", "QOVER", "ZWT", "SOILWATER_10CM"] 
+var_vec_h1 = ['H2OSOI', 'QRUNOFF', 'RAIN', 'QVEGE', 'QVEGT', 'QSOIL', 'TWS']
+#'SOILWATER_10CM', 'QOVER', 'QCHARGE', 'QDRAI', 'QINTR', 'QDRIP','ZWT', 'BTRAN', 'TLAI', 'FATES_NPLANT_SZ', 'FATES_CANOPYAREA_HT', 'FATES_BASALAREA_SZ', 'FATES_LEAFAREA_HT', 'FATES_LAI_CANOPY_SZ', 'FATES_LAI_USTORY_SZ', 'FATES_NPLANT_CANOPY_SZ', 'FATES_NPLANT_USTORY_SZ', 'FATES_VEGC_ABOVEGROUND_SZ', 'FATES_GPP_PF', 'FATES_NPLANT_PF', 'FATES_NPP_PF', 'FATES_STOREC_PF', 'FATES_VEGC_PF']
 #['H2OSOI', 'QRUNOFF', 'QOVER', 'QCHARGE', 'QDRAI', 'RAIN', 'QINTR', 'QDRIP', 'QVEGE', 'QVEGT', 'QSOIL', 'GPP', 'TWS', 'ZWT', 'BTRAN', 'SOILPSI']
 scale_vec_h1 = [1.0]*len(var_vec_h1) 
 
@@ -63,7 +66,7 @@ with localconverter(robjects.default_converter + pandas2ri.converter):
 scale_vec_h1_r
 
 #Invoking the R function and getting the result. Note that the sequence of arguments is critical
-h1_result = extractres_h1_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year)
+h1_result = extractres_h1_r(sam_start, sam_end, outdir, runroot, filebase, var_vec_h1_r, scale_vec_h1_r, filterFile, start_year, end_year, cycle_index)
 if (h1_result):
     print('Daily outputs extracted successfully for ', var_vec_h1, 'at ', outdir+"/elm_daily_outputs.txt")
     exit(0)
