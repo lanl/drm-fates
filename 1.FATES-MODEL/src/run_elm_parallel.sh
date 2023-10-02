@@ -43,7 +43,7 @@ fi
 #     b) we therefore using "sbatch --wait src/run_elm.sh"
 # CSXM (END)
 sbatch --wait src/run_elm.sh # MSXM
-#sbatch --wait -q debug --reservation=debug src/run_elm.sh
+#sbatch --wait -q debug --partition=debug --reservation=debug src/run_elm.sh
 
 #6. To find out if all simulations (cases) finished successfully, run this. It will also save which cases are complete (output/Filter.txt) and which are not (output/Missing.txt):
 python src/create.filter.py
@@ -54,3 +54,4 @@ if [ "$HYDRO" == TRUE ] || [ "$HYDRO" == true ]; then
 fi
 python src/extract.treelist.py
 python src/extract.litter.py
+python src/extract.output.py
