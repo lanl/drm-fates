@@ -148,8 +148,13 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     sample <- sam.vec[i]
     casename <- paste0(filebase, ".", sample)
     if (cycle_index==0 && finaltag_month_ci0 != 12) {
-      finalhour <- "01800"
+      finalhour <- "0000"
       filetag <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc") # at the end of the nmonth
+      filename <- paste0(runroot, "/", casename, "/run/", casename, ".", filetag)
+      if (file.exists(filename) == FALSE) {
+	finalhour <- "01800"
+        filetag <- paste0("elm.r.", finalyear, "-01-01-", finalhour, ".nc")
+      }
     } else {
       finalhour <- "00000"
       filetag <- paste0("elm.r.", finalyear + 1, "-01-01-", finalhour,".nc") # a restart file at the end of final year has timestamp for the beginning of next year

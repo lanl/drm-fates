@@ -32,8 +32,13 @@ extract_litter <-
       # Extracting from Restart file (should have only .R suffix):-------
       #--------------
       if (cycle_index==0 && finaltag_month_ci0 != 12) {
-	finalhour <- "01800"
+	finalhour <- "00000"
         filetag.R <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc") # at the end of the nmonth
+	filename.R <- paste0(runroot, "/", casename, "/run/", casename, ".", filetag.R)
+	if (file.exists(filename.R) == FALSE) {
+	  finalhour <- "01800" 
+	  filetag.R <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc")
+	}	
       } else {
 	finalhour <- "00000"
         filetag.R <- paste0("elm.r.", finalyear + 1, "-01-01-", finalhour, ".nc") # a restart file at the end of final year has timestamp for the beginning of next year

@@ -12,6 +12,7 @@ update_restart_treelist <-
            fire_res,
            fates_res,
 	   cycle_index,
+	   finaltag_month_ci0,
            grass_pft_index) {
     library(ncdf4)
     library(tidyverse)
@@ -57,11 +58,18 @@ update_restart_treelist <-
     for (i in 1:length(fire.dead.ls)) {
       sample <- sam.vec[i]
       casename <- paste0(filebase, ".", sample)
-      if (cycle_index==0) {
-	filetag <- paste0("elm.r.", finalyear, "-", "01-01-01800.nc") # at the end of the first month
+      if (cycle_index==0 && finaltag_month_ci0 != 12) {
+	finalhour <- "0000"
+	filetag <- paste0("elm.r.", finalyear, "-01-01-", finalhour,".nc") # at the end of the nmonth
+	filename <- paste0(runroot, "/", casename, "/run/", casename, ".", filetag)
+	if (file.exists(filename) == FALSE) {
+	  finalhour <- "01800"
+	  filetag <- paste0("elm.r.", finalyear, "-01-01-", finalhour, ".nc")
+	}
       } else {
-	filetag <- paste0("elm.r.", finalyear + 1, "-", "01-01-01800.nc") # a restart file at the end of final year has timestamp for the beginning of next year
-      }
+	finalhour <- "00000"
+	filetag <- paste0("elm.r.", finalyear + 1, "-01-01-", finalhour,".nc") # a restart file at the end of final year has timestamp for the beginning of next year
+      }   
       filename <-
         paste0(runroot,
                "/",

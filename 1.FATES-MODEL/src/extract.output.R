@@ -136,6 +136,7 @@ extractres_h1 <-
     all.var.df[, var.vec.h1] <- NA
     all.sam.list <- rep(list(all.var.df), nsam)
     #pb <- txtProgressBar(min = 0, max = nsam, style = 3)
+    var.dim <- vector()
     for (i in 1:nsam) {
       sample <- sam.vec[i]
       all.sam.list[[i]]$nsam <- rep(i, length(cnames)) 
@@ -164,7 +165,8 @@ extractres_h1 <-
       	  }
           index.start <- (yr - start.year) * 365 + 1
           index.end <- index.start + 365 - 1
-            all.sam.list[[i]][index.start:index.end, var.name] <- val * scale
+          if (var.dim[v] == 1) {
+	    all.sam.list[[i]][index.start:index.end, var.name] <- val * scale
 #           res.arr[[v]][[1]][i, index.start:index.end] <- val * scale
           } else {
             # Only saving 1st depth

@@ -39,7 +39,7 @@ extractres_h1_r = robjects.globalenv['extractres_h1']
 
 sam_start = int(config_dict['SIM_ID_START'])
 sam_end = int(config_dict['SIM_ID_END'])
-start_year = int(config_dict['FINAL_TAG_YEAR']) - int(config_dict['NCYCYEAR'])
+start_year = int(config_dict['FINAL_TAG_YEAR']) - int(config_dict['NCYCYEAR']) + 1
 end_year = int(config_dict['FINAL_TAG_YEAR'])
 cycle_index = int(config_dict['CYCLE_INDEX'])
 
