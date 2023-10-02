@@ -282,9 +282,11 @@ VDM = "FATES" # Vegetation Demography Model: "LLM" or "FATES"
 # nyears   = 100 # number of years for spinup (turn on SPITFIRE)                   Rutuja: 10 Adam: 100
 # ncycyear = 5   # number of years for VDM to run in each loop (turn off SPITFIRE) Rutuja: 5  Adam: 5
 # ncycle   = 10  # number of loop                                                  Rutuja: 20 Adam: 10 (Adam decided to go from 10 to 20 on Apr. 11 2023)
-nmonths   =  1
-ncycyear =  1
-ncycle   =  1
+with open('config.yaml', 'r') as file:
+    config_dict = yaml.safe_load(file)
+nmonths = config_dict['NMONTHS']
+ncycyear = config_dict['NCYCYEAR']
+ncycle = config_dict['NCYCLE']
 
 #Build Trees
 os.chdir('5.TREES-QUICFIRE')
@@ -304,9 +306,11 @@ elif VDM == "FATES":
     with open('../config.yaml', 'r') as file:
         y = yaml.safe_load(file)
         y['STOP_N'] = nmonths
+        y['FINAL_TAG_YEAR'] = int(y['DATM_CLMNCEP_YR_START']) + nmonths//12 - 1
+        #y['FINAL_TAG_YEAR'] = confi_dict['FINAL_TAG_YEAR'] #+ nyears - 1 
         # y['REST_N'] = nyears # commented out by SXM
         #y['REST_N'] = 1 #ASXM: hardwired as 1 as otherwise do not generate the restarting file at nyears+ncycyear for the first ncycyear (i.e., 160+5 years) (to fix later by working on nyears, ncycyear and ncycle)
-        y['FINAL_TAG_YEAR'] = y['DATM_CLMNCEP_YR_START'] #+ nyears - 1 
+        #y['FINAL_TAG_YEAR'] = confi_dict['FINAL_TAG_YEAR'] #+ nyears - 1 
         y['CYCLE_INDEX'] = 0
     with open('../config.yaml', 'w') as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
@@ -314,7 +318,7 @@ elif VDM == "FATES":
     shutil.rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
     # last visit reading: stopped here by SXM
-    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
+    #subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
     #### MAKE INTO FUNCTION
@@ -368,9 +372,9 @@ for i in range(ncycle):
         print (dd)
         #plt.savefig('HVI.png') 
         os.rename('HVI.png', dd)
-        print ('ADAM SQ', llm.sq_sc)
-        print ('ADAM GT', llm.gt_sc)
-        print ('ADAM RCW',sc_rcw)
+        print ('SQ', llm.sq_sc)
+        print ('GT', llm.gt_sc)
+        print ('RCW',sc_rcw)
         np.savetxt('HVI-score.txt', np.c_[sc_rcw, llm.sq_sc, llm.gt_sc], fmt='%1.4e')
     elif VDM == "FATES":
         os.chdir('../1.FATES-MODEL')
@@ -380,8 +384,8 @@ for i in range(ncycle):
             y = yaml.safe_load(file)
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
             # y['REST_N'] = ncycyear # commented out by SXM
-            y['REST_N'] = 1 #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
-            y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + ncycyear - 1
+            #y['REST_N'] = 1  #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
+            y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + y['NCYCYEAR']
             y['CYCLE_INDEX'] = ii
         with open('../config.yaml', 'w') as file:
             yaml.dump(y, file, default_flow_style=False, sort_keys=False)
