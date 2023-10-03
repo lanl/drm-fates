@@ -38,6 +38,7 @@ CLONE_ROOT = PROJECT_ROOT + '/' + config_dict['CASE_DIR']
 
 STOP_N = str(config_dict['STOP_N'])
 REST_N = str(config_dict['REST_N'])
+STATIC = str(config_dict['STATIC'])
 # This will set clone case ending with elements of case_arr to restart
 # For python > shell examples: https://stackoverflow.com/questions/32085956/pass-a-variable-from-python-to-shell-script
-subprocess.call(['tcsh', './src/restart.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, STOP_N, REST_N])
+subprocess.call(['tcsh', './src/restart.ELM.ensemble.csh', case_arr, BASE_CASE, CLONE_ROOT, STOP_N, REST_N, STATIC])

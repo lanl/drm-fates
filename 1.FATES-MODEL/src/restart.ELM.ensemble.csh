@@ -7,7 +7,8 @@ set case_arr=`echo $1 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set BASE_CASE=`echo $2 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set CLONE_ROOT=`echo $3 | sed 's/^[ \t]*//;s/[ \t]*$//'`
 set STOP_N=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
-set REST_N=`echo $4 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set REST_N=`echo $5 | sed 's/^[ \t]*//;s/[ \t]*$//'`
+set STATIC=`echo $6 | sed 's/^[ \t]*//;s/[ \t]*$//;s/./\L&/'`
 set arr_case=`echo $case_arr:q | sed 's/,/ /g'`
 ##======================================
 
@@ -27,4 +28,5 @@ foreach case_i (`seq 1 $#arr_case`)
   ./xmlchange --file env_run.xml --id STOP_OPTION --val nyears
   ./xmlchange --file env_run.xml --id REST_OPTION --val nyears
   ./xmlchange --file env_run.xml --id REST_DATE --val -999
+  sed -i "s|^use_fates_ed_st3.*|use_fates_ed_st3\=\.$STATIC.|g" user_nl_elm
 end

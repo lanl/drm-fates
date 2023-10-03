@@ -53,6 +53,7 @@ export CASEROOT=$PROJECT_ROOT/$CASE_DIR                 # CASE_DIR        is set
 export MAXPFT=$MAXPFT                                   # MAXPFT          is set in config.yaml
 export CLIM_DATA_LINE=$CLIM_DATA_ROOT/$IC_DATA_DIR/CLM1PT_data
 export HYDRO=$HYDRO
+export STATIC=$STATIC
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # DEPENDENT PATHS AND VARIABLES (USER MIGHT CHANGE THESE..)
@@ -239,6 +240,7 @@ hist_mfilt  = 1, 365
 ! Final tag check is based on annual file of individual days -24, 365
 
 use_fates_planthydro = .${HYDRO}.
+use_fates_ed_st3 = .${STATIC}.
 ! options considered but not used by Rutuja
 ! use_fates_planthydro = .true.
 ! use_fates_sp = .true.

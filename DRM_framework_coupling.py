@@ -382,6 +382,7 @@ for i in range(ncycle):
         RESTART="TRUE"
         with open('../config.yaml', 'r') as file:
             y = yaml.safe_load(file)
+            y['STATIC'] = 'false'
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
             # y['REST_N'] = ncycyear # commented out by SXM
             #y['REST_N'] = 1  #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
