@@ -200,11 +200,11 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
 
       # find nplants per cell, from nplants per ha
       fates_nplant.cell = fates_nplant*fates_res^2/10000, # all patch areas together amount to 1 ha or 10000 m2
-
       #CSXM: distance from tree base to crown base
-      # fates_height_to_crown_base = fates_height*(1-fates_crown_depth)) # commented out by SXM
-      fates_height_to_crown_base = fates_height*(1.0-fates_crown_depth/100.0)) # ASXM: fates_crown_depth in the restart-.r. files is called fraction, but actually in %
-
+      #fates_height_to_crown_base = fates_height*(1-fates_crown_depth)) # commented out by SXM 
+      #fates_height_to_crown_base = fates_height*(1.0-fates_crown_depth/100.0)) # ASXM: fates_crown_depth in the restart-.r. files is called fraction, but actually in %
+      # But fates_crown_depth generated several non numeric values ("_") in static mode, so calculating directly here
+      fates_height_to_crown_base = ifelse(as.numeric(as.character(fates_pft))==1, (1-0.76)*fates_height, 0)) # see Generate_parameter_file.rmd  
   # from cohort to individual scale biomass 
   all.sam.var <- all.sam.var %>%
     mutate(fates_bagw_twig = sum(c(sapw_c_val_001, store_c_val_001, repro_c_val_001, struct_c_val_001))*fates_CWD_frac_twig*fates_c2b, #QSXM01: bagw means biomass of above ground wood twig and where is this formula from?
