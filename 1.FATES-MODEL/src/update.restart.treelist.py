@@ -28,7 +28,6 @@ PROJECT_ROOT = os.path.abspath(SCRIPT_DIR+'/..')
 outdir = PROJECT_ROOT+'/'+config_dict['OUTPUT_DIR']
 VDM2FM = PROJECT_ROOT+'/'+config_dict['VDM2FM_DIR']
 FM2VDM = PROJECT_ROOT+'/'+config_dict['FM2VDM_DIR'] # ASXM
-print(FM2VDM)
 runroot = os.environ["RUN_ROOT"]
 
 # Defining the R script and loading the instance in Python
