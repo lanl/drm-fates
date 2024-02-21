@@ -25,11 +25,7 @@ from QUICFire_options import qf_options
 
 
 sys.path.insert(0, "1.LLM-HSM-MODEL/")
-import LLM_model_class as llm
-import LLM_FT_utils as llmft
-import hsiscore_class as HSI
-import hsi_plot_utils as hsi_plt
-import LLM_display
+import run_LLM as LLM
 
 sys.path.insert(0, "7.QUICFIRE-MODEL/projects/Tester")
 import postfuelfire_new as pff
@@ -37,98 +33,6 @@ import Buffer as buff
 
 
 # VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
-
-
-def LLMspinup(nyears):
-    # --spinup run ---
-    p = llm.LLM()  # assign p to the llm class
-    p.dim = 80
-    p.instantiate(0)  # 1: reads input data from file, 0: generate inputs internally
-    p.readfireprobfromfile = 0
-    p.readmastprobfromfile = 0
-    p.verbose = 0
-
-    start_time = time()
-    p.run(nyears)  # here 200 is a number of years
-    print("--- %s seconds ---" % (time() - start_time))
-    p.save_pickle()  # saves the results
-
-    return
-
-
-def LLMtransient(nyears):
-    # --transient run ---
-    # del p
-    p = llm.LLM()
-    p.dim = 80
-    p.randfromfile = 0
-    p.instantiate(1)  # 1: reads input data from file, 0: generate inputs internally
-    p.verbose = 0  # 0: do not print out scores, 1: print scores on the screen
-    p.tree_mature_age = 10
-    p.readfireprobfromfile = 0
-    p.readmastprobfromfile = 0
-
-    start_time = time()
-    p.run(nyears)
-    print("--- %s seconds ---" % (time() - start_time))
-    if np.sum(p.litter) == 0:
-        print("no litter, make an extra run...")
-        p.fire_prob = 0
-        p.run(1)
-    # p.save_randfromfile()
-    return p
-
-
-def dbh_cr(p):
-    lp_count = p.old_LPcount.copy()
-    lp_count[p.old_ht < 1.37] = 0
-
-    lp_height = p.old_ht.copy()
-    lp_height[lp_height < 1.37] = 1.37
-    p.lp_dbh = llmft.dbh1_model(lp_height)
-    # print dbh
-    # axx=llmft.plot_area_matrix(p.lp_dbh,'LLP tree DBH [cm]','yes')
-
-    lp_CA = llmft.dbh2_model(lp_height, p.lp_dbh)
-    p.lp_CR = np.sqrt(lp_CA / np.pi)  # LLP Crown Area
-    all_NaNs = np.isnan(p.lp_CR)
-    p.lp_CR[all_NaNs] = 0
-    # axx=llmft.plot_area_matrix(p.lp_CR,'LLP tree CR [m]','yes')
-
-    hw_height = p.old_htHW.copy()
-    hw_height[hw_height < 1.37] = 1.37
-    p.hw_dbh = llmft.dbh1_model(hw_height)
-    # print dbh
-    # axx=llmft.plot_area_matrix(p.hw_dbh,'HW tree DBH [cm]','yes')
-
-    hw_CR = llmft.dbh2cr_hw(p.hw_dbh / 2.54)  # note dbh is in inch
-    p.hw_CR = hw_CR / 3.281  # CR is in feet convert to meters
-    all_NaNs = np.isnan(p.hw_CR)
-    p.hw_CR[all_NaNs] = 0
-    # axx=llmft.plot_area_matrix(p.hw_CR,'HW tree CR [m]','yes')
-
-    return p
-
-
-def savelittersLLMQF(p, i):
-    filename = "VDM2FM/VDM_litter_WG.dat"
-    ftitle = "WG litter [kg/4m2]"
-    llmft.save_litter_LLM_FT(filename, ftitle, p.litterWG, "plot", "grass")
-    newname = "litter_WG." + str(i) + ".png"
-    os.rename("litter.png", newname)
-
-    filename = "VDM2FM/VDM_litter_trees.dat"
-    ftitle = "LLP + HW litter [kg/4m2]"
-    tree_litter = p.litterHW + p.litter
-    llmft.save_litter_LLM_FT(filename, ftitle, tree_litter, "plot", "litter")
-    newname = "litter_Tree." + str(i) + ".png"
-    os.rename("litter.png", newname)
-
-    percent_LP_litter = np.sum(p.litter) / np.sum(p.litterHW + p.litter)
-    percent_HW_litter = np.sum(p.litterHW) / np.sum(p.litterHW + p.litter)
-    print("lit_LLP%, lit_HW%:", percent_LP_litter, percent_HW_litter)
-
-    return
 
 
 def print_qf_inputs(ri: dict):
@@ -324,9 +228,9 @@ def runCrownScorch(ii):
 
         for i in range(len(file_names) - 3):
             # check if all input files exist
-            llmft.check_file_exists(file_names[i])
+            LLM.llmft.check_file_exists(file_names[i])
 
-        LiveDead = llmft.Treeoflife(file_names)
+        LiveDead = LLM.llmft.Treeoflife(file_names)
     # saving output files with loop index
     file_list = ["AfterFireTrees", "AfterFireWG", "AfterFireLitter"]
     for i in file_list:
@@ -392,7 +296,7 @@ def runLLMcyclical(p, nyears):
     flitter = "FM2VDM/AfterFireLitter.txt"
     fwg = "FM2VDM/AfterFireWG.txt"
     ftlist = "FM2VDM/AfterFireTrees.txt"
-    p = llmft.read_FT_2_LLM(flitter, fwg, ftlist, p)
+    p = LLM.llmft.read_FT_2_LLM(flitter, fwg, ftlist, p)
 
     # run the LLM-HSI for nyears years
     p.fire_prob = 0
@@ -405,7 +309,7 @@ def runLLMcyclical(p, nyears):
 
 def updateTreelist(p, ii):
     ftlist = "FM2VDM/AfterFireTrees.txt"
-    [lp_list, hw_list] = llmft.update_tree_info_per_location(p, ftlist, 0)
+    [lp_list, hw_list] = LLM.llmft.update_tree_info_per_location(p, ftlist, 0)
 
     df_hw = pd.DataFrame(hw_list)
     df = pd.DataFrame(lp_list)
@@ -414,7 +318,7 @@ def updateTreelist(p, ii):
     df.to_csv("treelist_VDM.dat", sep=" ", header=False, index=False)
     file_in = "treelist_VDM.dat"
     file_out = "VDM2FM/treelist_VDM.dat"
-    llmft.save_FT_treelist(file_in, file_out, 0)
+    LLM.llmft.save_FT_treelist(file_in, file_out, 0)
 
     df = pd.read_csv(
         "VDM2FM/treelist_VDM.dat",
@@ -503,12 +407,12 @@ with subprocess.Popen(["wsl", "make", "clean"], stdout=subprocess.PIPE) as proce
 # SPINUP
 if VDM == "LLM":
     os.chdir("../1.LLM-HSM-MODEL")
-    LLMspinup(nyears)  # temporary llm class
+    LLM.LLMspinup(nyears)  # temporary llm class
     llm = LLMtransient(nyears)  # permanent llm class
     llm = dbh_cr(llm)  # calculates dbh and crown radius
     os.makedirs("VDM2FM", exist_ok=True)
-    savelittersLLMQF(llm, 0)
-    llmft.create_treelist(llm, "VDM2FM/treelist_VDM.dat")
+    LLM.savelittersLLMQF(llm, 0)
+    LLM.llmft.create_treelist(llm, "VDM2FM/treelist_VDM.dat")
 elif VDM == "FATES":
     RESTART = "FALSE"
     os.chdir("../1.FATES-MODEL")
@@ -585,7 +489,7 @@ print("Total number of trees: ", df["x coord [m]"].size)
 plt.savefig("figures/TreePlot.0.png")
 
 if VDM == "LLM":
-    hsi_plt.plot_species_scores(llm)
+    LLM.hsi_plt.plot_species_scores(llm)
     plt.savefig("figures/HVI.0.png")
 #### MAKE ABOVE INTO FUNTION
 
@@ -611,7 +515,7 @@ for i in range(ncycle):
     print("Loop Number: ", ii)
     if VDM == "LLM":
         llm = runLLMcyclical(llm, ncycyear)  # runs LLM-HSM with no fire
-        hsi_plt.plot_species_scores(llm)  # Plotting HVI
+        LLM.hsi_plt.plot_species_scores(llm)  # Plotting HVI
         plt.savefig("figures/HVI.png")
         sc_rcw = (
             np.asarray(llm.age_sc)
@@ -619,7 +523,7 @@ for i in range(ncycle):
             + np.asarray(llm.ageHW_sc)
             + np.asarray(llm.hwHW_sc)
         )
-        savelittersLLMQF(llm, ii)
+        LLM.savelittersLLMQF(llm, ii)
         updateTreelist(llm, ii)  # this also updates dbh and cr
         ## Change Coordinates for QUICFIRE HERE ###
         # buff.add_tree_buff()
