@@ -17,6 +17,7 @@ import subprocess
 from matplotlib import pyplot as plt
 import pandas as pd
 import yaml
+from quicfire_tools import SimulationInputs
 
 # Internal Imports
 from QUICFire_options import qf_options
@@ -140,25 +141,31 @@ def savelittersLLMQF(p, i):
     return
 
 
-def print_qf_inputs(ri):
-    QFVD.print_gridlist(ri)
-    QFVD.print_QFire_Advanced_User_Inputs_inp(ri)
-    QFVD.print_QFire_Bldg_Advanced_User_Inputs_inp(ri)
-    QFVD.print_QFire_Plume_Advanced_User_Inputs_inp(ri)
-    QFVD.print_QP_buildout_inp(ri)
-    QFVD.print_QUIC_fire_inp(ri)
-    QFVD.print_QU_buildings_inp(ri)
-    QFVD.print_QU_fileoptions_inp(ri)
-    QFVD.print_QU_metparams_inp(ri)
-    QFVD.print_QU_movingcoords_inp(ri)
-    QFVD.print_QU_simparams_inp(ri)
-    if ri["QFVD"] == 5:
-        QFVD.print_QU_TopoInputs_inp(ri)
-    QFVD.print_rasterorigin_txt(ri)
-    QFVD.print_Runtime_Advanced_User_Inputs_inp(ri)
-    QFVD.print_sensor1_inp(ri)
-    if ri["QFVD"] == 4:
-        QFVD.print_topo_inp(ri)
+def print_qf_inputs(ri: dict):
+    sim = SimulationInputs.create_simulation(
+        nx=ri["nx"],
+        ny=ri["ny"],
+        fire_nz=ri["nz"],
+        wind_speed=ri["windspeed"],
+        wind_direction=ri["winddir"],
+        sim_time=ri["SimTime"],
+    )
+    sim.set_custom_simulation(
+        fuel_density=True,
+        fuel_moisture=True,
+        fuel_height=True,
+        size_scale=True,
+        ignition=True,
+        topo=ri["topo_custom"],
+    )
+    sim.set_output_files(fuel_dens=True, fuel_moist=True, qu_wind_inst=True)
+    sim.runtime_advanced_user_inputs.num_cpus = 8
+    sim.quic_fire.out_time_fire = ri["print_times"]
+    sim.quic_fire.out_time_wind = ri["print_times"]
+    sim.quic_fire.out_time_wind_avg = ri["print_times"]
+    sim.quic_fire.out_time_emis_rad = ri["print_times"]
+
+    sim.write_inputs(ri["RUN_PATH"])
 
 
 def runTreeQF(nsp, nx, ny, nz, ii):
