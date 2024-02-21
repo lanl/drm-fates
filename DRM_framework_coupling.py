@@ -17,6 +17,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 import yaml
+from scipy.io import FortranFile
 from quicfire_tools import SimulationInputs
 
 # Internal Imports
@@ -32,9 +33,6 @@ import LLM_display
 sys.path.insert(0, "7.QUICFIRE-MODEL/projects/Tester")
 import postfuelfire_new as pff
 import Buffer as buff
-
-sys.path.insert(0, "1.LANDIS-MODEL")
-import TTRS_QUICFire_Support as ttrs
 
 
 # VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
@@ -227,9 +225,9 @@ def runQF(i, VDM, qf_options):
         lines = [match for match in filelist if line_id in match]
         line = lines[0]
         cell_nums = list(map(int, re.findall(r"\d+", line)))
-        rhof = ttrs.import_fortran_dat_file("treesrhof.dat", cell_nums)
-        moist = ttrs.import_fortran_dat_file("treesmoist.dat", cell_nums)
-        fueldepth = ttrs.import_fortran_dat_file("treesfueldepth.dat", cell_nums)
+        rhof = import_fortran_dat_file("treesrhof.dat", cell_nums)
+        moist = import_fortran_dat_file("treesmoist.dat", cell_nums)
+        fueldepth = import_fortran_dat_file("treesfueldepth.dat", cell_nums)
         # read in surface fuels from landis
         os.chdir("../1.LANDIS-MODEL/VDM2FM")
         surf = np.loadtxt("VDM_litter_trees.dat")
@@ -246,9 +244,9 @@ def runQF(i, VDM, qf_options):
         rhof[0, :, :] = surf + rhof[0, :, :]
         # export new .dat files
         os.chdir("../../7.QUICFIRE-MODEL/projects/LandisTester/")
-        ttrs.export_fortran_dat_file(rhof, "treesrhof.dat")
-        ttrs.export_fortran_dat_file(moist, "treesmoist.dat")
-        ttrs.export_fortran_dat_file(fueldepth, "treesfueldepth.dat")
+        export_fortran_dat_file(rhof, "treesrhof.dat")
+        export_fortran_dat_file(moist, "treesmoist.dat")
+        export_fortran_dat_file(fueldepth, "treesfueldepth.dat")
         os.chdir("../../../5.TREES-QUICFIRE")
 
     os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
@@ -376,7 +374,7 @@ def treesdat_combine(nsp, nx, ny, nz, ii):
         sp_all = np.swapaxes(sp_all, 0, 2)
         sp_all = np.swapaxes(sp_all, 1, 2)
 
-        ttrs.export_fortran_dat_file(sp_all, datfile)
+        export_fortran_dat_file(sp_all, datfile)
         print("3D array created for trees" + str(i) + ".dat")
     return
 
@@ -446,6 +444,20 @@ def updateTreelist(p, ii):
     os.rename("TreeMap.png", newname)
 
     return
+
+
+def import_fortran_dat_file(filename, cell_nums):
+    (nx, ny, nz) = cell_nums
+    arr = (
+        FortranFile(filename, "r", "uint32").read_ints("float32").T.reshape(nz, ny, nx)
+    )
+    return arr
+
+
+def export_fortran_dat_file(arr, filename):
+    arr = arr.astype("float32")
+    arrfile = FortranFile(filename, "w", "uint32")
+    arrfile.write_record(arr)
 
 
 # -----main------
