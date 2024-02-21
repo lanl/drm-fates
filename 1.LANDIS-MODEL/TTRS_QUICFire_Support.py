@@ -10,6 +10,7 @@ import os
 from jinja2 import Template, TemplateError
 from scipy import interpolate
 from scipy.io import FortranFile
+from skimage.measure import block_reduce
 
 def import_fortran_dat_file(filename,cell_nums):
     (nx,ny,nz) = cell_nums
@@ -119,8 +120,13 @@ def remove_shapefile_from_bbox(mask_shp,dom_shp,res_xy=[2,2]):
     x2_min,y2_min,x2_max,y2_max  = mask_shp.total_bounds
     # Defining a bunch of parameters that will be useful later on for cleanness
     msk_xext,msk_yext,dom_xext,dom_yext,x_corner,y_corner = [
-        int(x2_max-x2_min),int(y2_max-y2_min),int(x1_max-x1_min),int(y1_max-y1_min),
-        int(x2_min-x1_min),int(y2_min-y1_min)]
+        int(x2_max-x2_min),
+        int(y2_max-y2_min),
+        int(x1_max-x1_min),
+        int(y1_max-y1_min),
+        int(x2_min-x1_min),
+        int(y2_min-y1_min)
+        ]
        
     geoT = (-1.0,0.0,x2_max,
            0.0,-1.0,y2_max)    
