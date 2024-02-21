@@ -7,10 +7,10 @@ from __future__ import annotations
 # Core Imports
 import sys
 import os
-from time import sleep, time
-from shutil import rmtree, copyfile
 import re
 import subprocess
+from time import sleep, time
+from shutil import rmtree, copyfile
 
 # External Imports
 from matplotlib import pyplot as plt
@@ -35,15 +35,6 @@ import Buffer as buff
 
 sys.path.insert(0, "1.LANDIS-MODEL")
 import TTRS_QUICFire_Support as ttrs
-
-# Determine which quicfire print functions to use
-if qf_options["QFVD"] == 4:
-    import QFVD4.print_functions as QFVD
-elif qf_options["QFVD"] == 5:
-    import QFVD5.print_functions as QFVD
-else:
-    print("QFVD version not supported. Check options.py.")
-    sys.exit(70)
 
 
 # VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
