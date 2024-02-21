@@ -2,13 +2,13 @@
 #
 # (c) Elchin Jafarov 03/30/2021
 
+from __future__ import annotations
+
 # Core Imports
 import sys
 import os
-import time
-from time import sleep
-import shutil
-from shutil import copyfile
+from time import sleep, time
+from shutil import rmtree, copyfile
 import re
 import subprocess
 
@@ -58,9 +58,9 @@ def LLMspinup(nyears):
     p.readmastprobfromfile = 0
     p.verbose = 0
 
-    start_time = time.time()
+    start_time = time()
     p.run(nyears)  # here 200 is a number of years
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time() - start_time))
     p.save_pickle()  # saves the results
 
     return
@@ -78,9 +78,9 @@ def LLMtransient(nyears):
     p.readfireprobfromfile = 0
     p.readmastprobfromfile = 0
 
-    start_time = time.time()
+    start_time = time()
     p.run(nyears)
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time() - start_time))
     if np.sum(p.litter) == 0:
         print("no litter, make an extra run...")
         p.fire_prob = 0
@@ -284,7 +284,7 @@ def runQF(i, VDM, qf_options):
     direc = "Plots"
     dd = direc + str(i)
     if os.path.exists(dd):
-        shutil.rmtree(dd)
+        rmtree(dd)
     os.rename("Plots", dd)
     os.mkdir("Plots")
     # rename initial fuels
@@ -353,7 +353,7 @@ def treesdat_combine(nsp, nx, ny, nz, ii):
     dat_list = ["rhof", "moist", "ss", "fueldepth"]
     for i in dat_list:
         print("Importing trees" + str(i) + " 4D dat file")
-        shutil.copyfile(
+        copyfile(
             "trees" + str(i) + ".dat", "trees" + str(i) + "4D_cycle" + str(ii) + ".dat"
         )
         rhof = np.zeros(nsp * nx * ny * nz).reshape(nsp, nx, ny, nz)
@@ -406,9 +406,9 @@ def runLLMcyclical(p, nyears):
 
     # run the LLM-HSI for nyears years
     p.fire_prob = 0
-    start_time = time.time()
+    start_time = time()
     p.run(nyears)
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time() - start_time))
 
     return p
 
@@ -517,7 +517,7 @@ elif VDM == "FATES":
     with open("../config.yaml", "w") as file:
         yaml.dump(y, file, default_flow_style=False, sort_keys=False)
     dir = "../1.FATES-MODEL/VDM2FM"
-    shutil.rmtree(dir, ignore_errors=True)
+    rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
     subprocess.call(["sh", "./src/prep_elm_parallel.sh"])
     subprocess.call(["sh", "./src/run_elm_parallel.sh", RESTART])
