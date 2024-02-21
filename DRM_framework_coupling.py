@@ -5,7 +5,6 @@
 # Core Imports
 import sys
 import os
-import numpy as np
 import time
 from time import sleep
 import shutil
@@ -15,6 +14,7 @@ import subprocess
 
 # External Imports
 from matplotlib import pyplot as plt
+import numpy as np
 import pandas as pd
 import yaml
 from quicfire_tools import SimulationInputs
