@@ -305,6 +305,7 @@ elif VDM == "FATES":
     os.chdir('../1.FATES-MODEL')
     with open('../config.yaml', 'r') as file:
         y = yaml.safe_load(file)
+        y['STATIC'] = True
         y['STOP_N'] = nmonths
         y['FINAL_TAG_YEAR'] = int(y['DATM_CLMNCEP_YR_START']) + nmonths//12 - 1
         #y['FINAL_TAG_YEAR'] = confi_dict['FINAL_TAG_YEAR'] #+ nyears - 1 
@@ -318,7 +319,7 @@ elif VDM == "FATES":
     shutil.rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
     # last visit reading: stopped here by SXM
-    #subprocess.call(['sh', './src/prep_elm_parallel.sh'])
+    subprocess.call(['sh', './src/prep_elm_parallel.sh'])
     subprocess.call(['sh', './src/run_elm_parallel.sh', RESTART])
 
     #### MAKE INTO FUNCTION
@@ -382,10 +383,10 @@ for i in range(ncycle):
         RESTART="TRUE"
         with open('../config.yaml', 'r') as file:
             y = yaml.safe_load(file)
-            y['STATIC'] = 'false'
+            y['STATIC'] = False
             y['STOP_N'] = ncycyear #ncycyear*(1 + (ncycle - 1))
             # y['REST_N'] = ncycyear # commented out by SXM
-            #y['REST_N'] = 1  #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
+            y['REST_N'] = 1  #ASXM: hardwired as 1, not nec. though (to fix later by working on nyears, ncycyear and ncycle)
             y['FINAL_TAG_YEAR'] = y['FINAL_TAG_YEAR'] + y['NCYCYEAR']
             y['CYCLE_INDEX'] = ii
         with open('../config.yaml', 'w') as file:

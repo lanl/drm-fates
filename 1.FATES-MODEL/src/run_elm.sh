@@ -17,7 +17,7 @@ echo 'Started on '`date`' for '$casedir' starting in '$casedir
 cd $casedir
 
 setenv location `date "+%F-%T"`
-srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.api24.12.1.1.0.5_3.IELMFATES.chicoma.gnu.Cc6963c159f-Fbeceb996d.1990-1990.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f elm.h0.1990-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/log
+srun -n 4 python /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/src/parallel.run.py -c 'drm.FATES.api24.12.1.1.0.5_stat_dyn_r.update.round1.seedsupp.IELMFATES.chicoma.gnu.Cc6963c159f-Fbeceb996d.1990-1990.' -r /usr/projects/higrad/rutuja/E3SM.DRM/runs -f elm.h0.1991-12.nc -s 1 -t 4 -g /usr/projects/higrad/rutuja/E3SM_cases/proj1/1.FATES-MODEL/log
 
 
 echo 'Finished on '`date`

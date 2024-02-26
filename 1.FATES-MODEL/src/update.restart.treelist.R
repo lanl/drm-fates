@@ -22,7 +22,7 @@ update_restart_treelist <-
     # ******************
 
     bft <- read.table(
-      file = file.path(paste0(VDM2FM, "/treelist_VDM_n.plant.", cycle_index, ".dat")), header = TRUE # ASXM
+      file = file.path(paste0(VDM2FM, "/plantlist_VDM_n.plant.", cycle_index, ".dat")), header = TRUE # ASXM
     )
     aft <- read.table(
       file = file.path(paste0(FM2VDM, "/AfterFireTrees.", cycle_index + 1, ".txt")), header = FALSE
@@ -30,17 +30,35 @@ update_restart_treelist <-
     colnames(aft) <- c("fates_pft", "x", "y", "fates_height", "fates_height_to_crown_base", "fates_crown_dia",
         "height_to_widest_crown", "sizescale", "fuel_moisture_content", "bulk_density_fine_fuel", "treeid")
     # list all the plants that died by taking the difference between before fire plant list (includes grasses) and after fire tree list.
-    fire.dead.plantlist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),] # so fire.dead.plantlist contains grasses, because bft has grasses, but aft does not 
+print(length(bft$treeid));
+print(length(aft$treeid));
+print(bft$treeid)
+print(aft$treeid)
+print(setdiff(bft$treeid, aft$treeid))
+print(length(setdiff(bft$treeid, aft$treeid)))
 
+    fire.dead.plantlist <- bft[bft$treeid %in% setdiff(bft$treeid, aft$treeid),] # so fire.dead.plantlist contains grasses, because bft has grasses, but aft does not 
+print(nrow(fire.dead.plantlist));
+print(nrow(bft))
     print(paste0("No. of plants that died in fire = ", nrow(fire.dead.plantlist), "; that is ", round(nrow(fire.dead.plantlist)*100/length(bft$treeid), 0), "% of plants present before fire."))
+
+    pre.fire.alive.nplant.by.pft.nsam <- aggregate(treeid ~ nsam + fates_pft, data = bft, FUN = length)
+    print("No. of trees alive before fire by pft and simulation: ")
+    print(pre.fire.alive.nplant.by.pft.nsam[order(pre.fire.alive.nplant.by.pft.nsam$nsam),])
+
+    write.table(pre.fire.alive.nplant.by.pft.nsam, file = file.path(outdir, paste0("/pre.fire.alive.nplant.by.pft.nsam_", cycle_index, ".dat")), row.names = FALSE)
+
+    print("No. of trees that died in fire by pft and simulation: ")
+    print(fire.dead.nplant.by.pft.nsam[order(fire.dead.nplant.by.pft.nsam$nsam),])
+    write.table(fire.dead.nplant.by.pft.nsam,
+		            file = file.path(outdir, paste0("/fire.dead.nplant.by.pft.nsam_", cycle_index, ".dat")),
+			                row.names = FALSE)
 
     #CSXM: for multiPFTs, wrt as "bft.trees <- bft[!(bft$fates_pft %in% grass_pft_index), ]"
     bft.trees <- bft[bft$fates_pft != as.numeric(grass_pft_index),] 
 
     #CSXM: for multiPFTs, wrt as "fire.dead.treelist <- fire.dead.plantlist[!(fire.dead.plantlist$fates_pft %in% grass_pft_index), ]"
     fire.dead.treelist <- fire.dead.plantlist[fire.dead.plantlist$fates_pft != as.numeric(grass_pft_index),] 
-
-    print(paste0("No. of trees that died in fire = ", nrow(fire.dead.treelist), "; that is ", round(nrow(fire.dead.treelist)*100/length(bft.trees$treeid), 0), "% of trees present before fire."))
 
     # ******************
     # Convert dead trees and grasses into cohort densities
@@ -109,8 +127,13 @@ update_restart_treelist <-
       # the above has nplants to remove for each cohort.rowid
       # Reducing tree densities to account for dead trees here
       post_fire.df$fates_nplant[fire.dead.nplant.i$cohort.rowid] <- pre_fire.df$fates_nplant[fire.dead.nplant.i$cohort.rowid] - fire.dead.nplant.i$remove_nplant
+      # before fire when tree densities were converted to individuals, a rounding was done to get only whole trees droppping off fractions. 
+      # So it would be OK to do reverse rounding: remove tree density fractions completely, otherwise there will be lingering tree densities (< 1) even if the corresponding trees died in fire   
+      post_fire.df$fates_nplant <- ifelse(post_fire.df$fates_nplant < 1, 0, post_fire.df$fates_nplant)
       ncdf4::ncvar_put(nc, "fates_nplant", post_fire.df$fates_nplant)
       nc_close(nc)
+
+      print(paste0(sum(post_fire.df$fates_nplant!=0), " No. of cohorts (fates_nplant) with non-zero densities were written to post-fire FATES file to restart: ", casename, ".", filetag))
 
       # ******************
       # Compare restart file cohorts before and after fire
@@ -119,13 +142,17 @@ update_restart_treelist <-
       colnames(pre_fire.df) <- paste0("pre.", colnames(pre_fire.df))
       colnames(post_fire.df) <- paste0("post.", colnames(post_fire.df))
       pre_post_fire.df <- cbind(pre_fire.df, post_fire.df)
-      pre_post_fire.df$diff_nplant <- pre_post_fire.df$pre.fates_nplant - pre_post_fire.df$post.fates_nplant
+      pre_post_fire.df$removed_all_nplants <- ifelse(pre_post_fire.df$post.fates_nplant == 0, 0, 1)
       pre_post_fire.df.ls[[i]] <- pre_post_fire.df
     }
     pre_post_fire.df <- do.call(dplyr::bind_rows, pre_post_fire.df.ls)
     write.table(pre_post_fire.df,
 		  file = file.path(outdir, paste0("/pre_post_fire.df_last_nsam_", cycle_index, ".dat")),
 		  row.names = FALSE)
+
+    total.cohorts <- paste0(sum(pre_post_fire.df$post.fates_nplant!=0), " Total No. of cohorts (fates_nplant)  with non-zero densities were written to post-fire FATES file to restart: ", filebase, ".", filetag)
+    write.table(total.cohorts,file = file.path(outdir, paste0("total.cohorts.to.post-fire.restart", cycle_index, ".dat")),row.names = FALSE, col.names = FALSE)
+
     # Test substitution for the last file:
     nc <- nc_open(filename, write = F)
     ## value in the file

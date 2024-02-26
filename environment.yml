@@ -1,4 +1,4 @@
-name: elm_env
+name: /usr/projects/higrad/rutuja/E3SM_cases/proj1/elm_env
 channels:
   - r
   - conda-forge
@@ -260,4 +260,6 @@ dependencies:
     - pycparser==2.21
     - pyevtk==1.6.0
     - rpy2==3.5.13
+    - ruamel-yaml==0.17.32
+    - ruamel-yaml-clib==0.2.7
 prefix: /usr/projects/higrad/rutuja/E3SM_cases/proj1/elm_env

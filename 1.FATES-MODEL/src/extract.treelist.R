@@ -40,7 +40,7 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
         new.left$treeid[1:nrow(old.left)] <- old.left$treeid
         # New trees: Assign treeids that are not already present in the past
         remaining.rows <- c(nrow(old.left)+1):nrow(new.left)
-        max.treeid <- max(old.treelist$treeid, na.rm = TRUE)
+        max.treeid <- max(old.plantlist$treeid, na.rm = TRUE)
         new.df$treeid[remaining.rows] <-  max.treeid + 1:length(remaining.rows)
       } else {
         # Trees present in the old list
@@ -187,8 +187,13 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     res.all.df$nsam <- i                             #CSXM: in each row of res.all.df, add a column named as nsam
     res.all.df$cohort.rowid <- 1:nrow(res.all.df)    #CSXM: in each row of res.all.df, add a column named as cohort.rowid
     all.sam.list[[i]] <- res.all.df                  #CSXM: store res.all.df as the ith element in the all.sam.list (a list)
+    print(paste0(sum(res.all.df$fates_nplant!=0), " No. of cohorts (fates_nplant) were found with non-zero densities in pre-fire restart file for tree extraction ", casename, ".", filetag))
+    print(paste0(round(sum(res.all.df$fates_nplant[res.all.df$fates_pft != 3], na.rm = TRUE), 0), " The sum of tree cohorts densities (fates_nplant), which is ~= no. of trees/ha, in pre-fire restart file for tree extraction ", casename, ".", filetag))
   }
   all.sam.var <- do.call(rbind, all.sam.list)
+
+  total.cohorts <- paste0(sum(all.sam.var$fates_nplant!=0), " Total no. of cohorts (fates_nplant) were found with non-zero densities in pre-fire restart files for tree extraction ", filebase, ".", filetag)
+  write.table(total.cohorts,file = file.path(VDM2FM, paste0("total.cohorts.", cycle_index, ".dat")),row.names = FALSE, col.names = FALSE)
 
   #++++++++++++++++++++
   # Make New Variables
@@ -235,16 +240,18 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   #++++++++++++++++++++++++++++++++++++++++++++++++
   # From nplants per size-pft to Individual Plants
   #++++++++++++++++++++++++++++++++++++++++++++++++
-  #CSXM: in trees.whole, each line is a descripiton of each tree based on FATES output (the so-called individual plants)
-  trees.whole <- all.sam.var %>%
+  #CSXM: in plants.whole, each line is a descripiton of each tree based on FATES output (the so-called individual plants)
+  plants.whole <- all.sam.var %>%
     # selecting only whole trees to present to the fire model
     # this could be made complex by grouping trees into size class bins and checking if the size class makes it to a whole tree (nplant.400 = 1)
     mutate(fates_nplant.cell = as.integer(round(fates_nplant.cell, 0))) %>%
     subset(fates_nplant.cell >= 1) %>%
     # repeat each plant number of plants #CSXM: expand the data frame by repeating each plant-line num-of-plants times (num-of-plants have been rounded as integer two lines above)
     uncount(fates_nplant.cell)
-  trees.whole$treeid <- 1:nrow(trees.whole)
+  plants.whole$treeid <- 1:nrow(plants.whole)
 
+  print(range(plants.whole$treeid))
+  print(nrow(plants.whole))
   #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   # Assign x-y location for each FATES simulation (aka patch) 
   # (assume simulation index, nsam, increases from East to West, then increases northward)
@@ -263,7 +270,7 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
     mutate(xmax = xmin - 1 + fates_res, ymax = ymin - 1 + fates_res)
 
   #CSXM: each invidual plant is tied to their simulation domain (take each point run as a domain with one grid cell)
-  trees.whole <- trees.whole %>%
+  plants.whole <- plants.whole %>%
     left_join(cell.xy, by="nsam") 
 
   #+++++++++++++++++++++++++++++++++++++
@@ -275,20 +282,20 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
 
   # get tree locations from last FATES run (#CSXM: last means the most recent previous)
   if (cycle_index > 0) {
-    old.treelist <- read.table(
-      file = file.path(VDM2FM, paste0("treelist_VDM_n.plant.", cycle_index-1, ".dat")), header = TRUE)
-
-    new.id.df <- trees.whole[, c("nsam", "treeid", "fates_pft", "fates_dbh")]
-    old.id.df <- old.treelist[, c("nsam", "treeid", "fates_pft", "fates_dbh")]
+    old.plantlist <- read.table(
+      file = file.path(VDM2FM, paste0("plantlist_VDM_n.plant.", cycle_index-1, ".dat")), header = TRUE)
+print(head(old.plantlist))
+    new.id.df <- plants.whole[, c("nsam", "treeid", "fates_pft", "fates_dbh")]
+    old.id.df <- old.plantlist[, c("nsam", "treeid", "fates_pft", "fates_dbh")]
     new.id.df$cycle <- "new"; old.id.df$cycle <- "old"
     id.df <- rbind(new.id.df, old.id.df)
     id.df.ls <- split(id.df, f=list(id.df$nsam, id.df$fates_pft), drop = TRUE)
-    # within each nsam by pft dataframe, update treeid for new treelist
-    
+    # within each nsam by pft dataframe, update treeid for new plantlist
+print(id.df.ls, head)
     update.treeid.ls <- lapply(id.df.ls, update.treeid.fun)
     update.treeid.df <- dplyr::bind_rows(update.treeid.ls)
     # because new treeids were created within nsam loop, there may be duplicates
-    trees.whole$treeid <- update.treeid.df$treeid
+    plants.whole$treeid <- update.treeid.df$treeid
   }
 
   #------------------------------------------------------------------------------------------
@@ -296,50 +303,50 @@ extract_treelist <- function(sam.start, sam.end, outdir, VDM2FM, runroot, fileba
   #------------------------------------------------------------------------------------------
   # group according to simus (sam.start to sam.end)
   cat("\n\nBEFFORE grouping AND BEFORE getting into rm.duplicate.locations.fun \n") # ASXM
-  print(paste("nrow(trees.whole)", nrow(trees.whole))) # ASXM
-  treelist.ls <- split(trees.whole, f=list(trees.whole$nsam), drop = TRUE) # treelist.ls may be the same with f=list(trees.whole$nsam) or f=trees.whole$nsam (to check)
+  print(paste("nrow(plants.whole)", nrow(plants.whole))) # ASXM
+  plantlist.ls <- split(plants.whole, f=list(plants.whole$nsam), drop = TRUE) # plantlist.ls may be the same with f=list(plants.whole$nsam) or f=plants.whole$nsam (to check)
 
   # distribute trees uniformly in the domain (keep using rm.duplicate.locations.fun as the function name, although it is confusing)
-  # CSXM: because treelist.ls is grouped for simus (four in total), the following wil call the rm.duplicate.locations four timess
-  treelist.ls <- lapply(treelist.ls, rm.duplicate.locations.fun)
+  # CSXM: because plantlist.ls is grouped for simus (four in total), the following wil call the rm.duplicate.locations four timess
+  plantlist.ls <- lapply(plantlist.ls, rm.duplicate.locations.fun)
 
   #*********************************************************************************************************
   # CSXM: Roughly stopped reading here during the last visit in Feb 2023
-  # Reading notes: /usr/projects/climate/xiaoming/Analysis/zTech/scrpts.R/Scrpts.DRM/drm_extract_treelist.R
+  # Reading notes: /usr/projects/climate/xiaoming/Analysis/zTech/scrpts.R/Scrpts.DRM/drm_extract_plantlist.R
   #*********************************************************************************************************
 
   # Checking if any tree location duplicates remain
-  treelist <- dplyr::bind_rows(treelist.ls)
-  #CSXM: for multiPFTs, wrt as "treelist.no.grass <- treelist[!(treelist$fates_pft  grass_pft_index),]"
-  treelist.no.grass <- treelist[treelist$fates_pft != as.numeric(grass_pft_index),]
-  coord <- paste0(round(treelist.no.grass$x, 1),"-", round(treelist.no.grass$y, 1))
+  plantlist <- dplyr::bind_rows(plantlist.ls)
+  #CSXM: for multiPFTs, wrt as "treelist <- plantlist[!(plantlist$fates_pft  grass_pft_index),]"
+  treelist <- plantlist[plantlist$fates_pft != as.numeric(grass_pft_index),]
+  coord <- paste0(round(treelist$x, 1),"-", round(treelist$y, 1))
   dupes <- which(duplicated(coord))
   # print(paste0("Remaining coordinate duplicates within 1m distance = ", length(dupes))) # commented out by SXM
   print(paste0("Remaining coordinate duplicates within 0.1 m distance = ", length(dupes)))
 
-  # CSXM: in the following from select(c(fates_pft, ..., fates_dbh)), the first 10 fields are in the same order as in update.restart.treelist.R, although not sure it is actually needed
-  treelist <- treelist %>%
+  # CSXM: in the following from select(c(fates_pft, ..., fates_dbh)), the first 10 fields are in the same order as in update.restart.plantlist.R, although not sure it is actually needed
+  plantlist <- plantlist %>%
     mutate(height_to_widest_crown = fates_height_to_crown_base, # not ideal for non-pines
            bulk_density_fine_fuel = leaf_twig_bulkd) %>% 
     left_join(sizescale_pd_df_r, by = "fates_pft") %>%
     select(c(fates_pft, x, y, fates_height, fates_height_to_crown_base, fates_crown_dia,   # CSXM: column 1-6 (fates_height_to_crown_base is actually the bottom of canopy)
              height_to_widest_crown, sizescale, fuel_moisture_content,                     # CSXM: column 7-9
              bulk_density_fine_fuel, treeid, nsam, fates_nplant, cohort.rowid, fates_dbh)) # CSXm: column 10-15
-  treelist <- as.data.frame(sapply(treelist, as.numeric))
-  #CSXM: for multiPFTs, wrt as "treelist.no.grass <- treelist[which(!(treelist$fates_pft  grass_pft_index)),]"
-  treelist.no.grass <- treelist[which(treelist$fates_pft != as.numeric(grass_pft_index)),] 
-  # treelist.VDM2FM <- subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh)) # commented out by SXM
-  treelist.VDM2FM <- subset(treelist.no.grass, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh))
+  plantlist <- as.data.frame(sapply(plantlist, as.numeric))
+  #CSXM: for multiPFTs, wrt as "treelist <- plantlist[which(!(plantlist$fates_pft  grass_pft_index)),]"
+  treelist <- plantlist[which(plantlist$fates_pft != as.numeric(grass_pft_index)),] 
+  # plantlist.VDM2FM <- subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh)) # commented out by SXM
+  treelist.VDM2FM <- subset(treelist, select = -c(nsam, fates_nplant, cohort.rowid, fates_dbh))
 
   write.table(
-    treelist,
-    file = file.path(VDM2FM, paste0("treelist_VDM_n.plant.dat")),
+    plantlist,
+    file = file.path(VDM2FM, paste0("plantlist_VDM_n.plant.dat")),
     row.names = FALSE
   )
 
   write.table(
     treelist,
-    file = file.path(VDM2FM, paste0("treelist_VDM_n.plant.", cycle_index, ".dat")),
+    file = file.path(VDM2FM, paste0("plantlist_VDM_n.plant.", cycle_index, ".dat")),
     row.names = FALSE
   )
   
