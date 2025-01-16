@@ -19,10 +19,11 @@ import pandas as pd
 import yaml
 from quicfire_tools import SimulationInputs
 
+os.chdir("C:/Users/ntutland/Documents/Projects/drm-fates")
 # Internal Imports
 from QUICFire_options import qf_options
 
-sys.path.insert(0, "1.LLM-HSM-MODEL/")
+sys.path.insert(0, "1.LLM-HSM-MODEL")
 import LLM_model_class as llm
 import LLM_FT_utils as llmft
 import hsiscore_class as HSI
@@ -35,15 +36,6 @@ import Buffer as buff
 
 sys.path.insert(0, "1.LANDIS-MODEL")
 import TTRS_QUICFire_Support as ttrs
-
-# Determine which quicfire print functions to use
-if qf_options["QFVD"] == 4:
-    import QFVD4.print_functions as QFVD
-elif qf_options["QFVD"] == 5:
-    import QFVD5.print_functions as QFVD
-else:
-    print("QFVD version not supported. Check options.py.")
-    sys.exit(70)
 
 
 # VDM = "LLM" # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS" #why is this here?
@@ -148,24 +140,38 @@ def print_qf_inputs(ri: dict):
         fire_nz=ri["nz"],
         wind_speed=ri["windspeed"],
         wind_direction=ri["winddir"],
-        sim_time=ri["SimTime"],
+        simulation_time=ri["SimTime"],
     )
     sim.set_custom_simulation(
         fuel_density=True,
         fuel_moisture=True,
         fuel_height=True,
         size_scale=True,
-        ignition=True,
+        ignition=ri["custom_ig"],
         topo=ri["topo_custom"],
     )
-    sim.set_output_files(fuel_dens=True, fuel_moist=True, qu_wind_inst=True)
+    sim.set_output_files(fuel_dens=True, fuel_moist=True)
+    ep_dict = {"drip": 2, "aerial": 5, "total": 100}
+    if ri["custom_ig"] == False:
+        sim.set_rectangle_ignition(
+            x_min=ri["ig_xmin"],
+            x_length=ri["ig_xlen"],
+            y_min=ri["ig_ymin"],
+            y_length=ri["ig_ylen"],
+        )
+    else:
+        src = os.path.join(ri["PROJ_PATH"], "ignite.dat")
+        dst = os.path.join(ri["RUN_PATH"], "ignite.dat")
+        shutil.copy(src, dst)
+    sim.quic_fire.ignitions_per_cell = ep_dict.get(ri["ig_method"])
     sim.runtime_advanced_user_inputs.num_cpus = 8
     sim.quic_fire.out_time_fire = ri["print_times"]
     sim.quic_fire.out_time_wind = ri["print_times"]
     sim.quic_fire.out_time_wind_avg = ri["print_times"]
     sim.quic_fire.out_time_emis_rad = ri["print_times"]
+    sim.quic_fire.auto_kill = 1
 
-    sim.write_inputs(ri["RUN_PATH"])
+    sim.write_inputs(ri["RUN_PATH"], version="v6")
 
 
 def runTreeQF(nsp, nx, ny, nz, ii):
@@ -180,9 +186,9 @@ def runTreeQF(nsp, nx, ny, nz, ii):
     dst = "../5.TREES-QUICFIRE/"
 
     file_list = ["VDM_litter_WG.dat", "treelist_VDM.dat", "VDM_litter_trees.dat"]
-    for i in file_list:
-        if os.path.isfile(os.path.join(os.getcwd(), "VDM2FM", i)):
-            copyfile(src + i, dst + i)
+    for file in file_list:
+        if os.path.isfile(os.path.join(os.getcwd(), "VDM2FM", file)):
+            copyfile(src + file, dst + file)
     os.chdir(dst)
     with subprocess.Popen(["wsl", "./trees"], stdout=subprocess.PIPE) as process:
 
@@ -195,8 +201,8 @@ def runTreeQF(nsp, nx, ny, nz, ii):
         if process.poll() == 0:
             print("Tree program run successfully!")
             ## If using quicfire, combine the species layers of 4D trees*.dat files
-            if FM == "QUICFIRE":
-                treesdat_combine(nsp, nx, ny, nz, ii)
+            # if FM == "QUICFIRE":
+            #     treesdat_combine(nsp, nx, ny, nz, ii)
             ### Copying Tree Files to Fire Affects Assessment
             file_list = [
                 "TreeTracker.txt",
@@ -219,14 +225,17 @@ def runQF(i, VDM, qf_options):
     # copy produced by Tree program files to the QF folder
     # os.chdir("/Users/elchin/Documents/Adams_project/llm-hsm-ft/")
     src = ""
-    dst = "../7.QUICFIRE-MODEL/projects/LandisTester/"
-    copyfile(src + "treesfueldepth.dat", dst + "treesfueldepth.dat")
-    copyfile(src + "treesmoist.dat", dst + "treesmoist.dat")
-    copyfile(src + "treesrhof.dat", dst + "treesrhof.dat")
-    copyfile(src + "treesss.dat", dst + "treesss.dat")
+    dst = qf_options["RUN_PATH"]
+    copyfile(src + "treesfueldepth.dat", dst + "/treesfueldepth.dat")
+    copyfile(src + "treesmoist.dat", dst + "/treesmoist.dat")
+    copyfile(src + "treesrhof.dat", dst + "/treesrhof.dat")
+    copyfile(src + "treesss.dat", dst + "/treesss.dat")
 
     # for landis, add surface fuel density, moisture, and depth values for non-canopy fuels
     if VDM == "LANDIS":
+        os.chdir("../1.LANDIS-MODEL")
+        import Track_Fuels as track
+
         # import .dat files output by trees
         # these will only have canopy fuels
         os.chdir("../5.TREES-QUICFIRE")
@@ -242,68 +251,91 @@ def runQF(i, VDM, qf_options):
         # read in surface fuels from landis
         os.chdir("../1.LANDIS-MODEL/VDM2FM")
         surf = np.loadtxt("VDM_litter_trees.dat")
-        # replace fuel moisture and depth values only where there are no canopy fuels
-        qf_moist = np.full((cell_nums[0], cell_nums[1]), qf_options["fuel_moisture"])
-        moist[0, :, :] = np.where(
-            (rhof[0, :, :] > 0) | (surf == 0), moist[0, :, :], qf_moist
-        )
-        qf_depth = np.full((cell_nums[0], cell_nums[1]), qf_options["fuel_height"])
+        # all surface fuels get moisture from qf_options
+        moist[0, :, :] = qf_options["fuel_moisture"]
+        # replace fuel depth values only where there are no canopy fuels
+        qf_depth = np.full((cell_nums[1], cell_nums[0]), qf_options["fuel_height"])
         fueldepth[0, :, :] = np.where(
             (rhof[0, :, :] > 0) | (surf == 0), fueldepth[0, :, :], qf_depth
         )
         # now add surface fuel density from landis to canopy fuel density from trees
         rhof[0, :, :] = surf + rhof[0, :, :]
         # export new .dat files
-        os.chdir("../../7.QUICFIRE-MODEL/projects/LandisTester/")
+        os.chdir(qf_options["RUN_PATH"])
         ttrs.export_fortran_dat_file(rhof, "treesrhof.dat")
         ttrs.export_fortran_dat_file(moist, "treesmoist.dat")
         ttrs.export_fortran_dat_file(fueldepth, "treesfueldepth.dat")
-        os.chdir("../../../5.TREES-QUICFIRE")
 
-    os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
-    # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 165
-    # MUST CHANGE QF INPUTS TO MATCH DOMAIN SIZE
+        # QF should already be compiled
+        src = os.path.abspath(
+            "C:/Users/ntutland/Documents/Quicfire/QF_6.0.1/exe/quicfire_LIN64.exe"
+        )
+        dst = os.path.join(qf_options["RUN_PATH"], "quicfire_LIN64.exe")
+        shutil.copy(src, dst)
+        with subprocess.Popen(
+            ["wsl", "./quicfire_LIN64.exe"], stdout=subprocess.PIPE
+        ) as process:
 
-    with subprocess.Popen(
-        ["wsl", "./adv_compile_and_run.sh"], stdout=subprocess.PIPE
-    ) as process:
+            def poll_and_read():
+                print(f"{process.stdout.read1().decode('utf-8')}")
 
-        def poll_and_read():
-            print(f"{process.stdout.read1().decode('utf-8')}")
+            while process.poll() != 0:
+                poll_and_read()
+                sleep(1)
+            if process.poll() == 0:
+                print("QF run successfully!")
+                track.FuelChange(
+                    qf_options["RUN_PATH"],
+                    qf_options["nx"],
+                    qf_options["ny"],
+                    qf_options["nz"],
+                )
 
-        while process.poll() != 0:
-            poll_and_read()
-            sleep(1)
-        if process.poll() == 0:
-            print("QF run successfully!")
-            # Successful run should produce bunch of binary files in
-            # 7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script
-            # that will generate PercentFuelChange.txt file required for the next step.
-            os.chdir("../projects/LandisTester")
-            # pff.main(0)
-    direc = "Plots"
-    dd = direc + str(i)
-    if os.path.exists(dd):
-        shutil.rmtree(dd)
-    os.rename("Plots", dd)
-    os.mkdir("Plots")
-    # rename initial fuels
-    dd = "fuels-dens-00000." + str(i) + ".vin"
-    os.rename("fuels-dens-00000.bin", dd)
-    dd = "fire_indexes." + str(i) + ".vin"
-    os.rename("fire_indexes.bin", dd)
-    # rename postfire fuels
-    simtime = str(qf_options["SimTime"]).zfill(5)
-    dd = "fuels-dens-" + simtime + "." + str(i) + ".vin"
-    os.rename("fuels-dens-" + simtime + ".bin", dd)
+    else:
+        os.chdir("../7.QUICFIRE-MODEL/mac_compile/")
+        # HAD TO CHANGE adv_compile_and_run.sh ARGUMENT testcase TO MATCH dst IN LINE 165
+        # MUST CHANGE QF INPUTS TO MATCH DOMAIN SIZE
+
+        with subprocess.Popen(
+            ["wsl", "./adv_compile_and_run.sh"], stdout=subprocess.PIPE
+        ) as process:
+
+            def poll_and_read():
+                print(f"{process.stdout.read1().decode('utf-8')}")
+
+            while process.poll() != 0:
+                poll_and_read()
+                sleep(1)
+            if process.poll() == 0:
+                print("QF run successfully!")
+                # Successful run should produce bunch of binary files in
+                # 7.QUICFIRE-MODEL/projects/Tester. Now run the postfire script
+                # that will generate PercentFuelChange.txt file required for the next step.
+                os.chdir(qf_options["RUN_PATH"])
+                # pff.main(0)
+        direc = "Plots"
+        dd = direc + str(i)
+        if os.path.exists(dd):
+            shutil.rmtree(dd)
+        os.rename("Plots", dd)
+        os.mkdir("Plots")
+        # rename initial fuels
+        dd = "fuels-dens-00000." + str(i) + ".vin"
+        os.rename("fuels-dens-00000.bin", dd)
+        dd = "fire_indexes." + str(i) + ".vin"
+        os.rename("fire_indexes.bin", dd)
+        # rename postfire fuels
+        simtime = str(qf_options["SimTime"]).zfill(5)
+        dd = "fuels-dens-" + simtime + "." + str(i) + ".vin"
+        os.rename("fuels-dens-" + simtime + ".bin", dd)
     return
 
 
-def runCrownScorch(ii):
+def runCrownScorch(ii, qf_options):
     # ii = 1
     os.chdir("../../../8.CROWN-SCORCH")
     copyfile(
-        "../7.QUICFIRE-MODEL/projects/LandisTester/PercentFuelChange.txt",
+        os.path.join(qf_options["RUN_PATH"], "PercentFuelChange.txt"),
         "../8.CROWN-SCORCH/PercentFuelChange.txt",
     )
     LiveDead = []
@@ -457,30 +489,34 @@ def updateTreelist(p, ii):
     return
 
 
-# -----main------
+def compile_trees(make_clean: bool = True):
+    """Compiles the LANL trees program. Set make_clean to False if no .dat files in directory"""
+    if make_clean:
+        with subprocess.Popen(
+            ["wsl", "make", "clean"], stdout=subprocess.PIPE
+        ) as process:
 
-VDM = "LANDIS"  # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
-FM = "QUICFIRE"  # Fire Model: "QUICFIRE" or "FIRETEC"
+            def poll_and_read():
+                print(f"{process.stdout.read1().decode('utf-8')}")
 
-nyears = 5  # number of years for spinup and transient runs
-ncycyear = 10  # number of cyclical year run
-ncycle = 1  # number of loops
+            while process.poll() != 0:
+                poll_and_read()
+                sleep(1)
+            if process.poll() == 0:
+                print("make clean successful - running make")
+                with subprocess.Popen(
+                    ["wsl", "make"], stdout=subprocess.PIPE
+                ) as process:
 
-nfuel = 2  # number of tree species (if not using LANDIS)
+                    def poll_and_read():
+                        print(f"{process.stdout.read1().decode('utf-8')}")
 
-# Build Trees
-os.chdir("5.TREES-QUICFIRE")
-
-with subprocess.Popen(["wsl", "make", "clean"], stdout=subprocess.PIPE) as process:
-
-    def poll_and_read():
-        print(f"{process.stdout.read1().decode('utf-8')}")
-
-    while process.poll() != 0:
-        poll_and_read()
-        sleep(1)
-    if process.poll() == 0:
-        print("make clean successful - running make")
+                    while process.poll() != 0:
+                        poll_and_read()
+                        sleep(1)
+                    if process.poll() == 0:
+                        print("trees successfully compiled")
+    else:
         with subprocess.Popen(["wsl", "make"], stdout=subprocess.PIPE) as process:
 
             def poll_and_read():
@@ -493,6 +529,20 @@ with subprocess.Popen(["wsl", "make", "clean"], stdout=subprocess.PIPE) as proce
                 print("trees successfully compiled")
 
 
+# -----main------
+
+VDM = "LANDIS"  # Vegetation Demography Model: "LLM" or "FATES" or "LANDIS"
+FM = "QUICFIRE"  # Fire Model: "QUICFIRE" or "FIRETEC"
+
+nyears = 10  # number of years for spinup and transient runs
+ncycyear = 10  # number of cyclical year run
+ncycle = 5  # number of loops
+
+nfuel = 2  # number of tree species (if not using LANDIS)
+
+# Build Trees
+os.chdir("5.TREES-QUICFIRE")
+compile_trees(make_clean=False)
 # ierr = call('make clean', shell=True)
 # ierr = call('make', shell=True)
 
@@ -545,12 +595,10 @@ elif VDM == "LANDIS":
         Treelist_params.ny,
         Treelist_params.nz,
     )
-    qf_options["ig_xmin"] = 100
-    qf_options["ig_ymin"] = Treelist_params.ny / 2  # half of half the y length
+    qf_options["ig_xmin"] = 50
+    qf_options["ig_ymin"] = 50
     qf_options["ig_xlen"] = 10
-    qf_options["ig_ylen"] = (
-        Treelist_params.ny
-    )  # since dy is 2, this is half the length of the y side of the domain
+    qf_options["ig_ylen"] = Treelist_params.ny * 2 - 100  # buffer of 50m on each end
     nfuel = Treelist_params.num_spp
 #### MAKE INTO FUNCTION
 df = pd.read_csv(
@@ -585,20 +633,32 @@ if VDM == "LLM":
     plt.savefig("figures/HVI.0.png")
 #### MAKE ABOVE INTO FUNTION
 
-## Print QF inputs
-print_qf_inputs(qf_options)
-
 # buff.add_surf_buff()
 
 LiveDead = []
 i = 0
 for i in range(ncycle):
     ii = i + 1
+    cycle = ii  # current cycle (fire sim initiates a cycle)
+    qf_options["RUN_PATH"] = os.path.join(
+        qf_options["PROJ_PATH"], f"Landis_cycle{cycle}"
+    )
+    os.makedirs(qf_options["RUN_PATH"], exist_ok=True)
+    os.chdir("../5.TREES-QUICFIRE")
+    print("Recompiling Trees program\n")
+    make_clean = False if cycle == 1 else True
+    compile_trees(make_clean)  # recompile trees to try to avoid segfault
+    os.chdir("../1.LANDIS-MODEL")
     runTreeQF(
         nfuel, qf_options["nx"], qf_options["ny"], qf_options["nz"], ii
     )  # runs the tree program to create QF inputs
+    os.chdir("../5.TREES-QUICFIRE")
+    ## Print QF inputs
+    print_qf_inputs(qf_options)
     runQF(i, VDM, qf_options)  # runs QUIC-Fire
-    L = np.array(runCrownScorch(ii))  # runs the tree program to create LLM inputs
+    L = np.array(
+        runCrownScorch(ii, qf_options)
+    )  # runs the tree program to create LLM inputs
     L = np.insert(L, 0, ii)
     LiveDead.append(L)
     ## Change Coordinates Back to Eco system model HERE ###
@@ -649,7 +709,6 @@ for i in range(ncycle):
 
         os.chdir("..")
         OG_PATH = os.getcwd()
-        cycle = ii  # current cycle (fire sim initiates a cycle)
         # Build Landis Parameters object for cycles
         L2_params = Run.LandisParams(
             OG_PATH, nyears, ncycyear, ncycle, cycle, spinup=False
