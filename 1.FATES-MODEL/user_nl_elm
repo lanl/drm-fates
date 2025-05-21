@@ -1,0 +1,6 @@
+fsurdat = '/lustre/scratch5/.mdt1/zjrobbins/FATES-DRM/Gen_needs/surfdata_eglin_c210813.nc'
+fates_paramfile = '/lustre/scratch5/.mdt1/zjrobbins/FATES-DRM/params/DRM_FL_eglin800_API25_v3_3.nc'
+use_fates_nocomp = .false.
+use_fates_inventory_init = .true.
+fates_inventory_ctrl_filename = '/lustre/scratch5/.mdt1/zjrobbins/ZR_DRM/data/eglin_0.1x0.1_v4.0i/eglinFIA_inv_file_list.txt'
+hist_empty_htapes = .false.
