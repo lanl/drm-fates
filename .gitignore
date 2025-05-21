@@ -44,8 +44,6 @@ __pycache__
 *.pyc
 # Ignore these directories
 2.Tree_code/**
-5.TREES-FIRETEC/**
-5.TREES-QUICFIRE/**
 7.FIRETEC-MODEL/**
 7.QUICFIRE-MODEL/**
 7.QUICFIRE-MODEL/mac_compile/**
