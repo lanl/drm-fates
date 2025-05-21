@@ -14,6 +14,8 @@
 # But descend into directories
 !*/
 # Un-ignore specific files under subtree
+!1.FATES-MODEL/**
+!1.LANDIS-MODEL/**
 !1.LLM-HSM-MODEL/**
 !3.VegMap-ParFlow/**
 !4.PARFLOW-MODEL/**
