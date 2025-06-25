@@ -1,2 +1,0 @@
-LATITUDE LONGITUDE PSS-FILE CSS-FILE
-1 9.153 280.1539 /turquoise/usr/projects/veg/cxu/ACME_cases/BCI/bci_0.1x0.1_v4.0i/Inventory/one-pft-c2017-11-17/bci_cens_24Jan2006_c2017-11-17.pss   /turquoise/usr/projects/veg/cxu/ACME_cases/BCI/bci_0.1x0.1_v4.0i/Inventory/one-pft-c2017-11-17/bci_cens_24Jan2006_c2017-11-17.css
